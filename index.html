@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Monitoring the nutritional status of humanitarian workers – Gaza response</title>
+<title>Gaza response: Monitoring the nutritional status of humanitarian workers</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-6bdd2aebeb936dcddaa5f935a5de481c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-6bdd2aebeb936dcddaa5f935a5de481c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-ccd81253fefb92e9cd3f9eb5b5d87b54.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-6bdd2aebeb936dcddaa5f935a5de481c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-dashboard/quarto-dashboard.js"></script>
 <script src="site_libs/quarto-dashboard/stickythead.js"></script>
@@ -83,7 +83,169 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="quarto-dashboard nav-fixed dashboard-fill fullcontent quarto-light">
+<body class="quarto-dashboard nav-fixed dashboard-fill dashboard-sidebar fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 
 <div id="quarto-search-results"></div>
@@ -92,7 +254,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Gaza response</span>
+    <span class="navbar-title">Gaza response: Monitoring the nutritional status of humanitarian workers</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -100,64 +262,105 @@ ul.task-list li input[type="checkbox"] {
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./english.qmd"> 
-<span class="menu-text">English</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./arabic.html"> 
-<span class="menu-text">Arabic</span></a>
-  </li>  
-</ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./protocol.html"> 
-<span class="menu-text">Study protocol</span></a>
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-about" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">About</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-about">    
+        <li>
+    <a class="dropdown-item" href="./about.html">
+ <span class="dropdown-text">About the project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./protocol.html">
+ <span class="dropdown-text">Study protocol</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/cmmid/gaza-response/issues/new">
+ <span class="dropdown-text">Report an issue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-bi-translate" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-translate" role="img">
+</i> 
+ <span class="menu-text"></span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-bi-translate">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">English</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./arabic.html">
+ <span class="dropdown-text">Arabic</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cmmid/gaza-response"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
 <header id="quarto-dashboard-header">
 <nav class="navbar navbar-expand-md slim" data-bs-theme="dark">
   <div class="navbar-container container-fluid">
-    <button class="navbar-toggler hidden" type="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-controls="dashboard-collapse" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-controls="dashboard-collapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>    
 
 
-    <div class="navbar-brand-container">       
-
-      <div class="navbar-title">
-        <div class="navbar-title-text"><a href="#">Monitoring the nutritional status of humanitarian workers</a></div>
-        
-        
-      </div>
-    </div>
-</div>
-</nav>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-weight-change" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#weight-change" data-scrolling="false" href="#weight-change" aria-controls="weight-change" aria-selected="true"><span class="nav-link-text">Weight change</span></a></li><li class="nav-item" role="presentation"><a id="tab-modelled-change" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#modelled-change" data-scrolling="false" href="#modelled-change" aria-controls="modelled-change" aria-selected="false"><span class="nav-link-text">Modelled % change</span></a></li><li class="nav-item" role="presentation"><a id="tab-bmi" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#bmi" data-scrolling="false" href="#bmi" aria-controls="bmi" aria-selected="false"><span class="nav-link-text">BMI</span></a></li></ul></div></div></nav>
 </header></header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-layout-custom page-navbar quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill">
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages dashboard-sidebar-container">
 <!-- sidebar -->
 <!-- margin-sidebar -->
 <!-- main -->
 
-<ul class="bslib-grid-item html-fill-item">
-<li>Mean, median and inter-quartile range absolute and percent reduction in weight and body mass index (BMI) from pre-war baseline.</li>
-<li>Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</li>
-<li>Trends in the mean, median and inter-quartile range weight, BMI and percent weight change, by date.</li>
-<li>Modelled percent change in individual weight, based on an additive growth model.</li>
-</ul>
-<p>Visualisations will be available for the entire group of staff being monitored, but also according to the following stratifications: (i) by sex, (ii) by age group (&lt;30yo, 30-44yo, 45+yo), (iii) by governorate of current residence, (iv) by staff role (any categories available).</p>
-<div class="bslib-grid-item html-fill-item bslib-grid" data-layout="fill" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
-<div class="card cell bslib-card html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+
+<div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" data-bslib-sidebar-border="false" data-bslib-sidebar-border-radius="false"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
+<div class="tab-content bslib-grid html-fill-item html-fill-container" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div id="weight-change" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-weight-change">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 85fr) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-body html-fill-item html-fill-container">
-<div class="cell-output cell-output-stdout html-fill-item html-fill-container">
-<pre><code>[1] 2</code></pre>
+<div class="panel-tabset html-fill-item html-fill-container">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Role</a></li></ul>
+<div class="tab-content html-fill-item html-fill-container">
+<div id="tabset-1-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<img src="index_files/figure-html/plot-absolute-1.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-1-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<img src="index_files/figure-html/plot-absolute-2.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-1-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<img src="index_files/figure-html/plot-absolute-3.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-1-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<img src="index_files/figure-html/plot-absolute-4.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-1-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<img src="index_files/figure-html/plot-absolute-5.png" class="img-fluid" width="768">
+</div>
+</div>
 </div>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
@@ -166,16 +369,204 @@ ul.task-list li input[type="checkbox"] {
         <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
     </span>
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
-
-
-<div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden">
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="panel-tabset html-fill-item html-fill-container">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Role</a></li></ul>
+<div class="tab-content html-fill-item html-fill-container">
+<div id="tabset-2-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<img src="index_files/figure-html/plot-trends-1.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-2-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<img src="index_files/figure-html/plot-trends-2.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-2-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<img src="index_files/figure-html/plot-trends-3.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-2-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<img src="index_files/figure-html/plot-trends-4.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-2-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<img src="index_files/figure-html/plot-trends-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<p>Data notes: Change in self-reported weight from pre-war baseline.</p>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="modelled-change" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-modelled-change">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="panel-tabset html-fill-item html-fill-container">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false">Role</a></li></ul>
+<div class="tab-content html-fill-item html-fill-container">
+<div id="tabset-3-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<img src="index_files/figure-html/plot-gam-1.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-3-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<img src="index_files/figure-html/plot-gam-2.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-3-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<img src="index_files/figure-html/plot-gam-3.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-3-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<img src="index_files/figure-html/plot-gam-4.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-3-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-5-tab">
+<img src="index_files/figure-html/plot-gam-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<p>Data notes:</p>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="bmi" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-bmi">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="panel-tabset html-fill-item html-fill-container">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false">Role</a></li></ul>
+<div class="tab-content html-fill-item html-fill-container">
+<div id="tabset-4-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<img src="index_files/figure-html/plot-bmi-1.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-4-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<img src="index_files/figure-html/plot-bmi-2.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-4-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<img src="index_files/figure-html/plot-bmi-3.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-4-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<img src="index_files/figure-html/plot-bmi-4.png" class="img-fluid" width="768">
+</div>
+<div id="tabset-4-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-5-tab">
+<img src="index_files/figure-html/plot-bmi-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<p>Data notes: Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</p>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden html-fill-item html-fill-container">
 
 </div>
+</div>
+</div>
+</div>
+</div>
+</div></div><aside id="bslib-sidebar-1" class="sidebar html-fill-container html-fill-item"><div class="html-fill-container html-fill-item">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Last update: 2025-08-05</li>
+<li>146 participants</li>
+<li>Median -17.8kg change from pre-war weight</li>
+</ul>
+</div>
+</div>
+<section id="section-1">
+<div class="h3">
+
+</div>
+<p>This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. The hope of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering.</p>
+<p>Participation is entirely voluntary. The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM). <a href="./protocol">Learn more</a></p>
+</section>
+</div></aside>
+<button class="collapse-toggle" type="button" title="Toggle sidebar" aria-expanded="true" aria-controls="bslib-sidebar-1">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" class="bi bi-chevron-left collapse-icon" style="fill:currentColor;" aria-hidden="true" role="img">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"></path>
+    </svg>
+</button>
+<script data-bslib-sidebar-init="">
+bslib.Sidebar.initCollapsibleAll()
+</script>
 </div>
 
 
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {
@@ -246,7 +637,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/cmmid\.github\.io\/gaza-response\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

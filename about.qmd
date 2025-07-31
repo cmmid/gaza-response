@@ -3,13 +3,14 @@ title: "About the project"
 toc: true
 ---
 
-This study aims to monitor the nutritional status of SCI staff currently working in Gaza by tracking their weight. The aim of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering Gaza.
-
+This study aims to monitor the nutritional status of humanitarian staff currently working in Gaza by tracking their weight. 
+The aim of this project is to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population by providing real-time information on the nutritional status of humanitarian staff in Gaza. 
 Read more about the project in the [study protocol](./protocol).
 
 ### Contributions
 
-The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. There is no specific funding source for this study.
+The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
+There is no specific funding source for this study.
 
 All participation is voluntary, with thanks to staff contributing their data and time.
 
@@ -25,6 +26,11 @@ Analysis support contributed by:
 - Clara Brigitta
 - Kath Sherratt
 - Ali Fahmi
+
+Additional contributions from:
+
+- Mervat Alhaffar
+- Catharina Van Der Boor
 
 We welcome new contributions to this project.
 

@@ -1,0 +1,40 @@
+project:
+  type: website
+  render:
+    - "*.qmd"
+
+website:
+  title: "Gaza response: Monitoring the nutritional status of humanitarian workers"
+  navbar:
+    right:
+      - text: Home
+        href: english.qmd
+      - text: About
+        menu:
+          - text: About the project
+            href: about.qmd
+          - text: Study protocol
+            href: protocol.qmd
+          - text: Report an issue
+            href: https://github.com/cmmid/gaza-response/issues/new
+      - icon: translate
+        menu:
+          - text: English
+            href: english.qmd
+          - text: Arabic
+            href: arabic.qmd
+      - icon: github
+        href:  https://github.com/cmmid/gaza-response
+  body-footer: <script data-goatcounter="https://gaza-response.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: styles.css
+    toc: true
+
+
+

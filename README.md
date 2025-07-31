@@ -9,7 +9,7 @@
 ### Dashboard
 
 - We have English and Arabic dashboards under development. Both dashboards should keep an identical structure and visual output. Source files are:
-  - [English quarto](english.qmd)
+  - [English quarto](index.qmd)
   - [Arabic quarto](arabic.qmd)
 
 ### Website maintenance

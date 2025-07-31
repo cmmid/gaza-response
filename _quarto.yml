@@ -8,7 +8,7 @@ website:
   navbar:
     right:
       - text: Home
-        href: english.qmd
+        href: index.qmd
       - text: About
         menu:
           - text: About the project
@@ -20,7 +20,7 @@ website:
       - icon: translate
         menu:
           - text: English
-            href: english.qmd
+            href: index.qmd
           - text: Arabic
             href: arabic.qmd
       - icon: github

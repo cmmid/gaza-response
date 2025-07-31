@@ -1,0 +1,578 @@
+**Version:** 31 July 2025
+
+**Authors:** Francesco Checchi, Zeina Jamaluddine (LSHTM)
+
+# Aim and objectives
+
+This information system is being set up by organisations providing
+humanitarian services inside the Gaza Strip, with the technical and
+scientific support of the London School of Hygiene and Tropical Medicine
+(LSHTM). Its **aim** is to inform humanitarian decision-making, advocacy
+and diplomatic action to improve the lives of the affected population by
+providing real-time information on the nutritional status of
+humanitarian staff in Gaza.
+
+While it is recognised that this sub-population may not be
+representative of the overall population (and may in fact have
+relatively higher socio-economic status), the system is intended to at
+least track the evolution of nutritional status within a **well-defined
+and accessible group** inside Gaza and thereby offer additional evidence
+for nutritional and food insecurity monitoring.
+
+The system's **specific objectives** are to:
+
+1.  Estimate average weight and body-mass index (BMI) change since
+    pre-war (7 October 2023) levels;
+
+2.  Monitor the relative and absolute evolution of weight and BMI over
+    time;
+
+3.  Describe differences in weight and BMI change by sex, age,
+    governorate of residence, professional role and number of children
+    dependents.
+
+# Data collection and analysis
+
+## Eligibility
+
+All individuals working for the organisation in some capacity are
+eligible to take part in data collection. Depending on the organisation,
+this may include expatriates, national staff, consultants, casual (e.g.
+daily) workers and others. The term **staff** throughout this document
+implies **any of the above categories** and should not be interpreted as
+signifying any specific employment relationship between the individual
+and the organisation.
+
+It is recommended that **expatriate staff** also join data collection,
+partly to monitor their own nutritional status, but also to attenuate
+Palestinian staff's potential concerns about data confidentiality and
+other harms.
+
+## 
+
+## Data structure
+
+The dataset will be **longitudinal**, meaning that multiple weight
+measures will be collected for the same individuals, with a unique ID
+linking sequential observations to each individual (staff member). This
+is far preferable in terms of statistical analysis to collecting
+observations that cannot be linked over time.
+
+## 
+
+## Requirements
+
+The LSHTM has prepared a **generic ODK/Kobo data collection platform**
+that any organisation can adopt. This should work on any mobile phone,
+tablet or computer. Staff can enter data using two forms accessible from
+separate URLs on a web browser (see below). They are able to toggle
+between identical Arabic and English versions of the data collection
+instruments. It is also possible to enter data on a desktop or mobile
+ODK/Kobo app, which however needs to be downloaded first. The LSHTM can
+provide instructions for this alternative option if staff prefer it, or
+if staff prefer designating a few individuals who will enter data on
+their device on behalf of many people, which would be easier to do via a
+desktop app.
+
+**When they first join the system**, staff members read the
+**information sheet** and provide **consent** (see Appendix); if they
+consent, they will be prompted to create a user ID (see below) and fill
+a brief **baseline questionnaire**: staff members will use a URL linking
+to the data collection screen for this one-off data collection. Staff
+need to be online when accessing this **first URL** on their browser.
+Even if they lose connectivity, the platform will allow them to complete
+the consent process and questionnaire and click submit: their submission
+will be queued and will be uploaded by their device when next connected
+to the internet.
+
+Staff are also be provided with a **separate URL** that they will need
+to use each time they wish to record **new weight observations** for
+themselves or a colleague. Again, the first time they use the URL on
+their device, they will need to be online. Subsequently, they can be
+offline, and the data will be uploaded when the device next has an
+internet connection; it is also possible to close the browser tab after
+submitting data.
+
+If staff delete their cookies or browsing history, it may be that they
+will once again need to be online when accessing either URL. However,
+they should not worry about losing data: this can only happen if the
+device is lost or breaks before uploading the latest weight observation.
+Even in these cases, data previously uploaded will be safe.
+
+## Variables collected
+
+**Baseline data collection:**
+
+-   Unique ID, specified once by each new participant: participants are
+    given two options for this: (i) specify their 9-digit Palestinian
+    national ID; (ii) specify the first initials of their name, last
+    name, father's name and mother's name (e.g. [F]{.underline}atima
+    [A]{.underline}bdelwahab [S]{.underline}alman
+    [Y]{.underline}asmeen), their date of birth (dd/mm/yy, e.g.
+    03/11/1978) and the first initial of their favourite Palestinian
+    artist (e.g. [S]{.underline}liman Mansour; if none, use any letter
+    of the alphabet), which in the above example will generate the
+    following ID: FASY031178S. Whichever option they choose, they are
+    reminded by the system to remember their ID.
+
+    -   Once an ID is selected, **staff have to use the same ID every
+        time** they add a new observation.
+
+-   Date \[today by default, but with option to select a different date
+    in the past\]
+
+-   Age \[16-99y\]
+
+-   Sex \[M, F, other/prefer not to say\]
+
+-   Governorate where you currently live \[North Gaza, Gaza City, Deir
+    al Balah, Rafah, Khan Younis\]
+
+-   Role \[expatriate staff, national staff, consultant/contractor,
+    casual/daily worker, other, prefer not to say\]
+
+-   Number of children aged below 10 years within Gaza that you are
+    currently responsible for feeding on a daily basis \[0 to 20\]
+
+-   Estimated height in cm \[100-230\]
+
+-   Estimated weight before the war started in Kg, to nearest decimal
+    \[30.0 to 180.0\]
+
+-   Weight today in Kg, to nearest decimal \[30.0 to 180.0\]
+
+**Ongoing data collection:**
+
+-   Unique ID, as above
+
+-   Date \[today by default, but with option to select a different date
+    in the past\]
+
+-   Weight on the above date in Kg, to nearest decimal \[30.0 to 180.0\]
+
+## Analysis and publication
+
+An **automated data pipeline** automatically captures data from the
+server at daily intervals, pre-processes the date to remove implausible
+variables, and analyses them to generate the following **aggregate
+visualisations**:
+
+-   Mean, median and inter-quartile range absolute and percent reduction
+    in weight and body mass index (BMI) from pre-war baseline.
+
+-   Proportion of staff with BMI in different WHO categories:
+    underweight \<18.5, normal 18.50 -- 24.99, overweight ≥ 25, obese ≥
+    30.
+
+-   Trends in the mean, median and inter-quartile range weight, BMI and
+    percent weight change, by date.
+
+-   Modelled percent change in individual weight, based on an additive
+    growth model.
+
+Visualisations are available for the entire group of staff being
+monitored, but also according to the following stratifications: (i) by
+organisation, (ii) by sex, (iii) by age group (\<30yo, 30-44yo, 45+yo),
+(iv) by governorate of current residence, (v) by staff role (any
+categories available), (vi) by number of children \<10years old the
+staff member is responsible for feeding (0, 1, 2, ≥ 3).
+
+All visualisations are automatically updated on a **publicly available
+website**.
+
+## Confidentiality provisions
+
+The following confidentiality provisions are built into the system:
+
+-   Data are uploaded onto a **secure server** that is compliant with UK
+    Data Protection legislation and is being used for other sensitive
+    studies, including storage of non-anonymised data;
+
+-   The **unique ID** specified by each participant, whichever option
+    they choose, is **encrypted** at source, meaning that the variable
+    as uploaded will not be either the Palestinian ID or the
+    initials-date of birth composite ID, but rather an encrypted code
+    that researchers receiving the dataset will not be able to decrypt;
+
+-   As no names or other uniquely identifiable variables are requested,
+    data are therefore entirely **anonymised**;
+
+-   The public website enables members of the public to download
+    graphs/tables but does not enable any access to the original source
+    data.
+
+## Ethics
+
+The system may be considered part of routine monitoring for the purpose
+of occupational health and humanitarian advocacy: as such, we believe it
+is **exempt from institutional ethics review**. However, the LSHTM has
+applied for ethics approval so as to cover the likely eventuality that
+data from the system are subjected to additional statistical analyses
+and submitted for scientific publication. Once this approval is granted,
+the LSHTM can provide details of it to participating organisations that
+also wish to apply for internal ethics approvals.
+
+# Procedures
+
+## Before system launch
+
+The following need to be in place:
+
+-   a calibrated **adult weight scale** set to kilograms in a visible,
+    relatively secluded location (e.g. tea room, bathroom) within each
+    office or building to which staff typically report at least once a
+    day. It is recommended where possible that separate scales for women
+    and men be made available, with a chair or stool for people to place
+    any bags and take off or put on shoes.
+
+-   a designated staff member in each of the above locations, trained to
+    calibrate the scale (if not electronic).
+
+-   one or more **designated member(s) of staff** who can answer
+    questions by staff on the system, including data protection aspects.
+
+## Procedures for system launch
+
+When the system is launched, the following procedures should be
+followed:
+
+-   all staff should be **informed about the system** through suitable
+    means (e.g. at morning briefings; through email, Whatsapp groups
+    etc.); this information should be reiterated at least twice over the
+    subsequent week; the links to the two ODK data collection screens
+    (consent + baseline questionnaire; ongoing weight observations)
+    should be shared at this stage.
+
+-   **key information** to emphasise to staff (see also Information
+    Sheet below) includes the following:
+
+    -   this initiative is meant to give a voice to the lived experience
+        of staff who are facing severe food insecurity, and make this
+        information available publicly for advocacy purposes.
+
+    -   the data are not collected for the purpose of food aid
+        registration: there is no immediate direct benefit to staff
+        participating.
+
+    -   taking part in data collection is completely up to each staff
+        member; there will be no monitoring of who is providing data or
+        not, and not providing data will not change anything for staff.
+
+    -   staff can enter data on their mobile, their computer, or even
+        someone else's mobile/computer; they can use a different device
+        on any given day; they just need the same URLs; the first time
+        they use either the first or second URL, they will need to be
+        online; thereafter, they can also be offline.
+
+    -   data entry should only take a few seconds; it would be great if
+        staff enter their weight every day, but as often as possible
+        would be good too. As soon as the device has an internet
+        connection, the data will be automatically uploaded. Therefore,
+        staff should take their weight and make sure to enter the
+        information straight away, rather than trying to remember the
+        number for later.
+
+        -   Before taking their weight, **staff must take their shoes
+            off** and remove any heavy items (bags, coats) they may be
+            holding or wearing, consistent with privacy and cultural
+            preferences.
+
+    -   all the information will be anonymised and encrypted at the
+        point of data entry, so that it will not be possible for anyone
+        to identify staff from the data they provide.
+
+    -   we will generate analyses from everyone's data and publish them
+        automatically online, but also share these with the staff, so
+        that you can also monitoring the evolution of the situation.
+
+    -   weight scales have been provided at each workplace \[specify
+        where / who can direct staff at each workplace\]. If you have
+        any questions about the system, please contact \[specify whom\].
+
+## Procedures after system launch
+
+After the system is launched:
+
+-   check regularly (at least once daily) that the **weight balances are
+    functional** and (if manual) well-calibrated.
+
+-   **remind staff** once a week to enter their data and encourage any
+    new employees to join the system.
+
+-   make sure that, for those who don't have internet access, at least
+    some of the key graphs showing trends are printed or otherwise
+    shared. Make some time for **feeding back information to staff**.
+
+-   **any staff who leave Gaza** (e.g. for annual leave in the case of
+    expatriates) should stop entering weight information until they
+    return to Gaza.
+
+-   if there are **any concerns from staff** or other problems with the
+    system, please email <Zeina.Jamaluddine@lshtm.ac.uk> cc
+    <Francesco.Checchi@lshtm.ac.uk> in English or Arabic.
+
+#  Appendix: Information sheet and online consent statement
+
+## Participant informant sheet organisation-generic: to modify for each organisation
+
+**Version:** 31 July 2025
+
+**Title of the project:** Monitoring the nutritional status of
+humanitarian workers in Gaza
+
+**Introduction**
+
+You are invited to take part in a project to monitor the nutritional
+situation of humanitarian staff in Gaza. For the purpose of this
+project, the definition of "staff" includes expatriates, national staff,
+consultants, casual (e.g. daily) workers and others. Participation is
+entirely voluntary. Please review this information carefully. Feel free
+to ask anything that is unclear, talk to others if you wish, and take
+your time to decide.
+
+**Who is organising and funding this project?**
+
+The project is implemented by your organisation with the support of the
+London School of Hygiene and Tropical Medicine (LSHTM), a university in
+the United Kingdom. There is no specific funding source for this study.
+
+**What is the purpose of this project?**
+
+This project aims to monitor the nutritional status of the
+organisation's staff currently working in Gaza by tracking their weight.
+
+**Why have you been asked to take part?**
+
+You are being invited to take part in this project because you are
+currently working for the organisation in Gaza in some capacity.
+
+**Do you have to take part?**
+
+No. Participation is entirely voluntary and will not affect your
+employment or your rights as a staff member. To take part, you need to
+actively opt in. Your employer will not know whether you opted in or
+opted out.
+
+**What will happen to me if I take part?**
+
+If you agree to participate, you will be asked to complete a very short
+questionnaire with basic information on yourself. You will then be asked
+to log your weight on a daily basis, or as often as you can. Only
+electronic data will be collected. Data can be entered via phone or
+computer, even when you are offline. Although daily entries are not
+required, they are recommended to help track changes over time.
+Recording and entering your weight should take about a minute.
+
+**What are the possible benefits of taking part?**
+
+There are no direct benefits to you from taking part in this project.
+However, the findings are likely to be used by your organisation and
+others to take decisions on nutrition and food security strategies, and
+to advocate for improved access to humanitarian assistance across Gaza.
+
+**What are the possible risks and disadvantages?**
+
+We do not expect you to experience any risks or disadvantages from
+participating in this project.
+
+**What will happen with your data?**
+
+Once you submit data, these will be uploaded to the internet as soon as
+the device has an internet connection. LSHTM researchers will analyse
+the data and produce graphs and tables to describe the evolution of the
+nutritional situation of the organisation's staff. Each time new data
+are uploaded, the graphs and tables will be updated on a public online
+website, which you can also access. This website will only show
+group-level summaries, for example averages by job role, sex, age, or
+area of residence. It will not show individual data or allow individual
+data to be downloaded from the website.
+
+The data you provide might also be used by your organisation and others
+to support decision-making around nutrition, food assistance, and
+humanitarian response. Researchers may also analyse and publish the
+anonymised data to better understand the nutritional situation in Gaza,
+including by estimating how much food was available to the population.
+These findings may be published in reports or scientific articles.
+
+**Confidentiality**
+
+The system only generates completely anonymised data, meaning it will
+not be possible from the dataset to identify your records or identity.
+You will need to create an ID when you first log into the system, but
+this ID will be encrypted before it is uploaded. Please keep a record of
+your ID, as you will need it each time you log your weight. Data will be
+stored on a secure cloud server at the LSHTM, which only designated
+LSHTM researchers have access to. No identifying information will ever
+be used in publications or shared outside the research team.
+
+**Can I change my mind about taking part?**
+
+Yes: if you do not wish to continue providing information to the system,
+you can simply stop entering data without any repercussions. If you want
+your data to be removed from the database, please get in touch with your
+designated contact person in the organisation, who will guide you on how
+to do this.
+
+**How will we use information about you after the project ends?**
+
+The fully anonymised data may be made available online subsequent to
+your organisation's approval and will be stored on the LSHTM server for
+up to 10 years, then deleted.
+
+**Who should I contact for further information?**
+
+Please feel free to contact the focal points for this project within
+your organisation, which someone will have communicated to you. If you
+wish to complain about this project or are unhappy with any aspect of
+it, please get in touch with the relevant contact person within your
+organisation who can receive staff complaints.
+
+## Consent statements
+
+  ----------------------------------------------------------------------------
+  **Statement**                                                   **Yes/No**
+  --------------------------------------------------------------- ------------
+  I have read the information sheet dated 31^st^ July 2025 for    
+  this project and I have or can access a copy of it if needed.   
+
+  I understand that my consent is voluntary and that I am free to 
+  withdraw this consent at any time without giving any reason and 
+  without my job or legal rights being affected.                  
+
+  I understand that results from the project may be published in  
+  scientific journals or reports, without the use of any          
+  information that could identify me.                             
+
+  I agree to take part in this project by providing data on       
+  myself.                                                         
+  ----------------------------------------------------------------------------
+
+**[استمارة المعلومات وبيان الموافقة الإلكترونية]{dir="rtl"}**
+
+## **[معلومات المشارك]{dir="rtl"}**
+
+**2025 [يوليو]{dir="rtl"} 31 [نسخة]{dir="rtl"}**
+
+**[عنوان المشروع: متابعة الحالة الغذائية لعمّال الإغاثة الإنسانية في قطاع
+غزة]{dir="rtl"}**
+
+**[المقدمة]{dir="rtl"}**\
+[تمت دعوتك للمشاركة في مشروع لمتابعة الوضع الغذائي لعمّال الإغاثة
+الإنسانية في قطاع غزة. يشمل تعريف عمّال الإغاثة الإنسانية في هذا المشروع
+\"الموظفين والموظفات\" الأجانب، الموظفين والموظفات الفلسطينيين ،
+المستشارين والمستشارات، العمّال المؤقتين (مثل العمّال اليوميين) وآخرين ممن
+يشاركون في الاستجابة الإنسانية. إن المشاركة في هذا المشروع طوعية
+بالكامل. يرجى منك قراءة هذه المعلومات بعناية. لا تتردد/ي في طرح أي أسئلة
+عن النقاط غير الواضحة، كما يمكنك مناقشة قرار المشاركة مع من حولك إذا
+أردت، لذا نطلب منك أخذ الوقت الكافي في اتخاذ القرار.]{dir="rtl"}
+
+**[من يقوم بتنظيم وتمويل هذه الدراسة؟]{dir="rtl"}**\
+[يتم تنفيذ المشروع من قبل]{dir="rtl"} [المنظمة بدعم من كلية لندن للصحة
+العامة والطب الاستوائي، وهي جامعة في المملكة المتحدة. لا يوجد مصدر تمويل
+محدد لهذه الدراسة]{dir="rtl"}.
+
+**[ما هو هدف هذه الدراسة؟]{dir="rtl"}**\
+[تهدف هذه الدراسة إلى متابعة الحالة الغذائية لموظفي وموظفات المنظمة
+العاملين حالياً ي قطاع غزة من خلال تتبع أوزانهم في ظل استمرار الحظر على
+دخول المواد الأساسية والمساعدات الإنسانية إلى القطاع.]{dir="rtl"}
+
+**[لماذا تمّت دعوتي للمشاركة؟]{dir="rtl"}**\
+[تمّت دعوتك للمشاركة في هذا المشروع لأنك تعمل]{dir="rtl"}/[ين حالياً مع
+المنظمة في قطاع غزة بأي صفة كانت]{dir="rtl"}.
+
+**[هل تجب عليّ المشاركة؟]{dir="rtl"}**\
+[لا، نؤكد أن المشاركة طوعية بالكامل ولن تؤثر على وظيفتك أو حقوقك كموظف/ة
+. كما أن مدراءك في المنظمة لن يعرفوا ما إذا كنت قد وافقت أو رفضت
+المشاركة]{dir="rtl"}. [في حال قررت المشاركة في المشروع نطلب أن تستمرّ
+بالمشاركة بنشاط.]{dir="rtl"}
+
+**[ماذا سيحدث لي إذا قررت المشاركة؟]{dir="rtl"}**
+
+[إذا وافقت على المشاركة، سيُطلب منك تعبئة استبيان قصير يحتوي على معلومات
+أساسية عنك. بعد ذلك، سيُطلب منك تسجيل وزنك يومياً أو حسبما تستطيع. سيتم
+جمع البيانات إلكترونياً فقط. يمكن إدخال البيانات عبر الهاتف أو الكمبيوتر،
+حتى إذا كنت غير متصل بالإنترنت. على الرغم من أن إدخال البيانات يوميًا ليس
+إلزامياً، إلا أنه يُوصى به لمتابعة التغييرات على مر الوقت. سيستغرق تسجيل
+وإدخال وزنك حوالي دقيقة واحدة]{dir="rtl"}. []{dir="rtl"}
+
+**[ما هي الفوائد المحتملة من المشاركة؟]{dir="rtl"}**\
+[لا توجد فوائد مباشرة لك من المشاركة في هذا المشروع. لكن من المحتمل أن
+يتم استخدام النتائج من قبل المنظمة وآخرين لاتخاذ قرارات حول استراتيجيات
+التغذية والأمن الغذائي، وللدعوة إلى تحسين الوصول إلى المساعدات الإنسانية
+في قطاع غزة]{dir="rtl"}.
+
+**[ما هي المخاطر والسلبيات المحتملة؟]{dir="rtl"}**\
+[من غير المتوقع أن تواجه أي مخاطر أو سلبيات من المشاركة في هذا
+المشروع]{dir="rtl"}.
+
+**[ماذا سيحدث لبياناتي؟]{dir="rtl"}**\
+[بمجرد إدخال البيانات، سيتم تحميلها إلى الإنترنت حين يتصل الجهاز
+بالإنترنت. سيقوم ا فريق البحث في المنظمة بتحليل البيانات وإنتاج رسوم
+بيانية وجداول لوصف تطور الوضع الغذائي لموظفي وموظفات المنظمة. كلما تم
+تحميل بيانات جديدة، ستُحدَّث الرسوم البيانية والجداول على موقع إلكتروني عام
+يمكنك الوصول إليه أيضاً. سيعرض هذا الموقع ملخّصات على مستوى المجموعات
+المشاركة بالمشروع فقط، مثل المتوسطات حسب المنصب الوظيفي، الجنس، العمر،
+أو منطقة الإقامة. لن تظهر البيانات الفردية على هذا الموقع الالكتروني
+وبالتالي من غير الممكن تحميل البيانات الفردية من الموقع]{dir="rtl"}.\
+[كما يمكن استخدام البيانات من قبل منظمتك وجهات أخرى لدعم اتخاذ القرارات
+حول التغذية والمساعدات الغذائية والاستجابة الإنسانية. كما قد يقوم فريق
+البحث بتحليل البيانات مجهولة الهويّة ونشر النتائج لفهم أفضل للوضع الغذائي
+في قطاع غزة، بما في ذلك تقدير مقدار الطعام الذي كان متاحاً بشكل حقيقي
+للسكان. قد تُنشر هذه النتائج في تقارير أو مقالات علمية]{dir="rtl"}.
+
+**[الخصوصية والسرية]{dir="rtl"}**\
+[يوفر نظام البيانات بيانات مجهولة الهوية بالكامل، مما يعني أنه من غير
+الممكن تحديد سجلاتك أو هويتك من خلال مجموعة البيانات. ستحتاج إلى إنشاء
+معرّف عند تسجيل الدخول لأوّل مرة إلى النظام، ولكن سيتم تشفير هذا المعرف
+قبل تحميله. يرجى منك الاحتفاظ بسجل المعرّف الخاص بك، حيث ستحتاج إليه في
+كل مرة تقوم فيها بتسجيل وزنك. سيتم تخزين البيانات على خادم كلية لندن
+الآمن، والذي يمكن الوصول إليه من قبل الفريق البحثي. لن يتم استخدام أي
+معلومات تعريفية في المنشورات أو مشاركتها خارج فريق البحث]{dir="rtl"}.
+
+**[هل يمكنني تغيير رأيي بشأن المشاركة؟]{dir="rtl"}**\
+[نعم: إذا كنت]{dir="rtl"}/[ي لا ترغب]{dir="rtl"}/[ين في الاستمرار في
+تقديم المعلومات إلى نظام البيانات]{dir="rtl"} [، يمكنك ببساطة التوقف عن
+إدخال البيانات دون أي تبعات تذكر. إذا كنت ترغب/ين في حذف بياناتك
+بالكامل، يمكنك التواصل بالشخص المعني (انظر/ي أدناه) مع اسم المستخدم
+الخاص بك، وسيتم حذف بياناتك نهائيًا من النظام. هذا الأمر يعود لك بشكل
+كامل .]{dir="rtl"}.
+
+**[كيف سيتم استخدام المعلومات عني بعد انتهاء المشروع؟]{dir="rtl"}**\
+[قد تُتاح البيانات مجهولة الهوية بالكامل عبر الإنترنت بعد موافقة منظمتك،
+وسيتم تخزينها على خادم كلية لندن الآمن لمدة تصل إلى 10 سنوات، ثم يتم
+حذفها]{dir="rtl"}.
+
+**[كيف يمكنني الحصول على مزيد من المعلومات؟]{dir="rtl"}**
+
+[لا تتردد/ي في التواصل مع الشخص المسؤول عن تقديم التوضيح. إذا كنت ترغب
+في تقديم شكوى بشأن هذا المشروع أو في حال عدم رضاك عن أي جانب منه، يرجى
+التواصل مع الشخص المسؤول عن تقديم التوضيح]{dir="rtl"}
+
+**[بيان الموافقة]{dir="rtl"}**\
+[عنوان المشروع: متابعة الحالة الغذائية للعاملين في المجال الإنساني في
+غزة]{dir="rtl"}\
+[شكرًا لك على التفكير في المشاركة في هذا النظام لجمع البيانات. إذا كانت
+لديك أي أسئلة تتعلق بورقة المعلومات أو الشرح الذي تم تقديمه لك، يرجى
+الاتصال بالنقطة المعنية المدرجة في ورقة المعلومات وطرح أسئلتك قبل اتخاذ
+قرارك بشأن تقديم الموافقة]{dir="rtl"}.
+
+  --------------------------------------------------------------------------------------------
+  **[نعم/لا]{dir="rtl"}**   **[البيان]{dir="rtl"}**
+  ------------------------- ------------------------------------------------------------------
+                            [لقد قرأت ورقة المعلومات بتاريخ]{dir="rtl"} [31 يوليو 2025 لهذا
+                            المشروع ولدي أو يمكنني الوصول إلى نسخة منها إذا لزم
+                            الأمر]{dir="rtl"}.
+
+                            [أفهم أن موافقتي طوعية وأنني حر في سحب هذه الموافقة في أي وقت دون
+                            إعطاء سبب ودون التأثير على عملي أو حقوقي القانونية]{dir="rtl"}.
+
+                            [أفهم أن نتائج المشروع قد تُنشر في مجلات علمية أو تقارير دون
+                            استخدام أي معلومات قد تحدد هويتي]{dir="rtl"}.
+
+                            [أوافق على المشاركة في هذا المشروع من خلال تقديم البيانات عن
+                            نفسي]{dir="rtl"}.
+  --------------------------------------------------------------------------------------------
+
+# 
+
+## 

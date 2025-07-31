@@ -1,0 +1,39 @@
+---
+title: "About the project"
+toc: true
+---
+
+This study aims to monitor the nutritional status of SCI staff currently working in Gaza by tracking their weight. The aim of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering Gaza.
+
+Read more about the project in the [study protocol](./protocol).
+
+### Contributions
+
+The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. There is no specific funding source for this study.
+
+All participation is voluntary, with thanks to staff contributing their data and time.
+
+LSHTM project team led by: 
+
+- Francesco Checchi 
+- Zeina Jamaluddine
+
+Analysis support contributed by:
+
+- Kevin van Zandvoort
+- Ciara Judge
+- Clara Brigitta
+- Kath Sherratt
+- Ali Fahmi
+
+We welcome new contributions to this project.
+
+### Contact
+
+- Email Zeina Jamaluddine at [Zeina.Jamaluddine@lshtm.ac.uk](mailto:Zeina.Jamaluddine@lshtm.ac.uk), cc [Francesco.Checchi@lshtm.ac.uk](mailto:Francesco.Checchi@lshtm.ac.uk)
+- Get in touch on the [open forum](https://github.com/cmmid/gaza-response/discussions/new?category=general)
+- Spotted a bug? [Let us know](https://github.com/cmmid/gaza-response/issues/new).
+
+### Reuse
+
+You are welcome to freely reuse and distribute any material on this website. Please [let us know](https://github.com/cmmid/gaza-response/discussions/new?category=general).  

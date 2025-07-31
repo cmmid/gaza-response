@@ -1,0 +1,139 @@
+---
+title: ""
+format: dashboard
+execute: 
+  echo: false
+---
+
+```{r setup, include=FALSE}
+pacman::p_load(here, 
+               readr, dplyr,
+               bslib, bsicons, 
+               ggplot2)
+# Load data
+## Summary stats
+summary <- read_csv(here("data", "current_summary_stats.csv"))
+## Time series
+time_series <- read_csv(here("data", "time_series_table.csv"))
+## BMI data
+bmi <- read_csv(here("data", "bmicategory_proportions.csv"))
+
+# Source plotting scripts
+source(here("R", "plot-bmi.R"))
+
+# Set parameters
+params <- list(latest_date = max(time_series$Date),
+               participants = filter(bmi, 
+                                     date == max(date) &
+                                       Stratification=="Overall") |> 
+                 pull(n) |> sum(),
+               median_change = filter(summary, 
+                                      Stratification=="Overall" & 
+                                      Variable=="% Weight Change from Prewar Value") |> 
+                 pull(median) |> round(digits = 1),
+               strata = unique(bmi$Stratification))
+```
+
+# {.sidebar}
+
+::: {.callout-note}
+## Key data
+
+- Last update: `r params$latest_date`
+- `r params$participants` participants
+- Median `r params$median_change`kg change from pre-war weight
+:::
+
+### 
+
+This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. The hope of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering. 
+
+Participation is entirely voluntary. The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM). [Learn more](./protocol)
+
+# Weight change
+
+## Row
+
+### Column
+
+::: {.panel-tabset}
+```{r plot-absolute, results="asis"}
+for(i in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  
+  print(
+    plot_bmi(bmi, stratification = i, date = params$latest_date)
+  )
+  cat(' \n \n')
+}
+```
+:::
+
+### Column
+
+::: {.panel-tabset}
+```{r plot-trends, results="asis"}
+for(i in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  
+  print(
+    plot_bmi(bmi, stratification = i, date = params$latest_date)
+  )
+  cat(' \n \n')
+}
+```
+:::
+
+## Row {height=15%}
+Data notes:
+Change in self-reported weight from pre-war baseline.
+
+# Modelled % change 
+
+## Row
+
+::: {.panel-tabset}
+```{r plot-gam, results="asis"}
+for(i  in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  
+  print(
+    plot_bmi(bmi, stratification = i, date = params$latest_date)
+  )
+  cat(' \n \n')
+}
+```
+:::
+
+## Row {height=15%}
+Data notes:
+
+# BMI
+
+## Row
+
+::: {.panel-tabset}
+```{r plot-bmi, results="asis"}
+for(i in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  
+  print(
+    plot_bmi(bmi, stratification = i, date = params$latest_date)
+  )
+  cat(' \n \n')
+}
+```
+:::
+
+## Row {height=15%}
+Data notes:
+Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
+
+
+
+
+

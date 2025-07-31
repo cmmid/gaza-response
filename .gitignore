@@ -49,3 +49,9 @@ po/*~
 rsconnect/
 
 /.quarto/
+
+# Website files
+_site
+
+# Other
+*.DS_Store

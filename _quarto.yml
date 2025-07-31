@@ -7,9 +7,11 @@ website:
   title: "Gaza response: Monitoring the nutritional status of humanitarian workers"
   navbar:
     right:
-      - text: Home
+      - icon: house
+        text: Home
         href: index.qmd
-      - text: About
+      - icon: question-circle
+        text: About
         menu:
           - text: About the project
             href: about.qmd
@@ -17,14 +19,14 @@ website:
             href: protocol.qmd
           - text: Report an issue
             href: https://github.com/cmmid/gaza-response/issues/new
+      - icon: github
+        href:  https://github.com/cmmid/gaza-response
       - icon: translate
         menu:
           - text: English
             href: index.qmd
           - text: Arabic
             href: arabic.qmd
-      - icon: github
-        href:  https://github.com/cmmid/gaza-response
   body-footer: <script data-goatcounter="https://gaza-response.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 

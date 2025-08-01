@@ -36,7 +36,7 @@ params <- list(
   latest_date = max(data$time_series_table$Date),
   # N
   participants = data$bmicategory_proportions |> 
-    filter(date == max(date) & Stratification=="Overall") |> 
+    filter(Date == max(Date) & Stratification=="Overall") |> 
                  pull(n) |> sum(),
   # Overall median
   median_change = data$current_summary_stats |> 

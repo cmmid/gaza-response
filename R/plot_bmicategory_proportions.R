@@ -32,7 +32,7 @@ plot_bmicategory_proportions <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data <- data %>%
-    filter(Stratification == strata, date == max(date)) %>%
+    filter(Stratification == strata, Date == max(Date)) %>%
     mutate(category = factor(category, levels = c("Underweight", "Normal", "Overweight", "Obese")))
 
   # Generate plot

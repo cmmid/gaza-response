@@ -26,16 +26,21 @@ source(here("R", "plot_current_summary_stats.R"))
 source(here("R", "plot_time_series_statistics.R"))
 
 ## Set parameters
-params <- list(latest_date = max(time_series$Date),
-               participants = filter(bmi, 
-                                     date == max(date) &
-                                       Stratification=="Overall") |> 
+params <- list(
+  # Most recent date
+  latest_date = max(data$time_series_table$Date),
+  # N
+  participants = data$bmicategory_proportions |> 
+    filter(date == max(date) & Stratification=="Overall") |> 
                  pull(n) |> sum(),
-               median_change = filter(summary, 
-                                      Stratification=="Overall" & 
-                                      Variable=="% Weight Change from Prewar Value") |> 
-                 pull(median) |> round(digits = 1),
-               strata = unique(bmi$Stratification))
+  # Overall median
+  median_change = data$current_summary_stats |> 
+    filter(Stratification=="Overall" & 
+             Variable=="% Weight Change from Prewar Value") |> 
+    pull(median) |> round(digits = 1),
+  # Stratifications
+  strata = unique(data$bmicategory_proportions$Stratification)
+  )
 ```
 
 # {.sidebar}

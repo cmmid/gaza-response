@@ -10,50 +10,35 @@
 ### Preparatory steps
 #...............................................................................
 
-#...................................      
+#...................................
 ## Install or load required R packages
-if (!"pacman" %in% rownames(installed.packages())){install.packages("pacman")}
-
-# Install or load packages from CRAN
-pacman::p_load(
-  ggplot2,       # Visualise data
-  tidyverse)     # Tidyverse suite of packages
-
-#...................................      
-## Starting setup
-
-# Clean up from previous code / runs
-rm(list=ls(all=TRUE) )
-
-# Set working directory to where this file is stored
-dir_path <- paste(dirname(rstudioapi::getActiveDocumentContext()$path  )
-                  , "/", sep = "")
-setwd(dir_path)
-print( getwd() )
+# pacman::p_load(
+#   ggplot2,       # Visualise data
+#   tidyverse)     # Tidyverse suite of packages
 
 #...............................................................................
 ### Read in current summary statistics data
 #...............................................................................
 
-current_summary_stats_filename <- "current_summary_stats.csv"
-current_summary_stats <- read.csv(current_summary_stats_filename)
-  
+# current_summary_stats_filename <- "current_summary_stats.csv"
+# current_summary_stats <- read.csv(current_summary_stats_filename)
+
 #...............................................................................
 ### Plot
 #...............................................................................
 
 plot_current_summary_stats <- function(data, option = c("Overall", "Sex", "Age Group", "Governorate", "Role")){
-  
+
   # Filter data for the selected option
-  data <- data %>% 
+  data <- data %>%
     filter(Stratification == option)
-  
+
   # Generate plot
-  fig <- data %>% 
+  fig <- data %>%
     ggplot(aes(y = 0)) +
-    geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +   
-    geom_point(aes(x = median), color = "darkblue", size = 3) +                           
-    geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +  
+    geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
+    geom_point(aes(x = median), color = "darkblue", size = 3) +
+    geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +
     facet_grid(cols = vars(Variable), row = vars(Group), switch = "y", scales = "free", labeller = label_wrap_gen(width = 25)) +
     labs(x = "Value",
          caption = "Blue point = median; X = mean; blue line = IQR") +
@@ -63,7 +48,7 @@ plot_current_summary_stats <- function(data, option = c("Overall", "Sex", "Age G
           axis.text.y  = element_blank(),
           axis.ticks.y = element_blank(),
           axis.title.y = element_blank())
-  
+
   return(fig)
-  
+
 }

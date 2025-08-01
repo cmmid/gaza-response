@@ -1,12 +1,18 @@
 ---
 title: Dashboard
-format: dashboard
+format: 
+  dashboard:
+    scrolling: true
+  html:
+    page-layout: custom
 execute: 
   echo: false
 ---
 
+<!-- Setup, no output -->
+
 ```{r setup, include=FALSE}
-# Dashboard
+## Packages
 pacman::p_load(here, 
                readr, dplyr,
                bslib, bsicons, 
@@ -32,12 +38,15 @@ params <- list(latest_date = max(time_series$Date),
                                       Stratification=="Overall" & 
                                       Variable=="% Weight Change from Prewar Value") |> 
                  pull(median) |> round(digits = 1),
-               strata = unique(bmi$Stratification))
+               strata = unique(bmi$Stratification),
+               orgs = unique(bmi$organisation))
 ```
+
+<!-- Global sidebar -->
 
 # {.sidebar}
 
-::: {.callout-note}
+::: {.callout-tip}
 
 ## Latest data
 
@@ -50,9 +59,31 @@ As of **`r params$latest_date`**:
 
 ### 
 
-This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. The hope of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering. 
+This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. 
+The aim of this project is to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population by providing real-time information on the nutritional status of humanitarian staff in Gaza. 
 
-Participation is entirely voluntary. The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM). [Learn more](./protocol)
+::: {.callout-note collapse="true"}
+
+## Study information
+
+The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM).
+All participation is entirely voluntary.
+
+Staff from the following organisations are currently contributing data:
+
+```{r contributing-orgs, results='asis'}
+org_list <- paste0("\n- ", sort(params$org))
+cat(org_list)
+```
+
+Find out more:
+
+- [Study protocol](./protocol)
+- [Contributors and contact](./about)
+
+:::
+
+<!-- Dashboard page 1 -->
 
 # Weight change
 
@@ -60,9 +91,33 @@ Participation is entirely voluntary. The project is implemented by SCI with the 
 
 ### Column
 
-::: {.panel-tabset title = "Change in weight, kg"}
+::: {.card title="Change from pre-war baseline"}
 
-```{r plot-absolute, results="asis"}
+::: {.panel-tabset}
+
+```{r plot-baseline-weight, results="asis"}
+for(i in params$strata) {
+  cat(glue::glue("#### {i} \n\n"))
+  cat("\n \n")
+  
+  print(
+    plot_bmi(bmi, stratification = i, date = params$latest_date)
+  )
+  cat(' \n \n')
+}
+```
+
+:::
+
+:::
+
+### Column
+
+::: {.card title="Trend over time"}
+
+::: {.panel-tabset}
+
+```{r plot-trends-weight, results="asis"}
 for(i in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
@@ -75,22 +130,6 @@ for(i in params$strata) {
 ```
 
 :::
-
-### Column
-
-::: {.panel-tabset}
-
-```{r plot-trends, results="asis"}
-for(i in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
-  cat("\n \n")
-  
-  print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
-  )
-  cat(' \n \n')
-}
-```
 
 :::
 
@@ -102,39 +141,15 @@ Change in self-reported weight from pre-war baseline.
 
 :::
 
-# Modelled % change 
+<!-- Dashboard page 2 -->
+
+# BMI change
 
 ## Row
 
-::: {.panel-tabset title = "Modelled change in individual weight"}
+::: {.card title="BMI categories"}
 
-```{r plot-gam, results="asis"}
-for(i  in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
-  cat("\n \n")
-  
-  print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
-  )
-  cat(' \n \n')
-}
-```
-
-:::
-
-## Row
-
-::: {.card title="Notes"}
-
-Trends in changes in self-reported weight.
-
-:::
-
-# BMI
-
-## Row
-
-::: {.panel-tabset title = "BMI categories"}
+::: {.panel-tabset}
 
 ```{r plot-bmi, results="asis"}
 for(i in params$strata) {
@@ -150,7 +165,9 @@ for(i in params$strata) {
 
 :::
 
-## Row {.flow}
+:::
+
+## Row
 
 ::: {.card title="Notes"}
 
@@ -158,8 +175,32 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 
 :::
 
+<!-- Dashboard page 3 -->
 
+# Modelled % change 
 
+::: {.card title = "Modelled change in individual weight"}
 
+::: {.panel-tabset}
 
+```{r plot-gam, results="asis"}
+for(i  in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  
+  print(
+    plot_bmi(bmi, stratification = i, date = params$latest_date)
+  )
+  cat(' \n \n')
+}
+```
 
+:::
+
+::: {.callout-note collapse="true" title="Notes"}
+
+Modelled changes in self-reported weight.
+
+:::
+
+:::

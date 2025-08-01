@@ -26,6 +26,12 @@ website:
             href: arabic.qmd
       - icon: github
         href:  https://github.com/cmmid/gaza-response
+  comments:
+    giscus:
+      repo: cmmid/gaza-response
+      loading: lazy
+      input-position: top
+      mapping: 11
 
   body-footer: <script data-goatcounter="https://gaza-response.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>

@@ -20,7 +20,10 @@ data <- map(data,
               mutate(Group = ifelse(is.na(Group), "Overall", Group)))
        
 ## Source plotting scripts
-source(here("R", "plot-bmi.R"))
+source(here("R", "plot_bmicategory_proportions.R"))
+source(here("R", "plot_bmicategory_proportions_time_series.R"))
+source(here("R", "plot_current_summary_stats.R"))
+source(here("R", "plot_time_series_statistics.R"))
 
 ## Set parameters
 params <- list(latest_date = max(time_series$Date),
@@ -67,7 +70,8 @@ for(i in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_current_summary_stats(data$current_summary_stats, 
+                               strata = i)
   )
   cat(' \n \n')
 }
@@ -85,7 +89,7 @@ for(i in params$strata) {
   cat("\n \n")
   
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_time_series_statistics(data_time_series, strata = i)
   )
   cat(' \n \n')
 }
@@ -108,15 +112,15 @@ Change in self-reported weight from pre-war baseline.
 ::: {.panel-tabset title = "Modelled change in individual weight"}
 
 ```{r plot-gam, results="asis"}
-for(i  in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
-  cat("\n \n")
-  
-  print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
-  )
-  cat(' \n \n')
-}
+# for(i  in params$strata) {
+#   cat(glue::glue("### {i} \n\n"))
+#   cat("\n \n")
+#   
+#   print(
+#     plot()
+#   )
+#   cat(' \n \n')
+# }
 ```
 
 :::

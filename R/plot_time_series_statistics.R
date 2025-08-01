@@ -27,11 +27,11 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_time_series_statistics <- function(data, option = c("Overall", "Sex", "Age Group", "Governorate", "Role")){
+plot_time_series_statistics <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data <- data %>%
-    filter(Stratification == option) %>%
+    filter(Stratification == strata) %>%
     mutate(Variable = factor(Variable,
                              levels = c("% Weight Change from Prewar Value",
                                         "% Weight Change from First Measurement",

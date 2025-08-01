@@ -27,11 +27,11 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_current_summary_stats <- function(data, option = c("Overall", "Sex", "Age Group", "Governorate", "Role")){
+plot_current_summary_stats <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data <- data %>%
-    filter(Stratification == option)
+    filter(Stratification == strata)
 
   # Generate plot
   fig <- data %>%

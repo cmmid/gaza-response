@@ -28,11 +28,11 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions_time_series <- function(data, option = c("Overall", "Sex", "Age Group", "Governorate", "Role")){
+plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data <- data %>%
-    filter(Stratification == option) %>%
+    filter(Stratification == strata) %>%
     mutate(category = factor(category, levels = c("Underweight", "Normal", "Overweight", "Obese")))
 
   # Generate plot

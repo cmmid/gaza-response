@@ -10,47 +10,35 @@
 ### Preparatory steps
 #...............................................................................
 
-#...................................      
-## Install or load required R packages
-if (!"pacman" %in% rownames(installed.packages())){install.packages("pacman")}
-
+#...................................
 # Install or load packages from CRAN
 pacman::p_load(
   ggplot2,       # Visualise data
   tidyverse)     # Tidyverse suite of packages
 
-#...................................      
-## Starting setup
-
-# Clean up from previous code / runs
-rm(list=ls(all=TRUE) )
-
-# Set working directory to where this file is stored
-dir_path <- paste(dirname(rstudioapi::getActiveDocumentContext()$path  )
-                  , "/", sep = "")
-setwd(dir_path)
-print( getwd() )
-
 #...............................................................................
 ### Read in current summary statistics data
 #...............................................................................
 
-time_series_stats_filename <- "time_series_table.csv"
-time_series_stats <- read.csv(time_series_stats_filename)
+# time_series_stats_filename <- "data/time_series_table.csv"
+# time_series_stats <- read.csv(time_series_stats_filename)
 
 #...............................................................................
 ### Plot
 #...............................................................................
 
-plot_time_series_statistics <- function(data, option = c("Overall", "Sex", "Age Group", "Governorate", "Role")){
-  
+plot_time_series_statistics <- function(data, strata = "Overall"){
+
   # Filter data for the selected option
-  data <- data %>% 
-    filter(Stratification == option) %>% 
-    mutate(Variable = factor(Variable, levels = c("% Weight Change from Prewar Value", "% Weight Change from First Measurement", "Weight (kg)", "BMI")))
-  
+  data <- data %>%
+    filter(Stratification == strata) %>%
+    mutate(Variable = factor(Variable,
+                             levels = c("% Weight Change from Prewar Value",
+                                        "% Weight Change from First Measurement",
+                                        "Weight (kg)", "BMI")))
+
   # Generate plot
-  fig <- data %>% 
+  fig <- data %>%
     ggplot(aes(x = Date)) +
     geom_line(aes(y = mean, group = Variable, colour = "Mean"), linetype = "solid") +
     geom_line(aes(y = median, group = Variable, colour = "Median"), linetype = "dashed") +
@@ -61,10 +49,10 @@ plot_time_series_statistics <- function(data, option = c("Overall", "Sex", "Age 
     labs(x = "Date", y = "Value") +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-          legend.title     = element_blank(),        
-          legend.spacing.y = unit(2, "pt"),           
+          legend.title     = element_blank(),
+          legend.spacing.y = unit(2, "pt"),
           legend.margin    = margin(2, 2, 2, 2))
-  
+
   return(fig)
-  
+
 }

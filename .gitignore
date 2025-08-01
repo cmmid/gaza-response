@@ -56,3 +56,8 @@ _site
 # Other
 *.DS_Store
 .DS_Store
+
+index_files
+index_files/*
+site_libs
+site_libs/*

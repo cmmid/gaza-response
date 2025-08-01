@@ -1,43 +1,58 @@
 ---
 title: Dashboard
-format: dashboard
+format: 
+  dashboard:
+    scrolling: true
+  html:
+    page-layout: custom
 execute: 
   echo: false
 ---
 
+<!-- Setup, no output -->
+
 ```{r setup, include=FALSE}
-# Dashboard
+## Packages
 pacman::p_load(here, 
-               readr, dplyr,
+               purrr, readr, dplyr,
                bslib, bsicons, 
                ggplot2)
-## Load data
-### Summary stats
-summary <- read_csv(here("data", "current_summary_stats.csv"))
-### Time series
-time_series <- read_csv(here("data", "time_series_table.csv"))
-### BMI data
-bmi <- read_csv(here("data", "bmicategory_proportions.csv"))
+## Load all csv data
+data <- list.files(here("data"), pattern = "*.csv")
+names(data) <- gsub("\\.csv", "", data)
+data <- map(data,
+            ~ read_csv(here("data", .x)) |> 
+              mutate(Group = ifelse(is.na(Group), "Overall", Group)))
 
 ## Source plotting scripts
-source(here("R", "plot-bmi.R"))
+source(here("R", "plot_bmicategory_proportions.R"))
+source(here("R", "plot_bmicategory_proportions_time_series.R"))
+source(here("R", "plot_current_summary_stats.R"))
+source(here("R", "plot_time_series_statistics.R"))
 
 ## Set parameters
-params <- list(latest_date = max(time_series$Date),
-               participants = filter(bmi, 
-                                     date == max(date) &
-                                       Stratification=="Overall") |> 
+params <- list(
+  # Most recent date
+  latest_date = max(data$time_series_table$Date),
+  # N
+  participants = data$bmicategory_proportions |> 
+    filter(Date == max(Date) & Stratification=="Overall") |> 
                  pull(n) |> sum(),
-               median_change = filter(summary, 
-                                      Stratification=="Overall" & 
-                                      Variable=="% Weight Change from Prewar Value") |> 
-                 pull(median) |> round(digits = 1),
-               strata = unique(bmi$Stratification))
+  # Overall median
+  median_change = data$current_summary_stats |> 
+    filter(Stratification=="Overall" & 
+             Variable=="% Weight Change from Prewar Value") |> 
+    pull(median) |> round(digits = 1),
+  # Stratifications
+  strata = unique(data$bmicategory_proportions$Stratification)
+  )
 ```
+
+<!-- Global sidebar -->
 
 # {.sidebar}
 
-::: {.callout-note}
+::: {.callout-tip}
 
 ## Latest data
 
@@ -50,9 +65,31 @@ As of **`r params$latest_date`**:
 
 ### 
 
-This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. The hope of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering. 
+This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. 
+The aim of this project is to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population by providing real-time information on the nutritional status of humanitarian staff in Gaza. 
 
-Participation is entirely voluntary. The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM). [Learn more](./protocol)
+::: {.callout-note collapse="true"}
+
+## Study information
+
+The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM).
+All participation is entirely voluntary.
+
+Staff from the following organisations are currently contributing data:
+
+```{r contributing-orgs, results='asis'}
+# org_list <- paste0("\n- ", sort(params$org))
+# cat(org_list)
+```
+
+Find out more:
+
+- [Study protocol](./protocol)
+- [Contributors and contact](./about)
+
+:::
+
+<!-- Dashboard page 1 -->
 
 # Weight change
 
@@ -60,15 +97,19 @@ Participation is entirely voluntary. The project is implemented by SCI with the 
 
 ### Column
 
-::: {.panel-tabset title = "Change in weight, kg"}
+::: {.card title="Change from pre-war baseline"}
 
-```{r plot-absolute, results="asis"}
+::: {.panel-tabset}
+
+```{r plot-baseline-weight, results="asis"}
 for(i in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
+  cat(glue::glue("#### {i} \n\n"))
   cat("\n \n")
-  
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_current_summary_stats(
+      data = data$current_summary_stats,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
@@ -76,21 +117,29 @@ for(i in params$strata) {
 
 :::
 
+:::
+
 ### Column
+
+::: {.card title="Trend over time"}
 
 ::: {.panel-tabset}
 
-```{r plot-trends, results="asis"}
+```{r plot-trends-weight, results="asis"}
 for(i in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
-  
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_time_series_statistics(
+      data = data$time_series_table,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
 ```
+
+:::
 
 :::
 
@@ -102,19 +151,28 @@ Change in self-reported weight from pre-war baseline.
 
 :::
 
-# Modelled % change 
+<!-- Dashboard page 2 -->
+
+# BMI change
 
 ## Row
 
-::: {.panel-tabset title = "Modelled change in individual weight"}
+### Column
 
-```{r plot-gam, results="asis"}
-for(i  in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
+::: {.card title="Change from pre-war baseline"}
+
+::: {.panel-tabset}
+
+```{r plot-baseline-bmi, results="asis"}
+for(i in params$strata) {
+  cat(glue::glue("#### {i} \n\n"))
   cat("\n \n")
   
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_bmicategory_proportions(
+      data = data$bmicategory_proportions,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
@@ -122,27 +180,23 @@ for(i  in params$strata) {
 
 :::
 
-## Row
-
-::: {.card title="Notes"}
-
-Trends in changes in self-reported weight.
-
 :::
 
-# BMI
+### Column
 
-## Row
+::: {.card title="Trend over time"}
 
-::: {.panel-tabset title = "BMI categories"}
+::: {.panel-tabset}
 
-```{r plot-bmi, results="asis"}
+```{r plot-trends-bmi, results="asis"}
 for(i in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
-  
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_bmicategory_proportions_time_series(
+      data = data$bmicategory_proportions,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
@@ -150,7 +204,9 @@ for(i in params$strata) {
 
 :::
 
-## Row {.flow}
+:::
+
+## Row {height=20%}
 
 ::: {.card title="Notes"}
 
@@ -158,8 +214,31 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 
 :::
 
+<!-- Dashboard page 3 -->
 
+# Modelled % change 
 
+::: {.card title = "Modelled change in individual weight"}
 
+::: {.panel-tabset}
 
+```{r plot-gam, results="asis"}
+for(i  in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  print(
+    ""
+  )
+  cat(' \n \n')
+}
+```
 
+:::
+
+::: {.card title="Notes"}
+
+Modelled changes in self-reported weight.
+
+:::
+
+:::

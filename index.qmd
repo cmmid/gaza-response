@@ -8,17 +8,17 @@ execute:
 ```{r setup, include=FALSE}
 # Dashboard
 pacman::p_load(here, 
-               readr, dplyr,
+               purrr, readr, dplyr,
                bslib, bsicons, 
                ggplot2)
-## Load data
-### Summary stats
-summary <- read_csv(here("data", "current_summary_stats.csv"))
-### Time series
-time_series <- read_csv(here("data", "time_series_table.csv"))
-### BMI data
-bmi <- read_csv(here("data", "bmicategory_proportions.csv"))
 
+## Load all csv data
+data <- list.files(here("data"), pattern = "*.csv")
+names(data) <- gsub("\\.csv", "", data)
+data <- map(data,
+            ~ read_csv(here("data", .x)) |> 
+              mutate(Group = ifelse(is.na(Group), "Overall", Group)))
+       
 ## Source plotting scripts
 source(here("R", "plot-bmi.R"))
 
@@ -66,7 +66,6 @@ Participation is entirely voluntary. The project is implemented by SCI with the 
 for(i in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
-  
   print(
     plot_bmi(bmi, stratification = i, date = params$latest_date)
   )

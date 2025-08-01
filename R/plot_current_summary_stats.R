@@ -12,9 +12,9 @@
 
 #...................................
 ## Install or load required R packages
-# pacman::p_load(
-#   ggplot2,       # Visualise data
-#   tidyverse)     # Tidyverse suite of packages
+pacman::p_load(
+  ggplot2,       # Visualise data
+  tidyverse)     # Tidyverse suite of packages
 
 #...............................................................................
 ### Read in current summary statistics data

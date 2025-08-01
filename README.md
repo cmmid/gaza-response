@@ -2,7 +2,7 @@
 
 ## Analysis
 
-For details of data collection, see the [Study protocol](protocol.qmd)
+- For details of data collection, see the [Study protocol](protocol.qmd)
 
 ## Dashboard
 

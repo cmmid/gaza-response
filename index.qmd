@@ -14,32 +14,38 @@ execute:
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
-               readr, dplyr,
+               purrr, readr, dplyr,
                bslib, bsicons, 
                ggplot2)
-## Load data
-### Summary stats
-summary <- read_csv(here("data", "current_summary_stats.csv"))
-### Time series
-time_series <- read_csv(here("data", "time_series_table.csv"))
-### BMI data
-bmi <- read_csv(here("data", "bmicategory_proportions.csv"))
+## Load all csv data
+data <- list.files(here("data"), pattern = "*.csv")
+names(data) <- gsub("\\.csv", "", data)
+data <- map(data,
+            ~ read_csv(here("data", .x)) |> 
+              mutate(Group = ifelse(is.na(Group), "Overall", Group)))
 
 ## Source plotting scripts
-source(here("R", "plot-bmi.R"))
+source(here("R", "plot_bmicategory_proportions.R"))
+source(here("R", "plot_bmicategory_proportions_time_series.R"))
+source(here("R", "plot_current_summary_stats.R"))
+source(here("R", "plot_time_series_statistics.R"))
 
 ## Set parameters
-params <- list(latest_date = max(time_series$Date),
-               participants = filter(bmi, 
-                                     date == max(date) &
-                                       Stratification=="Overall") |> 
+params <- list(
+  # Most recent date
+  latest_date = max(data$time_series_table$Date),
+  # N
+  participants = data$bmicategory_proportions |> 
+    filter(date == max(date) & Stratification=="Overall") |> 
                  pull(n) |> sum(),
-               median_change = filter(summary, 
-                                      Stratification=="Overall" & 
-                                      Variable=="% Weight Change from Prewar Value") |> 
-                 pull(median) |> round(digits = 1),
-               strata = unique(bmi$Stratification),
-               orgs = unique(bmi$organisation))
+  # Overall median
+  median_change = data$current_summary_stats |> 
+    filter(Stratification=="Overall" & 
+             Variable=="% Weight Change from Prewar Value") |> 
+    pull(median) |> round(digits = 1),
+  # Stratifications
+  strata = unique(data$bmicategory_proportions$Stratification)
+  )
 ```
 
 <!-- Global sidebar -->
@@ -72,8 +78,8 @@ All participation is entirely voluntary.
 Staff from the following organisations are currently contributing data:
 
 ```{r contributing-orgs, results='asis'}
-org_list <- paste0("\n- ", sort(params$org))
-cat(org_list)
+# org_list <- paste0("\n- ", sort(params$org))
+# cat(org_list)
 ```
 
 Find out more:
@@ -99,9 +105,11 @@ Find out more:
 for(i in params$strata) {
   cat(glue::glue("#### {i} \n\n"))
   cat("\n \n")
-  
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_current_summary_stats(
+      data = data$current_summary_stats,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
@@ -121,9 +129,11 @@ for(i in params$strata) {
 for(i in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
-  
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_time_series_statistics(
+      data = data$time_series_table,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
@@ -147,17 +157,22 @@ Change in self-reported weight from pre-war baseline.
 
 ## Row
 
-::: {.card title="BMI categories"}
+### Column
+
+::: {.card title="Change from pre-war baseline"}
 
 ::: {.panel-tabset}
 
-```{r plot-bmi, results="asis"}
+```{r plot-baseline-bmi, results="asis"}
 for(i in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
+  cat(glue::glue("#### {i} \n\n"))
   cat("\n \n")
   
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    plot_bmicategory_proportions(
+      data = data$bmicategory_proportions,
+      strata = i
+    )
   )
   cat(' \n \n')
 }
@@ -167,7 +182,31 @@ for(i in params$strata) {
 
 :::
 
-## Row
+### Column
+
+::: {.card title="Trend over time"}
+
+::: {.panel-tabset}
+
+```{r plot-trends-bmi, results="asis"}
+for(i in params$strata) {
+  cat(glue::glue("### {i} \n\n"))
+  cat("\n \n")
+  print(
+    plot_bmicategory_proportions_time_series(
+      data = data$bmicategory_proportions,
+      strata = i
+    )
+  )
+  cat(' \n \n')
+}
+```
+
+:::
+
+:::
+
+## Row {height=20%}
 
 ::: {.card title="Notes"}
 
@@ -187,9 +226,8 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 for(i  in params$strata) {
   cat(glue::glue("### {i} \n\n"))
   cat("\n \n")
-  
   print(
-    plot_bmi(bmi, stratification = i, date = params$latest_date)
+    ""
   )
   cat(' \n \n')
 }
@@ -197,7 +235,7 @@ for(i  in params$strata) {
 
 :::
 
-::: {.callout-note collapse="true" title="Notes"}
+::: {.card title="Notes"}
 
 Modelled changes in self-reported weight.
 

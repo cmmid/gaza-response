@@ -7,7 +7,6 @@ format:
       text: |
             <script src="lshtm.js"></script>
     css: "styles.css"
-  #html:
   #  page-layout: custom
 execute: 
   echo: false

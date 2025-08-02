@@ -1,3 +1,4 @@
+//filter in sidabar
 window.onload = function() {
   let widgets = document.querySelectorAll(".lshtm_widget");
     

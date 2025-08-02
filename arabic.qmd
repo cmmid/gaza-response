@@ -2,3 +2,5 @@
 title: "Coming soon"
 css: "styles.css"
 ---
+
+<!--TODO: Arabic translation and option (right to left menu)-->

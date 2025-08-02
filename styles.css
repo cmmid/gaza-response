@@ -27,7 +27,7 @@ header nav.navbar {
     background-color: #00BF6F;
 }
 header nav span {
-    color: white;
+    color: #EEEEEE;
 }
 .quarto-dashboard #quarto-dashboard-header .navbar .navbar-nav .active > span {
     color: #000000;

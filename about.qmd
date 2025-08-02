@@ -10,7 +10,7 @@ Read more about the project in the [study protocol](./protocol).
 
 ### Contributions
 
-The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
+The project is implemented by Save the Children (SCI) with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
 There is no specific funding source for this study.
 
 All participation is voluntary, with thanks to staff contributing their data and time.

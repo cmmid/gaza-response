@@ -1,1 +1,84 @@
 /* css styles */
+div#quarto-content {
+  /*height: auto !important;*/
+  /*min-height: 100vh;*/
+}
+/* Remove vertical margin/padding between rows */
+
+.lshtm_widget_content {
+  display: none;
+}
+.lshtm_widget_content.visible {
+  display: block !important;
+}
+.lshtm_widget_filter p {
+  font-size: 1.1em;
+  margin-bottom: 2px;
+}
+.lshtm_widget_filter legend {
+    font-size: 1em;
+    font-style: italic;
+    margin-bottom: 2px;
+}
+.lshtm_widget_filter label {
+    margin-left: 10px;
+}
+header nav.navbar {
+    background-color: #0D5257;
+}
+.quarto-dashboard #quarto-dashboard-header .navbar .navbar-nav .active {
+    background-color: #00BF6F;
+}
+header nav span {
+    color: #EEEEEE;
+}
+.quarto-dashboard #quarto-dashboard-header .navbar .navbar-nav .active > span {
+    color: #000000;
+}
+aside#bslib-sidebar-1 {
+    background-color: #EEEEEE;
+}
+.card-header {
+    background-color: #EEEEEE;
+}
+.callout-title-container.flex-fill {
+    font-size: 1.1em;
+    color: #000000;
+}
+.card-body {
+    font-size: 0.9em;
+    padding: 0.5em;
+}
+.card-body ul {
+    margin-bottom: 0;
+}
+ul.dropdown-menu li a span {
+    color: #000000 !important;
+}
+ul.dropdown-menu li a:hover {
+    background-color: #EEEEEE;
+}
+
+/* customizing the plot content
+#current_summary {
+  min-height: 200px;
+  max-height: 300px;
+}
+.lshtm_widget_content[id^="current_summary_"] {
+  min-height: 200px;
+  max-height: 300px;
+}
+
+.card.current_summary_card {
+  min-height: 300px;
+  max-height: 400px;
+}
+
+#trend_over_time {
+  min-height: 600px;
+}
+#trends_bmi {
+  min-height: 400px;
+}
+*/
+

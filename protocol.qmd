@@ -1,9 +1,10 @@
 ---
 title: "Study protocol"
+css: "styles.css"
 ---
 
 ```{r, echo=FALSE, results='asis'}
-# Convert a docx file to quarto markdown and render on this page
+# Convert a docx file to quarto markdown and render on this page 
 pacman::p_load(here, rmarkdown)
 pandoc_convert(input = list.files("protocol", 
                                   pattern = ".docx", 

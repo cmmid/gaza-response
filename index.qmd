@@ -58,7 +58,7 @@ params <- list(
 
 <!-- Add data filter
  - todo: change to pandoc format
- - fill options automatically
+ - todo: fill options automatically or wrap in function
 -->
 <div class="lshtm_widget_filter">
   <p><strong>Filter Data</strong></p>
@@ -102,7 +102,10 @@ params <- list(
 
 ### Column
 
-<!-- Create div for percentage change baseline -->
+<!-- Create div for percentage change baseline
+  - Could wrap this in function
+  - TODO: some cleaning needed
+-->
 ::: {.card .lshtm_widget title="Change from pre-war baseline"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="percentage_change_baseline">

@@ -1,7 +1,7 @@
 project:
   type: website
-  render:
-    - "*.qmd"
+#  render:
+#   - "*.qmd"
 
 website:
   title: "Monitoring the nutritional status of humanitarian workers in Gaza"
@@ -37,6 +37,5 @@ format:
       dark: darkly
     css: styles.css
     toc: true
-
 
 

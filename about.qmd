@@ -1,5 +1,6 @@
 ---
 title: "About the project"
+css: "styles.css"
 toc: true
 ---
 

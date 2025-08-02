@@ -3,6 +3,10 @@ title: Dashboard
 format: 
   dashboard:
     scrolling: true
+    include-in-header:
+      text: |
+            <script src="lshtm.js"></script>
+    css: "styles.css"
   html:
     page-layout: custom
 execute: 
@@ -52,95 +56,96 @@ params <- list(
 
 # {.sidebar}
 
-::: {.callout-tip}
-
-## Latest data
-
-As of **`r params$latest_date`**:
-
-- **`r params$participants`** participants
-- Median **`r params$median_change`**kg change from pre-war weight
-
-:::
-
-### 
-
-This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. 
-The aim of this project is to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population by providing real-time information on the nutritional status of humanitarian staff in Gaza. 
-
-::: {.callout-note collapse="true"}
-
-## Study information
-
-The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM).
-All participation is entirely voluntary.
-
-Staff from the following organisations are currently contributing data:
-
-```{r contributing-orgs, results='asis'}
-# org_list <- paste0("\n- ", sort(params$org))
-# cat(org_list)
-```
-
-Find out more:
-
-- [Study protocol](./protocol)
-- [Contributors and contact](./about)
-
-:::
+<!-- Add data filter
+ - todo: change to pandoc format
+ - fill options automatically
+-->
+<div class="lshtm_widget_filter">
+  <p><strong>Filter Data</strong></p>
+  <div class="filter_content">
+  <fieldset>
+    <legend>Show data by</legend>
+    <label>
+      <input type="radio" name="data_filter" value="Overall" checked>
+      All
+    </label><br>
+    <label>
+      <input type="radio" name="data_filter" value="sex">
+      Sex
+    </label><br>
+    <label>
+      <input type="radio" name="data_filter" value="agegroup">
+      Age
+    </label><br>
+    <label>
+      <input type="radio" name="data_filter" value="governorate">
+      Location
+    </label><br>
+    <label>
+      <input type="radio" name="data_filter" value="role">
+      Role
+    </label>
+  </fieldset>
+</div>
+</div>
 
 <!-- Dashboard page 1 -->
 
 # Weight change
+::: {.card fill="false" title="Key insights"}
+- Data updated as of **`r params$latest_date`**
+- Collected data from **`r params$participants` participants**
+- Median **`r params$median_change[1]`kg** change compared to pre-war weight
+:::
 
 ## Row
 
 ### Column
 
-::: {.card title="Change from pre-war baseline"}
-
-::: {.panel-tabset}
-
+<!-- Create div for percentage change baseline -->
+::: {.card .lshtm_widget title="Change from pre-war baseline"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="percentage_change_baseline">
 ```{r plot-baseline-weight, results="asis"}
 for(i in params$strata) {
-  cat(glue::glue("#### {i} \n\n"))
-  cat("\n \n")
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == params$strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='percentage_change_baseline_{i}'>"))
+  
   print(
     plot_current_summary_stats(
       data = data$current_summary_stats,
       strata = i
     )
   )
-  cat(' \n \n')
+  cat('</div>')
 }
 ```
-
-:::
-
+</div>
 :::
 
 ### Column
 
-::: {.card title="Trend over time"}
-
-::: {.panel-tabset}
-
+<!-- Create div for trend over time -->
+::: {.card .lshtm_widget title="Trend over time"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight, results="asis"}
 for(i in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
-  cat("\n \n")
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == params$strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
+  
   print(
     plot_time_series_statistics(
       data = data$time_series_table,
       strata = i
     )
   )
-  cat(' \n \n')
+  cat('</div>')
 }
 ```
-
-:::
-
+</div>
 :::
 
 ## Row {height=20%}
@@ -154,19 +159,25 @@ Change in self-reported weight from pre-war baseline.
 <!-- Dashboard page 2 -->
 
 # BMI change
+::: {.card fill="false" title="Key insights"}
+- Data updated as of **`r params$latest_date`**
+- Collected data from **`r params$participants` participants**
+- Median **`r params$median_change[1]`kg** change compared to pre-war weight
+:::
 
 ## Row
 
 ### Column
 
-::: {.card title="Change from pre-war baseline"}
-
-::: {.panel-tabset}
-
+<!-- Create div for trend over time -->
+::: {.card .lshtm_widget title="Change from pre-war baseline"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="baseline_bmi">
 ```{r plot-baseline-bmi, results="asis"}
 for(i in params$strata) {
-  cat(glue::glue("#### {i} \n\n"))
-  cat("\n \n")
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == params$strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='baseline_bmi_{i}'>"))
   
   print(
     plot_bmicategory_proportions(
@@ -174,36 +185,34 @@ for(i in params$strata) {
       strata = i
     )
   )
-  cat(' \n \n')
+  cat('</div>')
 }
 ```
-
-:::
-
+</div>
 :::
 
 ### Column
 
-::: {.card title="Trend over time"}
-
-::: {.panel-tabset}
-
+<!-- Create div for trend over time -->
+::: {.card .lshtm_widget title="Trend over time"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi, results="asis"}
 for(i in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
-  cat("\n \n")
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == params$strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
+  
   print(
     plot_bmicategory_proportions_time_series(
       data = data$bmicategory_proportions,
       strata = i
     )
   )
-  cat(' \n \n')
+  cat('</div>')
 }
 ```
-
-:::
-
+</div>
 :::
 
 ## Row {height=20%}
@@ -217,28 +226,33 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 <!-- Dashboard page 3 -->
 
 # Modelled % change 
+::: {.card fill="false" title="Key insights"}
+- Data updated as of **`r params$latest_date`**
+- Collected data from **`r params$participants` participants**
+- Median **`r params$median_change[1]`kg** change compared to pre-war weight
+:::
 
-::: {.card title = "Modelled change in individual weight"}
-
-::: {.panel-tabset}
-
+<!-- Create div for trend over time -->
+::: {.card .lshtm_widget title="Modelled change in individual weight"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="gam">
 ```{r plot-gam, results="asis"}
-for(i  in params$strata) {
-  cat(glue::glue("### {i} \n\n"))
-  cat("\n \n")
+for(i in params$strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == params$strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='gam_{i}'>"))
+  
   print(
-    ""
+    sprintf("Plot for stratum %s TBC", i)
   )
-  cat(' \n \n')
+  cat('</div>')
 }
 ```
-
+</div>
 :::
 
 ::: {.card title="Notes"}
 
 Modelled changes in self-reported weight.
-
-:::
 
 :::

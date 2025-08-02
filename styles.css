@@ -1,7 +1,10 @@
 /* css styles */
 div#quarto-content {
-    height: 100%;
+  /*height: auto !important;*/
+  /*min-height: 100vh;*/
 }
+/* Remove vertical margin/padding between rows */
+
 .lshtm_widget_content {
   display: none;
 }
@@ -55,3 +58,27 @@ ul.dropdown-menu li a span {
 ul.dropdown-menu li a:hover {
     background-color: #EEEEEE;
 }
+
+/* customizing the plot content
+#current_summary {
+  min-height: 200px;
+  max-height: 300px;
+}
+.lshtm_widget_content[id^="current_summary_"] {
+  min-height: 200px;
+  max-height: 300px;
+}
+
+.card.current_summary_card {
+  min-height: 300px;
+  max-height: 400px;
+}
+
+#trend_over_time {
+  min-height: 600px;
+}
+#trends_bmi {
+  min-height: 400px;
+}
+*/
+

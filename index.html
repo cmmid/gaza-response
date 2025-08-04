@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Gaza response: Monitoring the nutritional status of humanitarian workers</title>
+<title>Dashboard – Monitoring the nutritional status of humanitarian workers in Gaza</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,9 +41,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6bdd2aebeb936dcddaa5f935a5de481c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-ccd81253fefb92e9cd3f9eb5b5d87b54.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-6bdd2aebeb936dcddaa5f935a5de481c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3fced2653c1411365395c6308d7f7025.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-1e815c4c50043f7e8fc9161d15dcdabb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3fced2653c1411365395c6308d7f7025.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-dashboard/quarto-dashboard.js"></script>
 <script src="site_libs/quarto-dashboard/stickythead.js"></script>
 
@@ -79,11 +79,13 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="lshtm.js"></script>
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="quarto-dashboard nav-fixed dashboard-fill dashboard-sidebar fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="quarto-dashboard nav-fixed dashboard-sidebar fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -254,7 +256,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Gaza response: Monitoring the nutritional status of humanitarian workers</span>
+    <span class="navbar-title">Monitoring the nutritional status of humanitarian workers in Gaza</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -264,14 +266,17 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="./index.html" aria-current="page"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text"> </span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-about" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">About</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-bi-question-circle" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-question-circle" role="img">
+</i> 
+ <span class="menu-text"></span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-about">    
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-bi-question-circle">    
         <li>
     <a class="dropdown-item" href="./about.html">
  <span class="dropdown-text">About the project</span></a>
@@ -323,45 +328,43 @@ ul.task-list li input[type="checkbox"] {
     </button>    
 
 
-<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-weight-change" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#weight-change" data-scrolling="false" href="#weight-change" aria-controls="weight-change" aria-selected="true"><span class="nav-link-text">Weight change</span></a></li><li class="nav-item" role="presentation"><a id="tab-modelled-change" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#modelled-change" data-scrolling="false" href="#modelled-change" aria-controls="modelled-change" aria-selected="false"><span class="nav-link-text">Modelled % change</span></a></li><li class="nav-item" role="presentation"><a id="tab-bmi" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#bmi" data-scrolling="false" href="#bmi" aria-controls="bmi" aria-selected="false"><span class="nav-link-text">BMI</span></a></li></ul></div></div></nav>
+    <div class="navbar-brand-container">       
+
+      <div class="navbar-title">
+        <div class="navbar-title-text"><a href="#">Dashboard</a></div>
+        
+        
+      </div>
+    </div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-all-participants" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#all-participants" data-scrolling="true" href="#all-participants" aria-controls="all-participants" aria-selected="true"><span class="nav-link-text">All Participants</span></a></li><li class="nav-item" role="presentation"><a id="tab-save-the-children-international" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#save-the-children-international" data-scrolling="true" href="#save-the-children-international" aria-controls="save-the-children-international" aria-selected="false"><span class="nav-link-text">Save the Children International</span></a></li><li class="nav-item" role="presentation"><a id="tab-unrwa" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#unrwa" data-scrolling="true" href="#unrwa" aria-controls="unrwa" aria-selected="false"><span class="nav-link-text">UNRWA</span></a></li><li class="nav-item" role="presentation"><a id="tab-msf" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#msf" data-scrolling="true" href="#msf" aria-controls="msf" aria-selected="false"><span class="nav-link-text">MSF</span></a></li></ul></div></div>
+</nav>
 </header></header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-layout-custom page-navbar quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages dashboard-sidebar-container">
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar quarto-dashboard-content bslib-gap-spacing html-fill-container dashboard-scrolling quarto-dashboard-pages dashboard-sidebar-container">
 <!-- sidebar -->
 <!-- margin-sidebar -->
 <!-- main -->
 
 
+<!-- Setup, no output -->
+<!-- Global sidebar -->
 <div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" data-bslib-sidebar-border="false" data-bslib-sidebar-border-radius="false"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
 <div class="tab-content bslib-grid html-fill-item html-fill-container" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div id="weight-change" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-weight-change">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 85fr) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+<div id="all-participants" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-all-participants">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Key insights" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Key insights
+</span></div></div>
 <div class="card-body html-fill-item html-fill-container">
-<div class="panel-tabset html-fill-item html-fill-container">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Role</a></li></ul>
-<div class="tab-content html-fill-item html-fill-container">
-<div id="tabset-1-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<img src="index_files/figure-html/plot-absolute-1.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-1-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<img src="index_files/figure-html/plot-absolute-2.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-1-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<img src="index_files/figure-html/plot-absolute-3.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-1-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-4-tab">
-<img src="index_files/figure-html/plot-absolute-4.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-1-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-1-5-tab">
-<img src="index_files/figure-html/plot-absolute-5.png" class="img-fluid" width="768">
-</div>
-</div>
-</div>
+<ul>
+<li>Data updated as of <strong>2025-08-05</strong></li>
+<li>Collected <strong>284 observations</strong> from ** participants**</li>
+<li>Median <strong>-17.5kg</strong> change compared to pre-war weight</li>
+</ul>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
     <template>Expand</template>
@@ -369,76 +372,30 @@ grid-auto-rows: minmax(0, 1fr);">
         <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
     </span>
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
-</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
-<div class="card-body html-fill-item html-fill-container">
-<div class="panel-tabset html-fill-item html-fill-container">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Role</a></li></ul>
-<div class="tab-content html-fill-item html-fill-container">
-<div id="tabset-2-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<img src="index_files/figure-html/plot-trends-1.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-2-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<img src="index_files/figure-html/plot-trends-2.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-2-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-3-tab">
-<img src="index_files/figure-html/plot-trends-3.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-2-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-4-tab">
-<img src="index_files/figure-html/plot-trends-4.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-2-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-2-5-tab">
-<img src="index_files/figure-html/plot-trends-5.png" class="img-fluid" width="768">
-</div>
-</div>
-</div>
-</div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
-    <template>Expand</template>
-    <span class="bslib-full-screen-enter badge rounded-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
-    </span>
-</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
-</div>
 </div>
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card current_summary_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Current Summary" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Current Summary
+</span></div></div>
 <div class="card-body html-fill-item html-fill-container">
-<p>Data notes: Change in self-reported weight from pre-war baseline.</p>
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="current_summary" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="current_summary_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-1.png" class="img-fluid" width="768">
 </div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
-    <template>Expand</template>
-    <span class="bslib-full-screen-enter badge rounded-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
-    </span>
-</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div id="current_summary_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-2.png" class="img-fluid" width="768">
 </div>
+<div id="current_summary_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-3.png" class="img-fluid" width="768">
 </div>
-</div><div id="modelled-change" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-modelled-change">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
-grid-auto-rows: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
-<div class="card-body html-fill-item html-fill-container">
-<div class="panel-tabset html-fill-item html-fill-container">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false">Role</a></li></ul>
-<div class="tab-content html-fill-item html-fill-container">
-<div id="tabset-3-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<img src="index_files/figure-html/plot-gam-1.png" class="img-fluid" width="768">
+<div id="current_summary_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-4.png" class="img-fluid" width="768">
 </div>
-<div id="tabset-3-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<img src="index_files/figure-html/plot-gam-2.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-3-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-3-tab">
-<img src="index_files/figure-html/plot-gam-3.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-3-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-4-tab">
-<img src="index_files/figure-html/plot-gam-4.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-3-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-3-5-tab">
-<img src="index_files/figure-html/plot-gam-5.png" class="img-fluid" width="768">
-</div>
+<div id="current_summary_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-5.png" class="img-fluid" width="768">
 </div>
 </div>
 </div>
@@ -451,42 +408,27 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<!-- Create div for trend over time --><div class="card trend_time_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Trends over time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Trends over time
+</span></div></div>
 <div class="card-body html-fill-item html-fill-container">
-<p>Data notes:</p>
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trend_over_time" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trend_over_time_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-1.png" class="img-fluid" width="768">
 </div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
-    <template>Expand</template>
-    <span class="bslib-full-screen-enter badge rounded-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
-    </span>
-</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div id="trend_over_time_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-2.png" class="img-fluid" width="768">
 </div>
+<div id="trend_over_time_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-3.png" class="img-fluid" width="768">
 </div>
-</div><div id="bmi" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-bmi">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
-grid-auto-rows: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
-<div class="card-body html-fill-item html-fill-container">
-<div class="panel-tabset html-fill-item html-fill-container">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Overall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Sex</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Age Group</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">Governorate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false">Role</a></li></ul>
-<div class="tab-content html-fill-item html-fill-container">
-<div id="tabset-4-1" class="tab-pane active html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-1-tab">
-<img src="index_files/figure-html/plot-bmi-1.png" class="img-fluid" width="768">
+<div id="trend_over_time_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-4.png" class="img-fluid" width="768">
 </div>
-<div id="tabset-4-2" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-2-tab">
-<img src="index_files/figure-html/plot-bmi-2.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-4-3" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-3-tab">
-<img src="index_files/figure-html/plot-bmi-3.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-4-4" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-4-tab">
-<img src="index_files/figure-html/plot-bmi-4.png" class="img-fluid" width="768">
-</div>
-<div id="tabset-4-5" class="tab-pane html-fill-item html-fill-container" role="tabpanel" aria-labelledby="tabset-4-5-tab">
-<img src="index_files/figure-html/plot-bmi-5.png" class="img-fluid" width="768">
-</div>
+<div id="trend_over_time_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-5.png" class="img-fluid" width="768">
 </div>
 </div>
 </div>
@@ -499,9 +441,459 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<!-- Create div for trend over time --><div class="card trend_bmi_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Proportion Study in WHO Body Mass Index Categories Over Time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Proportion Study in WHO Body Mass Index Categories Over Time
+</span></div></div>
 <div class="card-body html-fill-item html-fill-container">
-<p>Data notes: Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</p>
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trends_bmi" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trends_bmi_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-1.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-2.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-3.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-4.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Notes" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Notes
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<p>Change in self-reported weight from pre-war baseline. Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</p>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><!-- Dashboard page 2 -->
+</div>
+</div>
+</div><div id="save-the-children-international" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-save-the-children-international">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Key insights" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Key insights
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<ul>
+<li>Data updated as of <strong>2025-08-05</strong></li>
+<li>Collected <strong>79 observations</strong> from ** participants**</li>
+<li>Median <strong>-17kg</strong> change compared to pre-war weight</li>
+</ul>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card current_summary_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Current Summary" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Current Summary
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="current_summary" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="current_summary_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-stc-1.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-stc-2.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-stc-3.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-stc-4.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-stc-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<!-- Create div for trend over time --><div class="card trend_time_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Trends over time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Trends over time
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trend_over_time" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trend_over_time_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-stc-1.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-stc-2.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-stc-3.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-stc-4.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-stc-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<!-- Create div for trend over time --><div class="card trend_bmi_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Proportion Study in WHO Body Mass Index Categories Over Time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Proportion Study in WHO Body Mass Index Categories Over Time
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trends_bmi" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trends_bmi_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-stc-1.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-stc-2.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-stc-3.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-stc-4.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-stc-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Notes" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Notes
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<p>Change in self-reported weight from pre-war baseline. Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</p>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="unrwa" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-unrwa">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Key insights" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Key insights
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<ul>
+<li>Data updated as of <strong>2025-08-05</strong></li>
+<li>Collected <strong>39 observations</strong> from ** participants**</li>
+<li>Median <strong>-17.9kg</strong> change compared to pre-war weight</li>
+</ul>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card current_summary_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Current Summary" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Current Summary
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="current_summary" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="current_summary_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-unrwa-1.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-unrwa-2.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-unrwa-3.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-unrwa-4.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-unrwa-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<!-- Create div for trend over time --><div class="card trend_time_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Trends over time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Trends over time
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trend_over_time" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trend_over_time_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-unrwa-1.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-unrwa-2.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-unrwa-3.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-unrwa-4.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-unrwa-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<!-- Create div for trend over time --><div class="card trend_bmi_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Proportion Study in WHO Body Mass Index Categories Over Time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Proportion Study in WHO Body Mass Index Categories Over Time
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trends_bmi" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trends_bmi_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-unrwa-1.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-unrwa-2.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-unrwa-3.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-unrwa-4.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-unrwa-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Notes" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Notes
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<p>Change in self-reported weight from pre-war baseline. Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</p>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="msf" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-msf">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Key insights" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Key insights
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<ul>
+<li>Data updated as of <strong>2025-08-05</strong></li>
+<li>Collected <strong>24 observations</strong> from ** participants**</li>
+<li>Median <strong>-18.6kg</strong> change compared to pre-war weight</li>
+</ul>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card current_summary_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Current Summary" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Current Summary
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="current_summary" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="current_summary_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-msf-1.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-msf-2.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-msf-3.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-msf-4.png" class="img-fluid" width="768">
+</div>
+<div id="current_summary_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-current-summary-msf-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<!-- Create div for trend over time --><div class="card trend_time_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Trends over time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Trends over time
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trend_over_time" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trend_over_time_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-msf-1.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-msf-2.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-msf-3.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-msf-4.png" class="img-fluid" width="768">
+</div>
+<div id="trend_over_time_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-weight-msf-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<!-- Create div for trend over time --><div class="card trend_bmi_card lshtm_widget html-fill-item html-fill-container bslib-card" data-title="Proportion Study in WHO Body Mass Index Categories Over Time" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Proportion Study in WHO Body Mass Index Categories Over Time
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div id="trends_bmi" class="lshtm_widget_identifier html-fill-item html-fill-container">
+<div id="trends_bmi_Overall" class="lshtm_widget_content visible html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-msf-1.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_sex" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-msf-2.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_agegroup" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-msf-3.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_governorate" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-msf-4.png" class="img-fluid" width="768">
+</div>
+<div id="trends_bmi_role" class="lshtm_widget_content html-fill-item html-fill-container">
+<img src="index_files/figure-html/plot-trends-bmi-msf-5.png" class="img-fluid" width="768">
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Notes" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container"><span style="display: inline">
+Notes
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<p>Change in self-reported weight from pre-war baseline. Proportion of staff with BMI in different WHO categories: underweight &lt;18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.</p>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
     <template>Expand</template>
@@ -516,30 +908,21 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 </div>
 </div></div><aside id="bslib-sidebar-1" class="sidebar html-fill-container html-fill-item"><div class="html-fill-container html-fill-item">
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Key data
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>Last update: 2025-08-05</li>
-<li>146 participants</li>
-<li>Median -17.8kg change from pre-war weight</li>
-</ul>
+<!-- Add data filter
+ - todo: change to pandoc format
+ - todo: fill options automatically or wrap in function
+-->
+<div class="lshtm_widget_filter">
+<p>
+<strong>Filter Data</strong>
+</p>
+<div class="filter_content">
+<fieldset>
+<legend>Show data by</legend> <label> <input type="radio" name="data_filter" value="Overall" checked=""> All </label><br> <label> <input type="radio" name="data_filter" value="sex"> Sex </label><br> <label> <input type="radio" name="data_filter" value="agegroup"> Age </label><br> <label> <input type="radio" name="data_filter" value="governorate"> Location </label><br> <label> <input type="radio" name="data_filter" value="role"> Role </label>
+</fieldset>
 </div>
 </div>
-<section id="section-1">
-<div class="h3">
-
-</div>
-<p>This project aims to monitor the nutritional status of humanitarian aid staff currently working in Gaza by tracking their weight. The hope of this project is to give a voice to aid workers who are currently based in Gaza, as essentials and humanitarian aid continues to be blocked from entering.</p>
-<p>Participation is entirely voluntary. The project is implemented by SCI with the support of the London School of Hygiene and Tropical Medicine (LSHTM). <a href="./protocol">Learn more</a></p>
-</section>
+<!-- Dashboard page 1 -->
 </div></aside>
 <button class="collapse-toggle" type="button" title="Toggle sidebar" aria-expanded="true" aria-controls="bslib-sidebar-1">
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" class="bi bi-chevron-left collapse-icon" style="fill:currentColor;" aria-hidden="true" role="img">

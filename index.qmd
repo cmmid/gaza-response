@@ -17,6 +17,10 @@ execute:
 
 ```{r setup, include=FALSE}
 ## Packages
+if (!require(pacman, character.only=T, quietly=T)) {
+    install.packages(pacman)
+    library(pacman, character.only=T)
+}
 pacman::p_load(here, 
                purrr, readr, dplyr,
                bslib, bsicons, 

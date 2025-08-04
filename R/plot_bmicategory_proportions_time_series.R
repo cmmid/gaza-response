@@ -32,6 +32,8 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data <- data %>%
+    filter(!Group == "other/prefer not to share") %>% #Manually filtering this out per Francescos advice
+    mutate(Group = factor(Group, levels = datadict[[strata]])) %>%
     filter(Stratification == strata) %>%
     mutate(category = factor(category, levels = c("Underweight", "Normal", "Overweight", "Obese")))
 
@@ -44,10 +46,15 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
     labs(x = "Date",
          y = "Percentage of Survey Participants (%)",
          fill = "Category") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+    #theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+          strip.text.y = element_blank()) +
     facet_grid(cols = vars(Group), row = vars(Stratification), switch = "y", labeller = label_wrap_gen(width = 25), scales = "free")
 
+
+  if (strata == "Overall") {
+    fig <- fig + theme(strip.text.x = element_blank())
+  }
   return(fig)
 
 }

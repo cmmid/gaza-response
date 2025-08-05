@@ -62,7 +62,7 @@ summarise_ids_by <- function(data, group_cols) {
 
 # summarise by intersection of multiple strata combinations -----
 summarise_ids <- function(data,
-                             group_cols = NULL,
+                             group_cols,
                              min_date = NULL, max_date = NULL) {
 
   # TODO filter dates if specified
@@ -84,7 +84,7 @@ summarise_ids <- function(data,
 
   # calculate summaries
   summary <- map(all_groupings,
-                 ~ df |>
+                 ~ data |>
                    summarise_ids_by(group_cols = .x) |>
                    mutate(strata = str_remove_all(group,
                                                  regex("-organisation|-date"))))

@@ -25,9 +25,6 @@ pacman::p_load(
 ### Read in and match data
 #...............................................................................
 
-# base_data <- readRDS(here("data", "processed", "df_base.RDS"))
-# fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
-
 clean_data <- function(base_data, fup_data) {
   suppressMessages({
     fup_data_expanded <- fup_data %>%

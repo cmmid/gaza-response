@@ -1,3 +1,11 @@
+# Functions to aggregate data at each intersection of stratifying variables
+#
+# Example
+# base_data <- readRDS(here("data", "processed", "df_base.RDS"))
+# fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
+# data_id <- clean_data(base_data, fup_data)
+
+pacman::p_load(dplyr, tidy, purrr)
 # summarise by any given strata ------------------------------------
 summarise_ids_by <- function(data,
                           group_cols) {
@@ -52,12 +60,12 @@ summarise_ids_by <- function(data,
   return(df_summary)
 }
 
-# summarise by multiple strata combinations -----
+# summarise by intersection of multiple strata combinations -----
 summarise_ids <- function(data,
                              group_cols = NULL,
                              min_date = NULL, max_date = NULL) {
 
-  # # filter dates if specified
+  # TODO filter dates if specified
   # if (is.null(min_date)) {min_date <- min(data$date)}
   # if (is.null(max_date)) {max_date <- max(data$date)}
   # data <- data |>
@@ -83,31 +91,3 @@ summarise_ids <- function(data,
 
   return(summary)
 }
-
-
-# data ------------------------------------------------------
-library(dplyr); library(tidyr); library(purrr)
-data_table <- readRDS("./data/cleaned/matched_data.RDS")
-df <- data_table |>
-  ungroup() |>
-  mutate(overall = "overall")
-
-# specify stratifications
-group_cols <- c("overall",
-                "sex", "agegroup", "governorate", "role", "children_feeding")
-
-# calculate summaries
-# All time
-summary_all <- summarise_ids(data = df,
-                             group_cols = group_cols)
-
-
-# Latest 3 days
-summary_3d <- summarise_ids_by(data = df,
-                               group_cols = group_cols,
-                                min_date = today() - 3)
-
-# Latest 7 days
-summary_7d <- summarise_ids_by(data = df,
-                               group_cols = group_cols,
-                               min_date = today() - 7)

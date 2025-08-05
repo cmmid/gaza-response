@@ -13,5 +13,4 @@ data_dict[["category"]] <- c("Underweight", "Normal", "Overweight", "Obese")
 data_dict[["role"]] <- c("expatriate", "national staff member", "consultant or contractor", "casual staff/daily worker", "other", "prefer not to answer")
 
 saveRDS(data_dict, "./data/data_dictionary.RDS")
-#I've manually put this on the dashboard repo for now but we'd ideally automate the transfer of this with the processed data
 

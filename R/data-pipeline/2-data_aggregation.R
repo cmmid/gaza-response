@@ -5,10 +5,10 @@
 # fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 # data_id <- clean_data(base_data, fup_data)
 
-pacman::p_load(dplyr, tidy, purrr)
+pacman::p_load(dplyr, tidyr, purrr)
+
 # summarise by any given strata ------------------------------------
-summarise_ids_by <- function(data,
-                          group_cols) {
+summarise_ids_by <- function(data, group_cols) {
 
   # summarise participants & data quality
   df_participants <- data |>

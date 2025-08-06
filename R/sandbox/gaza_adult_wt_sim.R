@@ -145,8 +145,8 @@
   ## Save data
 
     # Baseline dataset
-    write.csv(df_base, here("R", "processed", "df_base.csv"), row.names = F)
-    write.csv(df_fup, here("R", "processed", "df_base.csv"), row.names = F)
+    write.csv(df_base, here("data", "processed", "df_base.csv"), row.names = F)
+    write.csv(df_fup, here("data", "processed", "df_base.csv"), row.names = F)
 
 
 #...............................................................................

@@ -26,21 +26,27 @@ pacman::p_load(here,
 ## Load data dictionary
 datadict <- readRDS("data/data_dictionary.RDS")
 
-## Load all csv data
-data <- list.files(here("data"), pattern = "*.csv")
-names(data) <- gsub("\\.csv", "", data)
-data <- map(data,
-            ~ read_csv(here("data", .x)) |> 
-              mutate(Group = ifelse(is.na(Group), "Overall", Group)))
+## Load Data RDS
+data <- readRDS("data/summary-stats.RDS")
 
-organisations <- unique(data$current_summary_stats$Organisation)
+options <- c("sex", "agegroup", "governorate", "role")
+# Generate all non-empty combinations
+strata <- unlist(
+  #lapply(1:length(options), function(k) {
+  lapply(1:2, function(k) {
+    combn(sort(options), k, FUN = function(x) paste(x, collapse = "-"))
+  })
+)
+# Add 'Overall' as default/fallback
+strata <- c("Overall", strata)
+
 
 ## Source plotting scripts
-source(here("R", "plot_bmicategory_proportions_time_series.R"))
+source(here("R", "generate_key_insights.R"))
 source(here("R", "plot_current_summary_stats.R"))
 source(here("R", "plot_time_series_statistics.R"))
-source(here("R", "generate_key_insights.R"))
-source(here("R", "filter_data_to_org.R"))
+source(here("R", "plot_bmi_proportions.R"))
+
 source(here("R", "ggplot_theme.R"))
 
 ```
@@ -83,7 +89,7 @@ source(here("R", "ggplot_theme.R"))
 
 # All Participants
 ```{r filter_all, include=FALSE}
-data_filtered <- filter_data_to_org(data, "Overall")
+#data_filtered <- filter_data_to_org(data, "Overall")
 params <- generate_key_insights(data)
 ```
 
@@ -102,14 +108,14 @@ params <- generate_key_insights(data)
 #| fig-width: 10
 #| fig-asp: 0.4
 #| fig-align: center
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
+  visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
   
   print(
     plot_current_summary_stats(
-      data = data_filtered$current_summary_stats,
+      data = data,
       strata = i
     )
   )
@@ -128,14 +134,14 @@ for(i in params$strata) {
 #| fig-width: 10
 #| fig-asp: 1.5
 #| fig-align: center
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
+  visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
   
   print(
     plot_time_series_statistics(
-      data = data_filtered$time_series_table,
+      data = data,
       strata = i
     )
   )
@@ -151,16 +157,16 @@ for(i in params$strata) {
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi, results="asis", fig.height = 5}
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
+  visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
   
   print(
-    plot_bmicategory_proportions_time_series(
-      data = data_filtered$bmicategory_proportions,
-      strata = i
-    )
+    #plot_bmicategory_proportions_time_series(
+     # data = data_filtered$bmicategory_proportions,
+     # strata = i
+    #)
   )
   cat('</div>')
 }
@@ -178,194 +184,5 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 :::
 
 
-<!-- Dashboard page 2 -->
-
-# Save the Children International
-```{r filter_stc, include=FALSE}
-data_filtered <- filter_data_to_org(data, "Save the Children International")
-params <- generate_key_insights(data_filtered)
-```
-
-
-::: {.card fill="false" title="Key insights"}
-- Data updated as of **`r params$latest_date`**
-- Collected  **`r params$observations` observations** from **`r params$participants` participants**
-- Median **`r params$median_change[1]`kg** change compared to pre-war weight
-:::
-
-::: {.card .current_summary_card .lshtm_widget title="Current Summary" fill = "false"}
-
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="current_summary">
-```{r plot-current-summary-stc, results="asis", fig.height = 3}
-for(i in params$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  
-  print(
-    plot_current_summary_stats(
-      data = data_filtered$current_summary_stats,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-:::
-
-
-<!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Trends over time" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trend_over_time">
-```{r plot-trends-weight-stc, results="asis", fig.height = 8}
-for(i in params$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
-  
-  print(
-    plot_time_series_statistics(
-      data = data_filtered$time_series_table,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-
-<!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion Study in WHO Body Mass Index Categories Over Time" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trends_bmi">
-```{r plot-trends-bmi-stc, results="asis", fig.height = 5}
-for(i in params$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
-  
-  print(
-    plot_bmicategory_proportions_time_series(
-      data = data_filtered$bmicategory_proportions,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-
-
-
-::: {.card title="Notes" fill = "false"}
-
-Change in self-reported weight from pre-war baseline.
-Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
-
-:::
-
-
-# UNRWA
-```{r filter_unrwa, include=FALSE}
-data_filtered <- filter_data_to_org(data, "UNRWA")
-params <- generate_key_insights(data_filtered)
-```
-
-
-
-::: {.card fill="false" title="Key insights" }
-- Data updated as of **`r params$latest_date`**
-- Collected  **`r params$observations` observations** from **`r params$participants` participants**
-- Median **`r params$median_change[1]`kg** change compared to pre-war weight
-:::
-
-
-
-::: {.card .current_summary_card .lshtm_widget title="Current Summary" fill = "false" }
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="current_summary">
-```{r plot-current-summary-unrwa, results="asis", fig.height = 3}
-for(i in params$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  
-  print(
-    plot_current_summary_stats(
-      data = data_filtered$current_summary_stats,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-
-</div>
-:::
-
-
-<!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Trends over time" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trend_over_time">
-```{r plot-trends-weight-unrwa, results="asis", fig.height = 8}
-for(i in params$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
-  
-  print(
-    plot_time_series_statistics(
-      data = data_filtered$time_series_table,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-
-<!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion Study in WHO Body Mass Index Categories Over Time" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trends_bmi">
-```{r plot-trends-bmi-unrwa, results="asis", fig.height = 5}
-for(i in params$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == params$strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
-  
-  print(
-    plot_bmicategory_proportions_time_series(
-      data = data_filtered$bmicategory_proportions,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-
-
-
-::: {.card title="Notes" fill = "false"}
-
-Change in self-reported weight from pre-war baseline.
-Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
-
-:::
 
 

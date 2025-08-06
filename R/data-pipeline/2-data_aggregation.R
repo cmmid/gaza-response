@@ -84,6 +84,7 @@ clean_aggregated_data <- function(summary_list) {
     ungroup() |>
     mutate(organisation = if_else(is.na(organisation), "all", organisation)) |>
     mutate(group = str_replace_all(group, "date-organisation-", "")) |>
+    mutate(group = str_replace_all(group, "date-", "")) |>
     dplyr::select(-overall)
   org_split <- split(summary_df, summary_df$organisation)
   org_split <- map(org_split,

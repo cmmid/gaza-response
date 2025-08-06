@@ -9,6 +9,7 @@ pacman::p_load(dplyr, tidyr, purrr)
 
 # summarise by any given strata ------------------------------------
 summarise_ids <- function(data, group_cols) {
+  print(group_cols)
 
   # summarise participants per group -----
   df_participants <- data |>
@@ -69,8 +70,10 @@ summarise_ids <- function(data, group_cols) {
                           df_props) |>
     left_join(df_participants,
               by = group_cols) |>
+    ungroup() |>
     # create single grouping id
-    mutate(group = paste(group_cols, collapse = "-"))
+    mutate(group = paste(group_cols, collapse = "-"),
+            label = pmap_chr(across(all_of(setdiff(group_cols, c("date", "organisation")))), ~ paste(..., sep = ", ")))
 
   return(df_summary)
 }

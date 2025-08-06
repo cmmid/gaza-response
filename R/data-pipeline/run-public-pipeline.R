@@ -23,9 +23,9 @@ data_id <- clean_data(base_data, fup_data)
 
 # 2. Aggregate and calculate summaries by stratification -----
 # only use 2 levels of stratification for now
-group_cols <- c("overall",
-                "sex", "agegroup", "governorate", "role", "children_feeding")
+group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
+group_cols <- append(group_cols, as.list(c("overall", "agegroup", "children_feeding", "governorate", "role", "sex")))
 group_cols <- map(group_cols,
                   ~ c("date", "organisation", sort(.x)))
 

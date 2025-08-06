@@ -22,21 +22,17 @@ fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 data_id <- clean_data(base_data, fup_data)
 
 # 2. Aggregate and calculate summaries by stratification -----
+# only use 2 levels of stratification for now
 group_cols <- c("overall", # specify stratifications
                 "sex", "agegroup", "governorate", "role", "children_feeding")
-# only use 2 levels of stratification for now
 group_cols <- combn(group_cols_vec, 2, simplify = FALSE)
 group_cols <- map(group_cols_vec,
                   ~ c("date", "organisation", sort(.x)))
-# calculate summaries
-summary <- map(all_groupings,
+# summarise by date, organisation, and group combination
+summary <- map(group_cols,
                ~ data |>
                  summarise_ids(group_cols = .x))
-
-# summarise by date, organisation, and group combination
-summary <- summarise_ids(data = data_id,
-                         group_cols = group_cols)
-summary <- clean_aggregated_data(summary)
+summary_org <- clean_aggregated_data(summary)
 
 # participants reporting in latest 3 day window
 

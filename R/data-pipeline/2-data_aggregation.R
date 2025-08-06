@@ -79,11 +79,10 @@ clean_aggregated_data <- function(summary_list) {
   # Restructuring into a list by organisation
   summary_df <- list_rbind(summary_list) |>
     ungroup() |>
-    mutate(group = str_replace_all(group, "organisation", "")) |>
+    mutate(group = str_replace_all(group, "date-organisation-", "")) |>
     dplyr::select(-overall)
   org_split <- split(summary_df, summary_df$organisation)
   org_split <- map(org_split,
                    ~ split(., .$group))
-
   return(org_split)
 }

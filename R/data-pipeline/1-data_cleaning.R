@@ -21,11 +21,18 @@ pacman::p_load(
   tidyverse,     # Tidyverse suite of packages
   viridis)       # Colour-blind palette
 
+# example
+# # Load data stored locally
+# base_data <- readRDS(here("data", "processed", "df_base.RDS"))
+# fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
+# data <- clean_data(base_data, fup_data)
+
 #...............................................................................
 ### Read in and match data
 #...............................................................................
 
 clean_data <- function(base_data, fup_data) {
+
   suppressMessages({
     fup_data_expanded <- fup_data %>%
       dplyr::left_join(dplyr::select(base_data, !c(date, weight)),
@@ -45,16 +52,19 @@ clean_data <- function(base_data, fup_data) {
   #...............................................................................
 
   matched_data <- full_data %>%
-    dplyr::mutate(bmi = weight / (height/100)^2,
-                  bmi_prewar = weight_prewar / (height/100)^2) %>%
     dplyr::group_by(id) %>%
-    dplyr::mutate(date_first_measurement = min(date[!is.na(weight)])) %>%
-    dplyr::mutate(first_weight_measurement = weight[date == date_first_measurement]) %>%
-    dplyr::mutate(percent_change_firstmeasurement = ((weight - first_weight_measurement)/first_weight_measurement)*100,
+    # time in cohort
+    dplyr::mutate(date_first_measurement = min(date[!is.na(weight)]),
+                  days_in_study = date - date_first_measurement) %>%
+    # bmi, weight change
+    dplyr::mutate(bmi = weight / (height/100)^2,
+                  bmi_prewar = weight_prewar / (height/100)^2,
+                  first_weight_measurement = weight[date == date_first_measurement],
+                  percent_change_firstmeasurement = ((weight - first_weight_measurement)/first_weight_measurement)*100,
                   percent_change_prewar = ((weight - weight_prewar)/weight_prewar)*100) |>
     ungroup()
 
-  change_from_previous <- matched_data %>%
+  weight_change_from_previous <- matched_data %>%
     dplyr::arrange(id, date) %>%
     dplyr::group_by(id) %>%
     dplyr::filter(!is.na(weight)) %>%
@@ -64,14 +74,23 @@ clean_data <- function(base_data, fup_data) {
     ungroup()
 
   matched_data <- left_join(matched_data,
-                            change_from_previous, by = c("id", "date"))
-
+                            weight_change_from_previous, by = c("id", "date"))
 
   # Specify factor variables ------------------------------------------------
   # TODO use data dictionary here
   matched_data <- matched_data |>
     mutate(agegroup = ifelse(age < 30, "Under 30 years",
                              ifelse(age < 45, "30-44 years", "Over 45 years")))
+  # BMI categories
+  matched_data <- matched_data |>
+    mutate(bmi_category_current = case_when(
+      bmi <= 10 ~ NA_character_,
+      bmi < 18.5 ~ "underweight",
+      bmi >= 18.5 & bmi < 25 ~ "normal",
+      bmi >= 25 & bmi < 30 ~ "overweight",
+      bmi >= 30 ~ "obese",
+      bmi >= 60 ~ NA_character_,
+      TRUE ~ NA_character_))
 
   # Data quality checks -----------------------------------------------------
 
@@ -81,16 +100,6 @@ clean_data <- function(base_data, fup_data) {
            bmi_prewar_anomaly = !between(bmi_prewar, 10, 60),
            change_anomaly = percent_change_previousmeasurement >= 10)
 
-  # Add BMI categories
-  matched_data <- matched_data |>
-    mutate(bmi_category = case_when(
-      bmi <= 10 ~ NA_character_,
-      bmi < 18.5 ~ "underweight",
-      bmi >= 18.5 & bmi < 25 ~ "normal",
-      bmi >= 25 & bmi < 30 ~ "overweight",
-      bmi >= 30 ~ "obese",
-      bmi >= 60 ~ NA_character_,
-      TRUE ~ NA_character_))
 
   matched_data <- ungroup(matched_data)
 
@@ -98,4 +107,3 @@ clean_data <- function(base_data, fup_data) {
 }
 
 #...............................................................................
-# saveRDS(matched_data, "./data/cleaned/matched_data.RDS")

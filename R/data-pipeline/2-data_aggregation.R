@@ -62,10 +62,9 @@ summarise_ids_by <- function(data, group_cols) {
     dplyr::select(-c(n, bmi_category))
 
   # combine summaries -----
-  df_summary <- left_join(df_participants,
+  df_summary <- bind_rows(df_participants,
                           df_centraltendency,
-                          df_props,
-                          by = group_cols) |>
+                          df_props) |>
     # create single grouping id
     mutate(group = paste(group_cols, collapse = "-"))
 

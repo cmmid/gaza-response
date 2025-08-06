@@ -36,7 +36,6 @@ data <- map(data,
 organisations <- unique(data$current_summary_stats$Organisation)
 
 ## Source plotting scripts
-source(here("R", "plot_bmicategory_proportions.R"))
 source(here("R", "plot_bmicategory_proportions_time_series.R"))
 source(here("R", "plot_current_summary_stats.R"))
 source(here("R", "plot_time_series_statistics.R"))
@@ -55,28 +54,24 @@ source(here("R", "ggplot_theme.R"))
  - todo: fill options automatically or wrap in function
 -->
 <div class="lshtm_widget_filter">
-  <p><strong>Filter Data</strong></p>
+  <p><strong>Stratify Data</strong></p>
   <div class="filter_content">
   <fieldset>
-    <legend>Show data by</legend>
+    <legend>Stratify data by</legend>
     <label>
-      <input type="radio" name="data_filter" value="Overall" checked>
-      All
-    </label><br>
-    <label>
-      <input type="radio" name="data_filter" value="sex">
+      <input type="checkbox" name="data_filter" value="sex">
       Sex
     </label><br>
     <label>
-      <input type="radio" name="data_filter" value="agegroup">
+      <input type="checkbox" name="data_filter" value="agegroup">
       Age
     </label><br>
     <label>
-      <input type="radio" name="data_filter" value="governorate">
+      <input type="checkbox" name="data_filter" value="governorate">
       Location
     </label><br>
     <label>
-      <input type="radio" name="data_filter" value="role">
+      <input type="checkbox" name="data_filter" value="role">
       Role
     </label>
   </fieldset>

@@ -23,13 +23,14 @@ data_id <- clean_data(base_data, fup_data)
 
 # 2. Aggregate and calculate summaries by stratification -----
 # only use 2 levels of stratification for now
-group_cols <- c("overall", # specify stratifications
+group_cols <- c("overall",
                 "sex", "agegroup", "governorate", "role", "children_feeding")
-group_cols <- combn(group_cols_vec, 2, simplify = FALSE)
-group_cols <- map(group_cols_vec,
+group_cols <- combn(group_cols, 2, simplify = FALSE)
+group_cols <- map(group_cols,
                   ~ c("date", "organisation", sort(.x)))
+
 # summarise by date, organisation, and group combination
-summary <- map(group_cols,
+summary <- imap(group_cols,
                ~ data |>
                  summarise_ids(group_cols = .x))
 summary_org <- clean_aggregated_data(summary)

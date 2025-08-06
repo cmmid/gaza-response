@@ -26,8 +26,10 @@ data_id <- clean_data(base_data, fup_data)
 group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
 group_cols <- append(group_cols, as.list(c("overall", "agegroup", "children_feeding", "governorate", "role", "sex")))
-group_cols <- map(group_cols,
-                  ~ c("date", "organisation", sort(.x)))
+group_cols <- append(map(group_cols,
+                  ~ c("date", "organisation", sort(.x))),
+                  map(group_cols,
+                      ~ c("date", sort(.x))))
 
 # summarise by date, organisation, and group combination
 summary <- imap(group_cols,
@@ -38,6 +40,6 @@ summary_org <- clean_aggregated_data(summary)
 # participants reporting in latest 3 day window
 
 # 3. Save locally ----
-saveRDS(summary, here("data", "public", "summary-stats.RDS"))
+saveRDS(summary_org, here("data", "public", "summary-stats.RDS"))
 
 # RDS data pushed to Github public repo

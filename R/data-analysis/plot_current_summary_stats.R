@@ -30,14 +30,14 @@ pacman::p_load(
 plot_current_summary_stats <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data_filtered <- data[[paste0(tolower(strata), "_2")]] |>
+  data_filter <- data[[tolower(strata)]] |>
     filter(date == max(date, na.rm = TRUE)) %>%
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean))
 
   if (strata == "Overall") {
     # Generate plot
-    fig <- data_filtered %>%
+    fig <- data_filter %>%
       ggplot(aes(y = 0)) +
       geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
       geom_point(aes(x = median), color = "darkblue", size = 3) +
@@ -54,13 +54,11 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
   }
 
   else {
-    fig <- data_filtered %>%
-      dplyr::rename(stratification := !!sym(strata)) %>%
-      dplyr::filter(stratification != "other/prefer not to share") %>%
-      ggplot(aes(y = factor(stratification))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = stratification), show.legend = F, height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = stratification), show.legend = F, size = 3) +
-      geom_point(aes(x = mean, col = stratification), show.legend = F, size = 3, shape = 4, stroke = 1) +
+    fig <- data_filter %>%
+      ggplot(aes(y = factor(label))) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3, color = label), show.legend = F, height = 0, linewidth = 0.5) +
+      geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
+      geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
       facet_wrap(~variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "O = median; X = mean; - = IQR") +

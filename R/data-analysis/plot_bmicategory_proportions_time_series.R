@@ -31,30 +31,59 @@ pacman::p_load(
 plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data <- data %>%
-    filter(!Group == "other/prefer not to share") %>% #Manually filtering this out per Francescos advice
-    mutate(Group = factor(Group, levels = datadict[[strata]])) %>%
-    filter(Stratification == strata) %>%
-    mutate(category = factor(category, levels = c("Underweight", "Normal", "Overweight", "Obese")))
-
-  # Generate plot
-  fig <- data %>%
-    ggplot() +
-    geom_area(aes(x = Date, y = perc, fill = category, group = category),
-              position = "stack", alpha = 0.8) +
-    scale_fill_viridis_d(option = "D") +
-    labs(x = "Date",
-         y = "Percentage of Survey Participants (%)",
-         fill = "Category") +
-    #theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-          strip.text.y = element_blank()) +
-    facet_grid(cols = vars(Group), row = vars(Stratification), switch = "y", labeller = label_wrap_gen(width = 25), scales = "free")
-
+  data_filter <- data[[tolower(strata)]] |>
+    #dplyr::filter(!sex == "other/prefer not to share") %>%
+    pivot_wider(names_from = stat, values_from = value) %>%
+    dplyr::filter(is.na(mean))
 
   if (strata == "Overall") {
-    fig <- fig + theme(strip.text.x = element_blank())
+    fig <- data_filter %>%
+      ggplot() +
+      geom_area(aes(x = date, y = percent, fill = variable, group = variable),
+                position = "stack", alpha = 0.8) +
+      scale_fill_viridis_d(option = "D") +
+      labs(x = "Date",
+           y = "Percentage of Survey Participants (%)",
+           fill = "Category") +
+      #theme_bw() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+            strip.text.y = element_blank())
+  } else if (length(unlist(str_split(strata, "-"))) == 1) {
+    # Generate plot
+    fig <- data_filter %>%
+      dplyr::rename(facet1 = all_of(strata)) %>%
+      ggplot() +
+      geom_area(aes(x = date, y = percent, fill = variable, group = variable),
+                position = "stack", alpha = 0.8) +
+      scale_fill_viridis_d(option = "D") +
+      labs(x = "Date",
+           y = "Percentage of Survey Participants (%)",
+           fill = "Category") +
+      #theme_bw() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+            strip.text.y = element_blank()) +
+      facet_wrap(~facet1, labeller = label_wrap_gen(width = 25), scales = "free")
+
+  } else {
+    fig <- data_filter %>%
+      dplyr::rename(facet1 = all_of(unlist(str_split(strata, "-"))[1]),
+                    facet2 = all_of(unlist(str_split(strata, "-"))[2])) %>%
+      ggplot() +
+      geom_area(aes(x = date, y = percent, fill = variable, group = variable),
+                position = "stack", alpha = 0.8) +
+      scale_fill_viridis_d(option = "D") +
+      labs(x = "Date",
+           y = "Percentage of Survey Participants (%)",
+           fill = "Category") +
+      #theme_bw() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+            strip.text.y = element_blank()) +
+      facet_grid(facet1~facet2, labeller = label_wrap_gen(width = 25), scales = "free")
   }
+
+
+
+
   return(fig)
 
 }

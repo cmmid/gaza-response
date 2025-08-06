@@ -19,20 +19,22 @@ summarise_ids_by <- function(data, group_cols) {
       participant_days_n = n(),
       # data quality ---
       ## % records missing weight observations
-      days_observed = sum(!is.na(weight)),
-      days_missing = sum(is.na(weight)),
-      days_anomalous = sum(!include_observation),
-      ## % participants
-      days_excluded_percent = (days_missing + days_anomalous) /
-        participant_days_n * 100,
-      ) |>
-    pivot_longer(cols = -group_cols)
+      obs_recorded = sum(!is.na(weight)),
+      obs_missing = sum(is.na(weight)),
+      obs_anomalous = sum(!include_observation),
+      obs_excluded_percent = (obs_missing + obs_anomalous) /
+        participant_days_n * 100) |>
+    pivot_longer(cols = -group_cols, names_to = "variable") |>
+    mutate(stat = ifelse(grepl("_percent", variable),
+                         "percent", "count"))
 
   # summarise observed metrics -----
-  df_centraltendency <- data |>
-  # drop anomalous observations
+  ## drop anomalous observations
+  data <- data |>
     filter(include_observation)
-  # summarise
+
+  # averages
+  df_centraltendency <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
       across(c("weight",
@@ -49,9 +51,22 @@ summarise_ids_by <- function(data, group_cols) {
     pivot_longer(cols = -group_cols) %>%
     separate(name, into = c("variable", "stat"), sep = "\\.")
 
+  # proportions
+  df_props <- data |>
+    group_by(across(c(all_of(group_cols),
+                      "bmi_category"))) |>
+    summarise (n = n()) %>%
+    mutate(value = n / sum(n) * 100,
+           stat = "percent",
+           variable = paste0("bmi_category_", bmi_category)) |>
+    dplyr::select(-c(n, bmi_category))
+
   # combine summaries -----
-  df_summary <- left_join(df_participants, df_centraltendency,
+  df_summary <- left_join(df_participants,
+                          df_centraltendency,
+                          df_props,
                           by = group_cols) |>
+    # create single grouping id
     mutate(group = paste(group_cols, collapse = "-"))
 
   return(df_summary)

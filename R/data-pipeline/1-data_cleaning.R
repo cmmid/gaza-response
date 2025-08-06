@@ -88,14 +88,24 @@ clean_data <- function(base_data, fup_data) {
                              ifelse(age < 45, "30-44 years", "Over 45 years")))
   # BMI categories
   matched_data <- matched_data |>
-    mutate(bmi_category_current = case_when(
-      bmi <= 10 ~ NA_character_,
-      bmi < 18.5 ~ "underweight",
-      bmi >= 18.5 & bmi < 25 ~ "normal",
-      bmi >= 25 & bmi < 30 ~ "overweight",
-      bmi >= 30 ~ "obese",
-      bmi >= 60 ~ NA_character_,
-      TRUE ~ NA_character_))
+    mutate(
+      bmi_category = case_when(
+        bmi <= 10 ~ NA_character_,
+        bmi < 18.5 ~ "underweight",
+        bmi >= 18.5 & bmi < 25 ~ "normal",
+        bmi >= 25 & bmi < 30 ~ "overweight",
+        bmi >= 30 ~ "obese",
+        bmi >= 60 ~ NA_character_,
+        TRUE ~ NA_character_),
+      bmi_category_prewar = case_when(
+        bmi_prewar <= 10 ~ NA_character_,
+        bmi_prewar < 18.5 ~ "underweight",
+        bmi_prewar >= 18.5 & bmi_prewar < 25 ~ "normal",
+        bmi_prewar >= 25 & bmi_prewar < 30 ~ "overweight",
+        bmi_prewar >= 30 ~ "obese",
+        bmi_prewar >= 60 ~ NA_character_,
+        TRUE ~ NA_character_)
+      )
 
   # add "overall" variable for total-cohort summaries
   matched_data <- matched_data |>

@@ -27,8 +27,8 @@ group_cols <- c("overall", # specify stratifications
                 "sex", "agegroup", "governorate", "role", "children_feeding")
 
 # all time
-summary_all <- summarise_ids(data = data_id,
-                             group_cols = group_cols)
+summary <- summarise_ids(data = data_id,
+                                group_cols = group_cols)
 
 # participants reporting in latest 3 day window
 

@@ -28,11 +28,12 @@ group_cols <- c("overall", # specify stratifications
 
 # all time
 summary <- summarise_ids(data = data_id,
-                                group_cols = group_cols)
+                         group_cols = group_cols)
+summary_df <- list_rbind(summary)
 
 # participants reporting in latest 3 day window
 
 # 3. Save locally ----
-saveRDS(current_summary_stats_table, here("results",
-                                            "current_summary_stats.RDS"))
+saveRDS(summary, here("data", "public", "summary-stats.RDS"))
+
 # RDS data pushed to Github public repo

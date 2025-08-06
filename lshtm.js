@@ -10,7 +10,7 @@ window.onload = function() {
         document.querySelectorAll(".lshtm_widget_filter input:checked")
       ).map(cb => cb.value);
 
-        if (checkedBoxes.length > 2 && e.target.checked) {
+        if (checkedStrata.length > 2 && e.target.checked) {
           e.target.checked = false;
           alert("You can select up to 2 stratification options only.");
           return;
@@ -20,7 +20,7 @@ window.onload = function() {
       checkedStrata.sort();
 
       // Join with underscore
-      let stratum = checkedStrata.length > 0 ? checkedStrata.join("_") : "Overall";
+      let stratum = checkedStrata.length > 0 ? checkedStrata.join("-") : "Overall";
       console.log("Combined stratum string:", stratum);
 
       widgets.forEach(widget => {

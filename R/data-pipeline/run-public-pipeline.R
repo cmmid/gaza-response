@@ -31,7 +31,7 @@ group_cols <- map(group_cols,
 
 # summarise by date, organisation, and group combination
 summary <- imap(group_cols,
-               ~ data |>
+               ~ data_id |>
                  summarise_ids(group_cols = .x))
 summary_org <- clean_aggregated_data(summary)
 

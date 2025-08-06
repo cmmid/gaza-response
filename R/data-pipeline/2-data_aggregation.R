@@ -10,41 +10,43 @@ pacman::p_load(dplyr, tidyr, purrr)
 # summarise by any given strata ------------------------------------
 summarise_ids_by <- function(data, group_cols) {
 
-  # summarise participants & data quality
+  # summarise participants per group
   df_participants <- data |>
     group_by(across(all_of(group_cols))) |>
-    summarise(participants = length(unique(id)),
-              observations = n(),
-              weight_prewar_missing = sum(is.na(weight_prewar)),
-              bmi_anomaly = sum(bmi_anomaly, na.rm = TRUE) /
-                participants*100,
-              change_anomaly = sum(change_anomaly, na.rm = TRUE)  /
-                observations*100,
-              .groups = "drop"
-    )
+    summarise(
+      # participants ---
+      participants = length(unique(id)),
+      days_in_study = sum(days_in_study, na.rm = TRUE),
+      # data quality ---
+      ## % participants with anomalous current BMI
+      percent_bmi_anomaly = sum(bmi_anomaly, na.rm = TRUE) /
+        participants * 100,
+      ## % observations since enrolment with anomalous change in daily weight
+      percent_change_anomaly = sum(change_anomaly, na.rm = TRUE)  /
+        (days_in_study - participants) * 100)
 
   # drop anomalous observations
   data <- data |>
     filter(!bmi_anomaly | !change_anomaly)
 
-  # summarise observed metrics
-  observation_cols = c("weight", "BMI",
-                       "percent_change_firstmeasurement",
-                       "percent_change_prewar")
-
+  # summarise observed metrics, excluding anomalous observations
   df_centraltendency <- data |>
     group_by(across(all_of(group_cols))) |>
-    summarise(across(all_of(observation_cols),
-                     .fns = list(mean = ~ mean(., na.rm = TRUE),
-                                 median = ~ median(., na.rm = TRUE),
-                                 q1 = ~ quantile(., probs = 0.25, na.rm = TRUE),
-                                 q3 = ~ quantile(., probs = 0.75, na.rm = TRUE),
-                                 recorded = ~ n() - sum(is.na(.)),
-                                 missing = ~ sum(is.na(.)),
-                                 #participants = length(unique(id))
-                     ),
-                     .names = "{.col}.{.fn}"),
-              .groups = "drop"
+    summarise(
+      across(c("days_in_study",
+               "weight",
+               "bmi",
+               "percent_change_firstmeasurement",
+               "percent_change_prewar"),
+             .fns = list(mean = ~ mean(., na.rm = TRUE),
+                         median = ~ median(., na.rm = TRUE),
+                         q1 = ~ quantile(., probs = 0.25, na.rm = TRUE),
+                         q3 = ~ quantile(., probs = 0.75, na.rm = TRUE),
+                         records = n(),
+                         recorded = ~ n() - sum(is.na(.)),
+                         missing = ~ sum(is.na(.)),
+             )
+             .names = "{.col}.{.fn}")
     )
 
   df_centraltendency <- df_centraltendency |>

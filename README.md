@@ -17,3 +17,4 @@
 - This is a Quarto website, hosted on GitHub Pages.
 - Website settings are saved in [`_quarto.yml`](_quarto.yml)
 - Analytics are tracked with [goatcounter](https://gaza-response.goatcounter.com/settings/users). An admin will need to add your email to access this.
+- 

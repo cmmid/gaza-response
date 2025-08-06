@@ -24,9 +24,12 @@ summarise_ids_by <- function(data, group_cols) {
       obs_anomalous = sum(!include_observation),
       obs_excluded_percent = (obs_missing + obs_anomalous) /
         participant_days_n * 100) |>
-    pivot_longer(cols = -group_cols, names_to = "variable") |>
-    mutate(stat = ifelse(grepl("_percent", variable),
-                         "percent", "count"))
+    ungroup()
+
+  # |>
+  #   pivot_longer(cols = -group_cols, names_to = "variable") |>
+  #   mutate(stat = ifelse(grepl("_percent", variable),
+  #                        "percent", "count"))
 
   # summarise observed metrics -----
   ## drop anomalous observations
@@ -62,9 +65,10 @@ summarise_ids_by <- function(data, group_cols) {
     dplyr::select(-c(n, bmi_category))
 
   # combine summaries -----
-  df_summary <- bind_rows(df_participants,
-                          df_centraltendency,
+  df_summary <- bind_rows(df_centraltendency,
                           df_props) |>
+    left_join(df_participants,
+              by = group_cols) |>
     # create single grouping id
     mutate(group = paste(group_cols, collapse = "-"))
 

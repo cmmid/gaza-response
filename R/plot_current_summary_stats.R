@@ -30,20 +30,19 @@ pacman::p_load(
 plot_current_summary_stats <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data <- data %>%
-    filter(!Group == "other/prefer not to share") %>% #Manually filtering this out per Francescos advice
-    filter(Stratification == strata) %>%
-    mutate(Group = factor(Group, levels = datadict[[strata]]),
-           Variable = factor(Variable, levels = datadict[["variable"]]))
+  data_filtered <- data[[paste0(tolower(strata), "_2")]] |>
+    filter(date == max(date, na.rm = TRUE)) %>%
+    pivot_wider(names_from = stat, values_from = value) %>%
+    dplyr::filter(!is.na(mean))
 
   if (strata == "Overall") {
     # Generate plot
-    fig <- data %>%
+    fig <- data_filtered %>%
       ggplot(aes(y = 0)) +
       geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
       geom_point(aes(x = median), color = "darkblue", size = 3) +
       geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~Variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
+      facet_wrap(~variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "Blue point = median; X = mean; blue line = IQR") +
       #theme_bw() +
@@ -55,12 +54,14 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
   }
 
   else {
-    fig <- data %>%
-      ggplot(aes(y = factor(Group))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = Group), show.legend = F, height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = Group), show.legend = F, size = 3) +
-      geom_point(aes(x = mean, col = Group), show.legend = F, size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~Variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
+    fig <- data_filtered %>%
+      dplyr::rename(stratification := !!sym(strata)) %>%
+      dplyr::filter(stratification != "other/prefer not to share") %>%
+      ggplot(aes(y = factor(stratification))) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3, color = stratification), show.legend = F, height = 0, linewidth = 0.5) +
+      geom_point(aes(x = median, col = stratification), show.legend = F, size = 3) +
+      geom_point(aes(x = mean, col = stratification), show.legend = F, size = 3, shape = 4, stroke = 1) +
+      facet_wrap(~variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "O = median; X = mean; - = IQR") +
       #theme_bw() +

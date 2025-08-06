@@ -32,6 +32,7 @@ plot_bmicategory_proportions <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data <- data %>%
+    filter(!Group == "other/prefer not to share") %>% #Manually filtering this out per Francescos advice
     filter(Stratification == strata, Date == max(Date)) %>%
     mutate(category = factor(category, levels = c("Underweight", "Normal", "Overweight", "Obese")))
 
@@ -39,6 +40,7 @@ plot_bmicategory_proportions <- function(data, strata = "Overall"){
   fig <- data %>%
     ggplot() +
     geom_bar(aes(x = category, y = perc, fill = category), stat = "identity") +
+    geom_text(aes(x = category, y = perc, label = round(perc)), vjust = -0.5) +
     scale_fill_viridis_d(option = "D") +
     labs(x = "WHO BMI Category",
          y = "Percentage of Survey Participants (%)") +

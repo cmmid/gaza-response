@@ -10,6 +10,12 @@ window.onload = function() {
         document.querySelectorAll(".lshtm_widget_filter input:checked")
       ).map(cb => cb.value);
 
+        if (checkedBoxes.length > 2 && e.target.checked) {
+          e.target.checked = false;
+          alert("You can select up to 2 stratification options only.");
+          return;
+        }
+
       // Sort them alphabetically (change this to any other sorting logic if needed)
       checkedStrata.sort();
 

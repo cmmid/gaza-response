@@ -48,29 +48,28 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
            caption = "Blue point = median; X = mean; blue line = IQR") +
       #theme_bw() +
       theme(#strip.background = element_blank(),
-            #strip.text  = "outside",
-            axis.text.y  = element_blank(),
-            axis.ticks.y = element_blank(),
-            axis.title.y = element_blank())
+        #strip.text  = "outside",
+        axis.text.y  = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank())
   }
 
   else {
     fig <- data %>%
       ggplot(aes(y = factor(Group))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = Group), height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = Group), size = 3) +
-      geom_point(aes(x = mean, col = Group), size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~Variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3, color = Group), show.legend = F, height = 0, linewidth = 0.5) +
+      geom_point(aes(x = median, col = Group), show.legend = F, size = 3) +
+      geom_point(aes(x = mean, col = Group), show.legend = F, size = 3, shape = 4, stroke = 1) +
+      facet_wrap(~Variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "O = median; X = mean; - = IQR") +
-      labs(color = strata) +
       #theme_bw() +
       theme(#strip.background = element_blank(),
-            #strip.placement  = "outside",
-            axis.text.y  = element_blank(),
-            axis.ticks.y = element_blank(),
-            axis.title.y = element_blank(),
-            legend.position = "bottom")
+        #strip.placement  = "outside",
+        #axis.text.y  = element_blank(),
+        #åaxis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "bottom")
   }
 
 

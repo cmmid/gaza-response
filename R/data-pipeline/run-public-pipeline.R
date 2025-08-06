@@ -11,8 +11,7 @@ if(interactive()) {
 
 pipeline_functions <- paste0(base,
                              c("/1-data_cleaning.R",
-                               "/2-data_aggregation.R",
-                               "/3-data-quality.R"))
+                               "/2-data_aggregation.R"))
 walk(pipeline_functions, source)
 
 # Load data stored locally
@@ -25,11 +24,19 @@ data_id <- clean_data(base_data, fup_data)
 # 2. Aggregate and calculate summaries by stratification -----
 group_cols <- c("overall", # specify stratifications
                 "sex", "agegroup", "governorate", "role", "children_feeding")
+# only use 2 levels of stratification for now
+group_cols <- combn(group_cols_vec, 2, simplify = FALSE)
+group_cols <- map(group_cols_vec,
+                  ~ c("date", "organisation", sort(.x)))
+# calculate summaries
+summary <- map(all_groupings,
+               ~ data |>
+                 summarise_ids(group_cols = .x))
 
-# all time
+# summarise by date, organisation, and group combination
 summary <- summarise_ids(data = data_id,
                          group_cols = group_cols)
-summary_df <- list_rbind(summary)
+summary <- clean_aggregated_data(summary)
 
 # participants reporting in latest 3 day window
 

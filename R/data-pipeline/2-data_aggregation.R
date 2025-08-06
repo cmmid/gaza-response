@@ -8,7 +8,7 @@
 pacman::p_load(dplyr, tidyr, purrr)
 
 # summarise by any given strata ------------------------------------
-summarise_ids_by <- function(data, group_cols) {
+summarise_ids <- function(data, group_cols) {
 
   # summarise participants per group -----
   df_participants <- data |>
@@ -75,34 +75,15 @@ summarise_ids_by <- function(data, group_cols) {
   return(df_summary)
 }
 
-# summarise by intersection of multiple strata combinations -----
-summarise_ids <- function(data,
-                             group_cols,
-                             min_date = NULL, max_date = NULL) {
+clean_aggregated_data <- function(summary_list) {
+  # Restructuring into a list by organisation
+  summary_df <- list_rbind(summary_list) |>
+    ungroup() |>
+    mutate(group = str_replace_all(group, "organisation", "")) |>
+    dplyr::select(-overall)
+  org_split <- split(summary_df, summary_df$organisation)
+  org_split <- map(org_split,
+                   ~ split(., .$group))
 
-  # TODO filter dates if specified
-  # if (is.null(min_date)) {min_date <- min(data$date)}
-  # if (is.null(max_date)) {max_date <- max(data$date)}
-  # data <- data |>
-  #   filter(between(date, min_date, max_date))
-
-  # set up groups of stratification
-  all_groupings <- map(group_cols,
-                       ~ list(
-                         .x,  # just by stratification
-                         c(.x, "date"), # each stratification by date/org
-                         c(.x, "organisation"),
-                         c(.x, "organisation", "date")
-                       ))
-  names(all_groupings) <- group_cols
-  all_groupings <- list_flatten(all_groupings)
-
-  # calculate summaries
-  summary <- map(all_groupings,
-                 ~ data |>
-                   summarise_ids_by(group_cols = .x) |>
-                   mutate(strata = str_remove_all(group,
-                                                 regex("-organisation|-date"))))
-
-  return(summary)
+  return(org_split)
 }

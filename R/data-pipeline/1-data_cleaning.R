@@ -103,16 +103,14 @@ clean_data <- function(base_data, fup_data) {
 
   # Data quality checks -----------------------------------------------------
 
-  # Flag anomalous data: TRUE if anomalous, FALSE if within range
+  # Flag anomalous data
   matched_data <- matched_data |>
-    mutate(bmi_anomaly = !between(bmi, 10, 60),
-           bmi_prewar_anomaly = !between(bmi_prewar, 10, 60),
-           change_anomaly = percent_change_previousmeasurement >= 10)
-
-
-  # Remove records from before study enrolment ------------------------------
-  matched_data <- matched_data |>
-    filter()
+    mutate(
+      include_observation = case_when(
+        !between(bmi, 10, 60) ~ FALSE,
+        percent_change_previousmeasurement >= 10 ~ FALSE,
+        TRUE ~ TRUE)
+    )
 
   matched_data <- ungroup(matched_data)
 

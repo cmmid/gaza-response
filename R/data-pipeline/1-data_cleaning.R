@@ -34,14 +34,13 @@ pacman::p_load(
 
 clean_data <- function(base_data, fup_data) {
 
-  suppressMessages({
-    fup_data_expanded <- fup_data %>%
+  fup_data_expanded <- fup_data %>%
       dplyr::left_join(dplyr::select(base_data, !c(date, weight)),
                        by = "id")
-  })
 
   full_data <- rbind(base_data, fup_data_expanded) %>%
     dplyr::arrange(id, date, desc(!is.na(weight))) %>%  # Put non-NA weights first
+    # TODO remove duplicate records by ID and date - add n to quality checks
     dplyr::distinct(id, date, .keep_all = TRUE)
 
 
@@ -53,10 +52,10 @@ clean_data <- function(base_data, fup_data) {
     dplyr::group_by(id) %>%
     # time in cohort
     dplyr::mutate(date_first_measurement = min(date[!is.na(weight)]),
-                  days_in_study = difftime(date, date_first_measurement,
-                                           units = "days")) %>%
+                  days_in_study = as.integer(
+                    difftime(date, date_first_measurement, units = "days"))) %>%
     # remove records from before enrolment
-    filter(days_in_study < 0)
+    filter(days_in_study >= 0)
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -97,6 +96,10 @@ clean_data <- function(base_data, fup_data) {
       bmi >= 30 ~ "obese",
       bmi >= 60 ~ NA_character_,
       TRUE ~ NA_character_))
+
+  # add "overall" variable for total-cohort summaries
+  matched_data <- matched_data |>
+    mutate(overall = "overall")
 
   # Data quality checks -----------------------------------------------------
 

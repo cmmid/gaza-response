@@ -11,7 +11,7 @@ pipeline_functions <- paste0(base,
                              c("/1-data_cleaning.R",
                                "/2-data_aggregation.R",
                                "/3-data-quality.R"))
-walk(pipeline_functions, ~ source(.[1]))
+walk(pipeline_functions, source)
 
 # Load data stored locally
 base_data <- readRDS(here("data", "processed", "df_base.RDS"))

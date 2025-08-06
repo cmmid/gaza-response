@@ -41,7 +41,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
   fig <- data %>%
     ggplot() +
     geom_area(aes(x = Date, y = perc, fill = category, group = category),
-              position = "fill", alpha = 0.8) +
+              position = "stack", alpha = 0.8) +
     scale_fill_viridis_d(option = "D") +
     labs(x = "Date",
          y = "Percentage of Survey Participants (%)",

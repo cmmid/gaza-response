@@ -4,7 +4,9 @@
 pacman::p_load(here, purrr, dplyr)
 
 # Load the pipeline functions, locally or from github
-if(interactive()) {base <- here("R", "data-pipeline")} else {
+if(interactive()) {
+  base <- here("R", "data-pipeline")
+  } else {
   base <- "https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline" }
 
 pipeline_functions <- paste0(base,
@@ -17,11 +19,11 @@ walk(pipeline_functions, source)
 base_data <- readRDS(here("data", "processed", "df_base.RDS"))
 fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 
-# Clean data -----
+# 1. Clean data -----
 data_id <- clean_data(base_data, fup_data) |>
   mutate(overall = "overall")
 
-# Aggregate and calculate summaries by stratification -----
+# 2. Aggregate and calculate summaries by stratification -----
 group_cols <- c("overall", # specify stratifications
                 "sex", "agegroup", "governorate", "role", "children_feeding")
 
@@ -33,5 +35,5 @@ summary_all <- summarise_ids(data = data_id,
 
 # 3. Save locally ----
 saveRDS(current_summary_stats_table, here("results",
-                                            "current_summary_stats.csv"))
+                                            "current_summary_stats.RDS"))
 # RDS data pushed to Github public repo

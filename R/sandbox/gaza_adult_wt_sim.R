@@ -78,8 +78,6 @@
     df_base$role <- sample(c("expatriate", "national - contracted",
       "national = casual worker", "other"), n_staff, replace = T,
       prob = c(0.1, 0.5, 0.3, 0.1))
-
-    # number of children responsible
     df_base$children_feeding <- sample(c("1", "2", "3+"), n_staff, replace = T,
                                       prob = c(0.5, 0.3, 0.2))
 
@@ -145,11 +143,10 @@
   ## Save data
 
     # Baseline dataset
-    write.csv(df_base, here("data", "processed", "df_base.csv"), row.names = F)
-    write.csv(df_fup, here("data", "processed", "df_base.csv"), row.names = F)
+    saveRDS(df_base, here("data", "processed", "df_base.RDS"))
+    saveRDS(df_fup, here("data", "processed", "df_fup.RDS"))
 
 
 #...............................................................................
 ### ENDS
 #...............................................................................
-

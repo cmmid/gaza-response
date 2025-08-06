@@ -20,8 +20,7 @@ base_data <- readRDS(here("data", "processed", "df_base.RDS"))
 fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 
 # 1. Clean data -----
-data_id <- clean_data(base_data, fup_data) |>
-  mutate(overall = "overall")
+data_id <- clean_data(base_data, fup_data)
 
 # 2. Aggregate and calculate summaries by stratification -----
 group_cols <- c("overall", # specify stratifications

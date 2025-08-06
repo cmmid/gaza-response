@@ -12,6 +12,7 @@
 
 # Install or load packages from CRAN
 pacman::p_load(
+  lubridate,
   ggplot2,       # Visualise data
   ggpubr,        # Arrange multiple plots into a single plot
   ggrepel,       # Improve labelling of plots
@@ -43,20 +44,25 @@ clean_data <- function(base_data, fup_data) {
     dplyr::arrange(id, date, desc(!is.na(weight))) %>%  # Put non-NA weights first
     dplyr::distinct(id, date, .keep_all = TRUE)
 
-  # Clean date
+
+# Dates & cohort time -----------------------------------------------------
   full_data <- full_data |>
     dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
-
-  #...............................................................................
-  ### Add BMI and % wt change
-  #...............................................................................
 
   matched_data <- full_data %>%
     dplyr::group_by(id) %>%
     # time in cohort
     dplyr::mutate(date_first_measurement = min(date[!is.na(weight)]),
-                  days_in_study = date - date_first_measurement) %>%
-    # bmi, weight change
+                  days_in_study = difftime(date, date_first_measurement,
+                                           units = "days")) %>%
+    # remove records from before enrolment
+    filter(days_in_study < 0)
+
+  #...............................................................................
+  ### Add BMI and % wt change
+  #...............................................................................
+
+  matched_data <- matched_data |>
     dplyr::mutate(bmi = weight / (height/100)^2,
                   bmi_prewar = weight_prewar / (height/100)^2,
                   first_weight_measurement = weight[date == date_first_measurement],
@@ -100,6 +106,10 @@ clean_data <- function(base_data, fup_data) {
            bmi_prewar_anomaly = !between(bmi_prewar, 10, 60),
            change_anomaly = percent_change_previousmeasurement >= 10)
 
+
+  # Remove records from before study enrolment ------------------------------
+  matched_data <- matched_data |>
+    filter()
 
   matched_data <- ungroup(matched_data)
 

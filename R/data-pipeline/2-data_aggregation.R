@@ -23,7 +23,7 @@ summarise_ids <- function(data, group_cols) {
       cohort_recorded = sum(!is.na(weight)),
       cohort_missing = sum(is.na(weight)),
       cohort_anomalous = sum(!observation_valid),
-      cohort_invalid_percent = (obs_missing + obs_anomalous) /
+      cohort_invalid_percent = (cohort_missing + cohort_anomalous) /
         cohort_days_enrolled * 100) |>
     ungroup()
 
@@ -53,7 +53,7 @@ summarise_ids <- function(data, group_cols) {
     separate(name, into = c("variable", "stat"), sep = "\\.")
 
   # proportions
-  df_props <- data |>
+  df_bmi_current <- data |>
     group_by(across(all_of(c(group_cols,
                              "bmi_category")))) |>
     summarise(count = n()) |>
@@ -65,9 +65,24 @@ summarise_ids <- function(data, group_cols) {
     ungroup() |>
     dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
 
+  #TODO fix this
+  df_bmi_prewar <- data |>
+    group_by(across(all_of(c(group_cols,
+                             "bmi_category_prewar")))) |>
+    summarise(count = n()) |>
+    left_join(dplyr::select(df_participants,
+                            all_of(c(group_cols, "cohort_n")))) |>
+    mutate(value = count / cohort_n * 100,
+           stat = "percent",
+           variable = paste0("bmi_category_prewar_", bmi_category_prewar)) |>
+    ungroup() |>
+    dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
+
+  df_bmi_props <- bind_rows(df_bmi_current, df_bmi_prewar)
+
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,
-                          df_props) |>
+                          df_bmi_props) |>
     left_join(df_participants,
               by = group_cols) |>
     ungroup() |>

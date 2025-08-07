@@ -17,20 +17,21 @@ summarise_ids <- function(data, group_cols) {
     summarise(
       # participants ---
       cohort_n = length(unique(id)),
-      cohort_days_enrolled = n(),
+      cohort_new_joiners = participant_cumulative_days_enrolled == 1,
+      cohort_cumulative_days_enrolled = sum(participant_cumulative_days_enrolled),
       # data quality ---
       ## % records missing weight observations
-      cohort_recorded = sum(!is.na(weight)),
+      cohort_recorded_valid = sum(observation_valid, na.rm = TRUE),
       cohort_missing = sum(is.na(weight)),
-      cohort_anomalous = sum(!observation_valid),
+      cohort_anomalous = sum(!observation_valid, na.rm = TRUE),
       cohort_invalid_percent = (cohort_missing + cohort_anomalous) /
-        cohort_days_enrolled * 100) |>
+        cohort_n * 100) |>
     ungroup()
 
   # summarise observed metrics -----
   ## drop anomalous observations
   data <- data |>
-    filter(observation_valid)
+    filter(observation_valid == TRUE)
 
   # averages
   df_centraltendency <- data |>
@@ -53,13 +54,42 @@ summarise_ids <- function(data, group_cols) {
     separate(name, into = c("variable", "stat"), sep = "\\.")
 
   # proportions
-  df_bmi_current <- data |>
-    group_by(across(all_of(c(group_cols,
-                             "bmi_category")))) |>
-    summarise(count = n()) |>
-    left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_n")))) |>
-    mutate(value = count / cohort_n * 100,
+  all_factors <- data |>
+
+    group_by(across(all_of(c(group_cols)))) |>
+    crossing(group_cols)
+
+  bmi_expand <- data |>
+    mutate(bmi_category = factor(bmi_category,
+                                 levels = data_dict$bmi_category,
+                                 labels = names(data_dict$bmi_category)),
+           bmi_category = factor(bmi_category,
+                                 levels = data_dict$bmi_category,
+                                 labels = names(data_dict$bmi_category))) |>
+    group_by(across(all_of(c(group_cols)))) |>
+    summarise(records_valid = sum(observation_valid, na.rm = TRUE)) |>
+    expand(bmi_categories)
+
+  bmi_count <- bmi_data |>
+    filter(!is.na(bmi_category) & !(grepl("anomaly", bmi_category))) |>
+    group_by(across(all_of(c(group_cols, "bmi_category")))) |>
+    count() |>
+    right_join(bmi_expand)
+
+    # mutate(records = n()) |>
+    # group_by(across(all_of(c(group_cols, "bmi_category")))) |>
+    summarise(count = count(bmi_category),
+              records = n())
+
+              records = records[1])
+  bmi_data <- bmi_categories |>
+    left_join(df_bmi_current, by = c("bmi_category",
+                                     all_of(c(group_cols))))
+
+  bmi_data <- bmi_expand |>
+    left_join()
+  |>
+    mutate(value = count / records * 100,
            stat = "percent",
            variable = paste0("bmi_category_", bmi_category)) |>
     ungroup() |>
@@ -71,8 +101,8 @@ summarise_ids <- function(data, group_cols) {
                              "bmi_category_prewar")))) |>
     summarise(count = n()) |>
     left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_n")))) |>
-    mutate(value = count / cohort_n * 100,
+                            all_of(c(group_cols, "cohort_recorded")))) |>
+    mutate(value = count / cohort_recorded * 100,
            stat = "percent",
            variable = paste0("bmi_category_prewar_", bmi_category_prewar)) |>
     ungroup() |>

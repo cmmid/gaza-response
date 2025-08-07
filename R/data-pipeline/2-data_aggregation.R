@@ -58,12 +58,13 @@ summarise_ids <- function(data, group_cols) {
                              "bmi_category")))) |>
     summarise(count = n()) |>
     left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_n")))) |>
-    mutate(value = count / cohort_n * 100,
+                            all_of(c(group_cols, "cohort_recorded")))) |>
+    mutate(value = count / cohort_recorded * 100,
            stat = "percent",
            variable = paste0("bmi_category_", bmi_category)) |>
     ungroup() |>
-    dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
+    dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
+    complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))
 
   #TODO fix this copy-paste
   df_bmi_prewar <- data |>

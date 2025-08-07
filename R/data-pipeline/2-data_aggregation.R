@@ -22,24 +22,26 @@ summarise_ids <- function(data, group_cols) {
       ## % records missing weight observations
       obs_recorded = sum(!is.na(weight)),
       obs_missing = sum(is.na(weight)),
-      obs_anomalous = sum(!include_observation),
-      obs_excluded_percent = (obs_missing + obs_anomalous) /
+      obs_anomalous = sum(!observation_valid),
+      obs_invalid_percent = (obs_missing + obs_anomalous) /
         participant_days_since_enrol * 100) |>
     ungroup()
 
   # summarise observed metrics -----
   ## drop anomalous observations
   data <- data |>
-    filter(include_observation)
+    filter(observation_valid)
 
   # averages
   df_centraltendency <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
       across(c("weight",
+               "weight_percent_change_firstmeasurement",
+               "weight_percent_change_prewar",
                "bmi",
-               "percent_change_firstmeasurement",
-               "percent_change_prewar"),
+               "bmi_percent_change_firstmeasurement",
+               "bmi_percent_change_prewar"),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),
@@ -55,8 +57,8 @@ summarise_ids <- function(data, group_cols) {
     group_by(across(c(all_of(group_cols),
                       "bmi_category"))) |>
     summarise (n = n()) %>%
-    mutate(value = n / sum(n) * 100,
-           stat = "percent",
+    mutate(value = n,
+           stat = "count",
            variable = paste0("bmi_category_", bmi_category)) |>
     dplyr::select(-c(n, bmi_category))
 

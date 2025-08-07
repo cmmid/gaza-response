@@ -16,35 +16,32 @@ summarise_ids <- function(data, group_cols) {
     group_by(across(all_of(group_cols))) |>
     summarise(
       # participants ---
-      participant_n = length(unique(id)),
-      participant_days_n = n(),
+      cohort_n = length(unique(id)),
+      cohort_days_enrolled = n(),
       # data quality ---
       ## % records missing weight observations
-      obs_recorded = sum(!is.na(weight)),
-      obs_missing = sum(is.na(weight)),
-      obs_anomalous = sum(!include_observation),
-      obs_excluded_percent = (obs_missing + obs_anomalous) /
-        participant_days_n * 100) |>
+      cohort_recorded = sum(!is.na(weight)),
+      cohort_missing = sum(is.na(weight)),
+      cohort_anomalous = sum(!observation_valid),
+      cohort_invalid_percent = (cohort_missing + cohort_anomalous) /
+        cohort_days_enrolled * 100) |>
     ungroup()
-
-  # |>
-  #   pivot_longer(cols = -group_cols, names_to = "variable") |>
-  #   mutate(stat = ifelse(grepl("_percent", variable),
-  #                        "percent", "count"))
 
   # summarise observed metrics -----
   ## drop anomalous observations
   data <- data |>
-    filter(include_observation)
+    filter(observation_valid)
 
   # averages
   df_centraltendency <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
       across(c("weight",
+               "weight_percent_change_firstmeasurement",
+               "weight_percent_change_prewar",
                "bmi",
-               "percent_change_firstmeasurement",
-               "percent_change_prewar"),
+               "bmi_percent_change_firstmeasurement",
+               "bmi_percent_change_prewar"),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),
@@ -56,18 +53,37 @@ summarise_ids <- function(data, group_cols) {
     separate(name, into = c("variable", "stat"), sep = "\\.")
 
   # proportions
-  df_props <- data |>
-    group_by(across(c(all_of(group_cols),
-                      "bmi_category"))) |>
-    summarise (n = n()) %>%
-    mutate(value = n / sum(n) * 100,
+  df_bmi_current <- data |>
+    group_by(across(all_of(c(group_cols,
+                             "bmi_category")))) |>
+    summarise(count = n()) |>
+    left_join(dplyr::select(df_participants,
+                            all_of(c(group_cols, "cohort_recorded")))) |>
+    mutate(value = count / cohort_recorded * 100,
            stat = "percent",
            variable = paste0("bmi_category_", bmi_category)) |>
-    dplyr::select(-c(n, bmi_category))
+    ungroup() |>
+    dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
+    complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))
+
+  #TODO fix this copy-paste
+  df_bmi_prewar <- data |>
+    group_by(across(all_of(c(group_cols,
+                             "bmi_category_prewar")))) |>
+    summarise(count = n()) |>
+    left_join(dplyr::select(df_participants,
+                            all_of(c(group_cols, "cohort_n")))) |>
+    mutate(value = count / cohort_n * 100,
+           stat = "percent",
+           variable = paste0("bmi_category_prewar_", bmi_category_prewar)) |>
+    ungroup() |>
+    dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
+
+  df_bmi_props <- bind_rows(df_bmi_current, df_bmi_prewar)
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,
-                          df_props) |>
+                          df_bmi_props) |>
     left_join(df_participants,
               by = group_cols) |>
     ungroup() |>
@@ -81,10 +97,19 @@ summarise_ids <- function(data, group_cols) {
 clean_aggregated_data <- function(summary_list) {
   # Restructuring into a list by organisation
   summary_df <- list_rbind(summary_list) |>
-    ungroup() |>
+    ungroup()
+
+  # drop "other" sex category
+  summary_df <- summary_df |>
+    filter(!grepl("other/prefer not to share", sex))
+
+  # split into a list indexed by organisation
+  org_split <- summary_df |>
+    mutate(organisation = if_else(is.na(organisation), "all", organisation)) |>
     mutate(group = str_replace_all(group, "date-organisation-", "")) |>
+    mutate(group = str_replace_all(group, "date-", "")) |>
     dplyr::select(-overall)
-  org_split <- split(summary_df, summary_df$organisation)
+  org_split <- split(org_split, org_split$organisation)
   org_split <- map(org_split,
                    ~ split(., .$group))
   return(org_split)

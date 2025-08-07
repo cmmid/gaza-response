@@ -1,0 +1,201 @@
+---
+title: Dashboard
+format: 
+  dashboard:
+    scrolling: true
+    include-in-header:
+      text: |
+            <script src="lshtm.js"></script>
+    css: "styles.css"
+    fig-format: svg
+  #html:
+  #  page-layout: custom
+execute: 
+  echo: false
+---
+
+<!-- Setup, no output -->
+
+```{r setup, include=FALSE}
+## Packages
+pacman::p_load(here, 
+               purrr, readr, dplyr,
+               bslib, bsicons, 
+               ggplot2, plotly)
+
+## Load data dictionary
+datadict <- readRDS(here("data", "data_dictionary.RDS"))
+
+## Load Data RDS
+data <- readRDS(here("data", "public", "summary-stats.RDS"))
+
+data_long <- list_rbind(data[["all"]])
+data_long_current <- data_long |> filter(date == max(date))
+
+
+options <- c("sex", "agegroup", "governorate", "role", "children_feeding")
+# Generate all non-empty combinations
+strata <- unlist(
+  #lapply(1:length(options), function(k) {
+  lapply(1:2, function(k) {
+    combn(sort(options), k, FUN = function(x) paste(x, collapse = "-"))
+  })
+)
+# Add 'Overall' as default/fallback
+strata <- c("Overall", strata)
+
+
+## Source plotting scripts
+source(here("R", "data-analysis/generate_key_insights.R"))
+source(here("R", "data-analysis/plot_current_summary_stats.R"))
+source(here("R", "data-analysis/plot_time_series_statistics.R"))
+source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
+source(here("R", "data-analysis/ggplot_theme.R"))
+
+```
+
+<!-- Global sidebar -->
+
+# {.sidebar}
+
+<!-- Add data filter
+ - todo: change to pandoc format
+ - todo: fill options automatically or wrap in function
+-->
+<div class="lshtm_widget_filter">
+  <p><strong>Stratify Data</strong></p>
+  <div class="filter_content">
+  <fieldset>
+    <legend>Stratify data by</legend>
+    <label>
+      <input type="checkbox" name="data_filter" value="sex">
+      Sex
+    </label><br>
+    <label>
+      <input type="checkbox" name="data_filter" value="agegroup">
+      Age
+    </label><br>
+    <label>
+      <input type="checkbox" name="data_filter" value="governorate">
+      Location
+    </label><br>
+    <label>
+      <input type="checkbox" name="data_filter" value="role">
+      Role
+    </label>
+    <label>
+      <input type="checkbox" name="data_filter" value="children_feeding">
+      Dependent children
+    </label><br>
+  </fieldset>
+</div>
+</div>
+
+<!-- Dashboard page 1 -->
+
+
+# All Participants
+```{r filter_all, include=FALSE}
+data_filtered <- data$all
+params <- generate_key_insights(data)
+```
+
+
+::: {.card fill="false" title="Key insights"}
+- Data updated as of **`r params$latest_date`**
+- Collected  **`r params$observations` observations** from **`r params$participants` participants**
+- Median **`r params$median_change[1]`kg** change compared to pre-war weight
+:::
+
+
+::: {.card .current_summary_card .lshtm_widget title="Current Summary" fill = "false"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="current_summary">
+```{r plot-current-summary, results="asis"}
+#| fig-width: 10
+#| fig-asp: 0.4
+#| fig-align: center
+for(i in strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
+  
+  print(
+    plot_current_summary_stats(
+      data = data_filtered,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
+:::
+
+```{r plotly}
+data_filtered <- data$all
+plot_current_summary_stats(
+      data = data_filtered,
+      strata = c("Overall")
+    ) |> 
+  ggplotly()
+```
+
+<!-- Create div for trend over time -->
+::: {.card .trend_time_card .lshtm_widget title="Trends over time" fill = "false"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="trend_over_time">
+```{r plot-trends-weight, results="asis"}
+#| fig-width: 10
+#| fig-asp: 1.5
+#| fig-align: center
+for(i in strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
+  
+  print(
+    plot_time_series_statistics(
+      data = data_filtered,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
+:::
+
+
+<!-- Create div for trend over time -->
+::: {.card .trend_bmi_card .lshtm_widget title="Proportion Study in WHO Body Mass Index Categories Over Time" fill = "false"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="trends_bmi">
+```{r plot-trends-bmi, results="asis"}
+#| fig-width: 10
+#| fig-asp: 1
+#| fig-align: center
+for(i in strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
+  
+  print(
+     plot_bmicategory_proportions_time_series(
+     data = data_filtered,
+     strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
+:::
+
+
+::: {.card title="Notes" fill = "false"}
+
+Change in self-reported weight from pre-war baseline.
+Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
+
+:::

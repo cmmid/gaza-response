@@ -16,15 +16,15 @@ summarise_ids <- function(data, group_cols) {
     group_by(across(all_of(group_cols))) |>
     summarise(
       # participants ---
-      participant_n = length(unique(id)),
-      participant_days_since_enrol = n(),
+      cohort_n = length(unique(id)),
+      cohort_days_enrolled = n(),
       # data quality ---
       ## % records missing weight observations
-      obs_recorded = sum(!is.na(weight)),
-      obs_missing = sum(is.na(weight)),
-      obs_anomalous = sum(!observation_valid),
-      obs_invalid_percent = (obs_missing + obs_anomalous) /
-        participant_days_since_enrol * 100) |>
+      cohort_recorded = sum(!is.na(weight)),
+      cohort_missing = sum(is.na(weight)),
+      cohort_anomalous = sum(!observation_valid),
+      cohort_invalid_percent = (obs_missing + obs_anomalous) /
+        cohort_days_enrolled * 100) |>
     ungroup()
 
   # summarise observed metrics -----
@@ -54,13 +54,16 @@ summarise_ids <- function(data, group_cols) {
 
   # proportions
   df_props <- data |>
-    group_by(across(c(all_of(group_cols),
-                      "bmi_category"))) |>
-    summarise (n = n()) %>%
-    mutate(value = n,
-           stat = "count",
+    group_by(across(all_of(c(group_cols,
+                             "bmi_category")))) |>
+    summarise(count = n()) |>
+    left_join(dplyr::select(df_participants,
+                            all_of(c(group_cols, "cohort_n")))) |>
+    mutate(value = count / cohort_n * 100,
+           stat = "percent",
            variable = paste0("bmi_category_", bmi_category)) |>
-    dplyr::select(-c(n, bmi_category))
+    ungroup() |>
+    dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,

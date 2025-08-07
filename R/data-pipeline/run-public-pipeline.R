@@ -41,21 +41,21 @@ saveRDS(summary_date, here("data", "public", "summary-date.RDS"))
 
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
 # set window for current data
-current_days <- Sys.Date() - 3 # TODO set this interactively so not fixed to now
+# TODO set this interactively so not fixed to now
+current_days <- seq.Date(Sys.Date() - 3, length.out = 3, by = "day")
 # filter to current data
 data_id_latest <- data_id |>
   group_by(id) |>
   filter(
     # only include observations that are recorded & in valid range
     observation_valid &
-    # only latest for each participant
-    cumulative_days_obs_recorded == max(cumulative_days_obs_recorded,
-                                         na.rm = TRUE) &
     # only within most recent window
-    date >= current_days) |>
+    date %in% current_days &
+    # only latest for each participant
+    date == max(date, na.rm = TRUE)) |>
   ungroup() |>
   # set all dates to earliest date in recent window
-  mutate(date = min(date))
+  mutate(date = min(current_days))
 
 # summarise
 summary_current <- imap(group_cols,

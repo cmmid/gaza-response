@@ -52,11 +52,11 @@ clean_data <- function(base_data, fup_data) {
     dplyr::group_by(id) |>
     # time in cohort
     dplyr::mutate(date_first_measurement = min(date[!is.na(weight)]),
-                  days_since_enrol = as.integer(
+                  participant_cumulative_days_enrolled = 1 + as.integer(
                     difftime(date, date_first_measurement, units = "days")),
-                  cumulative_days_obs_recorded = cumsum(!is.na(weight))) |>
+                  participant_cumulative_days_recorded = cumsum(!is.na(weight))) |>
     # remove records from before enrolment
-    filter(days_since_enrol >= 0) |>
+    filter(participant_cumulative_days_enrolled >= 1) |>
     ungroup()
 
   #...............................................................................
@@ -64,12 +64,14 @@ clean_data <- function(base_data, fup_data) {
   #...............................................................................
 
   matched_data <- matched_data |>
+    group_by(id) |>
     dplyr::mutate(
-      # absolute numbers
+      # daily absolute number
       bmi = weight / (height/100)^2,
       bmi_prewar = weight_prewar / (height/100)^2,
+      # prewar absolute
       first_weight_measurement = weight[date == date_first_measurement],
-      first_bmi_measurement = weight[date == date_bmi_measurement],
+      first_bmi_measurement = bmi[date == date_first_measurement],
       # change since enrolment
       weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/
                                                   first_weight_measurement)*100,
@@ -78,8 +80,8 @@ clean_data <- function(base_data, fup_data) {
       # change since prewar
       weight_percent_change_prewar = ((weight - weight_prewar)/
                                         weight_prewar)*100,
-      bmi_percent_change_prewar = ((weight - weight_prewar)/
-                                     weight_prewar)*100) |>
+      bmi_percent_change_prewar = ((bmi - bmi_prewar)/
+                                     bmi_prewar)*100) |>
     ungroup()
 
  change_from_previous <- matched_data %>%
@@ -87,8 +89,9 @@ clean_data <- function(base_data, fup_data) {
     dplyr::group_by(id) %>%
     dplyr::filter(!is.na(weight)) %>%
     dplyr::mutate(previous_weight = lag(weight),
-                  previous_bmi - lag(bmi)) %>%
-    dplyr::mutate(weight_percent_change_previousmeasurement = ((weight - previous_weight) / previous_weight)*100,
+                  previous_bmi = lag(bmi),
+                  weight_percent_change_previousmeasurement = ((weight - previous_weight) /
+                                                                 previous_weight)*100,
                   bmi_percent_change_previousmeasurement = ((bmi - previous_bmi) / previous_bmi)*100) %>%
     dplyr::select(id, date,
                   weight_percent_change_previousmeasurement,
@@ -133,9 +136,9 @@ clean_data <- function(base_data, fup_data) {
   # Flag anomalous data
   matched_data <- matched_data |>
     mutate(
-      include_observation = case_when(
+      observation_valid = case_when(
         !between(bmi, 10, 60) ~ FALSE,
-        percent_change_previousmeasurement >= 10 ~ FALSE,
+        weight_percent_change_previousmeasurement >= 10 ~ FALSE,
         TRUE ~ TRUE)
     )
 

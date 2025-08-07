@@ -6,7 +6,7 @@ pacman::p_load(here, purrr, dplyr)
 # Load the pipeline functions, locally or from github
 if(interactive()) {
   base <- here("R", "data-pipeline")
-  } else {
+} else {
   base <- "https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline" }
 
 pipeline_functions <- paste0(base,
@@ -26,18 +26,17 @@ group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
 group_cols <- append(group_cols, as.list(c("overall", "agegroup", "children_feeding", "governorate", "role", "sex")))
 group_cols <- append(map(group_cols,
-                  ~ c("date", "organisation", sort(.x))),
-                  map(group_cols,
-                      ~ c("date", sort(.x))))
+                         ~ c("date", "organisation", sort(.x))),
+                     map(group_cols,
+                         ~ c("date", sort(.x))))
 
 # Trends over time: summarise by date, organisation, and group -----
 # summarise
-summary_date <- imap(group_cols,
-               ~ data_id |>
-                 summarise_ids(group_cols = .x)) |>
+summary_time <- imap(group_cols,
+                     ~ data_id |>
+                       summarise_ids(group_cols = .x)) |>
   clean_aggregated_data()
-# save
-saveRDS(summary_date, here("data", "public", "summary-date.RDS"))
+
 
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
 # set window for current data
@@ -49,20 +48,24 @@ data_id_latest <- data_id |>
   filter(
     # only include observations that are recorded & in valid range
     observation_valid &
-    # only within most recent window
-    date %in% current_days &
-    # only latest for each participant
-    date == max(date, na.rm = TRUE)) |>
+      # only within most recent window
+      date %in% current_days &
+      # only latest for each participant
+      date == max(date, na.rm = TRUE)) |>
   ungroup() |>
   # set all dates to earliest date in recent window
   mutate(date = min(current_days))
 
 # summarise
 summary_current <- imap(group_cols,
-                     ~ data_id_latest |>
-                       summarise_ids(group_cols = .x)) |>
+                        ~ data_id_latest |>
+                          summarise_ids(group_cols = .x)) |>
   clean_aggregated_data()
-# save
-saveRDS(summary_date, here("data", "public", "summary-current.RDS"))
+
+# save ----------------------
+summary <- list()
+summary$time <- summary_time
+summary$current <- summary_current
+saveRDS(summary, here("data", "public", "summary.RDS"))
 
 # RDS data pushed to Github public repo

@@ -65,7 +65,7 @@ summarise_ids <- function(data, group_cols) {
     ungroup() |>
     dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
 
-  #TODO fix this
+  #TODO fix this copy-paste
   df_bmi_prewar <- data |>
     group_by(across(all_of(c(group_cols,
                              "bmi_category_prewar")))) |>
@@ -100,7 +100,7 @@ clean_aggregated_data <- function(summary_list) {
 
   # drop "other" sex category
   summary_df <- summary_df |>
-    filter(sex != "other/prefer not to share")
+    filter(!grepl("other/prefer not to share", sex))
 
   # split into a list indexed by organisation
   org_split <- summary_df |>

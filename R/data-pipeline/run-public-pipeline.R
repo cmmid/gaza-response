@@ -30,18 +30,11 @@ group_cols <- append(map(group_cols,
                      map(group_cols,
                          ~ c("date", sort(.x))))
 
-# Trends over time: summarise by date, organisation, and group -----
-# summarise
-summary_time <- imap(group_cols,
-                     ~ data_id |>
-                       summarise_ids(group_cols = .x)) |>
-  clean_aggregated_data()
-
-
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
-# set window for current data
+# TODO fix this very hacky code
 # TODO set this interactively so not fixed to now
 current_days <- seq.Date(Sys.Date() - 3, length.out = 3, by = "day")
+
 # filter to current data
 data_id_latest <- data_id |>
   group_by(id) |>
@@ -53,19 +46,19 @@ data_id_latest <- data_id |>
       # only latest for each participant
       date == max(date, na.rm = TRUE)) |>
   ungroup() |>
-  # set all dates to earliest date in recent window
-  mutate(date = min(current_days))
+  # set date to the future to use as a flag that this is the most recent record (noting all group calculations include date so will not be double-counted)
+  mutate(date = Sys.Date() + 3650)
 
-# summarise
-summary_current <- imap(group_cols,
-                        ~ data_id_latest |>
-                          summarise_ids(group_cols = .x)) |>
+# bind latest data with fill time series
+data_id_dated <- bind_rows(data_id, data_id_latest)
+
+# summarise by date, organisation, and group -----
+summary <- imap(group_cols,
+                     ~ data_id_dated |>
+                       summarise_ids(group_cols = .x)) |>
   clean_aggregated_data()
 
 # save ----------------------
-summary <- list()
-summary$time <- summary_time
-summary$current <- summary_current
-saveRDS(summary, here("data", "public", "summary.RDS"))
+saveRDS(summary, here("data", "public", "summary-stats.RDS"))
 
 # RDS data pushed to Github public repo

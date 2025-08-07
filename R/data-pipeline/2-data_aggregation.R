@@ -96,12 +96,19 @@ summarise_ids <- function(data, group_cols) {
 clean_aggregated_data <- function(summary_list) {
   # Restructuring into a list by organisation
   summary_df <- list_rbind(summary_list) |>
-    ungroup() |>
+    ungroup()
+
+  # drop "other" sex category
+  summary_df <- summary_df |>
+    filter(sex != "other/prefer not to share")
+
+  # split into a list indexed by organisation
+  org_split <- summary_df |>
     mutate(organisation = if_else(is.na(organisation), "all", organisation)) |>
     mutate(group = str_replace_all(group, "date-organisation-", "")) |>
     mutate(group = str_replace_all(group, "date-", "")) |>
     dplyr::select(-overall)
-  org_split <- split(summary_df, summary_df$organisation)
+  org_split <- split(org_split, org_split$organisation)
   org_split <- map(org_split,
                    ~ split(., .$group))
   return(org_split)

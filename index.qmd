@@ -149,7 +149,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
   
   print(
-    plot_time_series_statistics(
+   plot_time_series_statistics(
       data = data_filtered,
       strata = i
     )
@@ -213,12 +213,7 @@ for(i in strata) {
 </div>
 :::
 
-## Row
-::: {.card title="Notes" fill = "false"}
 
-Change in self-reported weight from pre-war baseline.
-Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
-:::
 
 
 
@@ -317,13 +312,32 @@ Trends over time of proportion of staff with BMI in different [WHO categories](h
 
 :::
 
+## Row
 
-::: {.card title="Notes" fill = "false"}
-
-Change in self-reported weight from pre-war baseline.
-Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
-
+::: {.card fill="false" .lshtm_widget title="Participants over time"}
+<div class="lshtm_widget_identifier" id="participants_over_time">
+```{r plot-participants-over-time-stc, results="asis"}
+#| fig-width: 7
+#| fig-asp: 0.5
+#| fig-align: center
+for(i in strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))
+  
+  print(
+    plot_participants_over_time(
+      data = data_filtered,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
 :::
+
+
 
 
 
@@ -420,12 +434,31 @@ for(i in strata) {
 Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
 :::
 
+## Row
 
-::: {.card title="Notes" fill = "false"}
-
-Change in self-reported weight from pre-war baseline.
-Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30.
-
+::: {.card fill="false" .lshtm_widget title="Participants over time"}
+<div class="lshtm_widget_identifier" id="participants_over_time">
+```{r plot-participants-over-time-unrwa, results="asis"}
+#| fig-width: 7
+#| fig-asp: 0.5
+#| fig-align: center
+for(i in strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))
+  
+  print(
+    plot_participants_over_time(
+      data = data_filtered,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
 :::
+
+
 
 

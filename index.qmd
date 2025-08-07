@@ -94,14 +94,14 @@ All participation is entirely voluntary.
 # All Participants
 ```{r filter_all, include=FALSE}
 data_filtered <- data$all
-params <- generate_key_insights(data)
+params <- generate_key_insights(data_filtered)
 ```
 
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-- Collected  **`r params$observations` observations** from **`r params$participants` participants**
-- Median **`r params$median_change[1]`kg** change compared to pre-war weight
+- Collected  **`r params$observations` observations** from **`r params$cohort_size` participants**
+- Median change of **`r params$median_change`%** compared to pre-war weight
 :::
 
 
@@ -194,13 +194,13 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 # Save the Children International
 ```{r filter_stc, include=FALSE}
 data_filtered <- data$`Save the Children International`
-params <- generate_key_insights(data)
+params <- generate_key_insights(data_filtered)
 ```
 
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-- Collected  **`r params$observations` observations** from **`r params$participants` participants**
+- Collected  **`r params$observations` observations** from **`r params$cohort_size` participants**
 - Median **`r params$median_change[1]`kg** change compared to pre-war weight
 :::
 
@@ -294,13 +294,13 @@ Proportion of staff with BMI in different WHO categories: underweight <18.5, nor
 # UNRWA
 ```{r filter_unrwa, include=FALSE}
 data_filtered <- data$UNRWA
-params <- generate_key_insights(data)
+params <- generate_key_insights(data_filtered)
 ```
 
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-- Collected  **`r params$observations` observations** from **`r params$participants` participants**
+- Collected  **`r params$observations` observations** from **`r params$cohort_size` participants**
 - Median **`r params$median_change[1]`kg** change compared to pre-war weight
 :::
 

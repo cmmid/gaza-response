@@ -17,20 +17,15 @@ summarise_ids <- function(data, group_cols) {
     summarise(
       # participants ---
       participant_n = length(unique(id)),
-      participant_days_n = n(),
+      participant_days_since_enrol = n(),
       # data quality ---
       ## % records missing weight observations
       obs_recorded = sum(!is.na(weight)),
       obs_missing = sum(is.na(weight)),
       obs_anomalous = sum(!include_observation),
       obs_excluded_percent = (obs_missing + obs_anomalous) /
-        participant_days_n * 100) |>
+        participant_days_since_enrol * 100) |>
     ungroup()
-
-  # |>
-  #   pivot_longer(cols = -group_cols, names_to = "variable") |>
-  #   mutate(stat = ifelse(grepl("_percent", variable),
-  #                        "percent", "count"))
 
   # summarise observed metrics -----
   ## drop anomalous observations

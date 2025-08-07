@@ -93,10 +93,17 @@ All participation is entirely voluntary.
 
 
 # All Participants
+
 ```{r filter_all, include=FALSE}
 data_filtered <- data$all
 params <- generate_key_insights(data_filtered)
 ```
+
+::: {.callout-caution}
+## Caution
+This project remains under active development, with data collection and analysis occurring in 
+real time in an evolving situation. To get involved, read more about the project in the [About](./about) section.
+:::
 
 ## Row
 

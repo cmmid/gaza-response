@@ -40,6 +40,7 @@ strata <- unlist(
 # Add 'Overall' as default/fallback
 strata <- c("Overall", strata)
 
+organisations <- names(data)[2:length(data)]
 
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))
@@ -54,15 +55,19 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 
 # {.sidebar}
 
+### About the project
+This project aims to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the famine-affected population in Gaza by providing real-time information on the nutritional status of humanitarian staff. The project is implemented with the support of the London School of Hygiene and Tropical Medicine (LSHTM).
+All participation is entirely voluntary.
+
 <!-- Add data filter
  - todo: change to pandoc format
  - todo: fill options automatically or wrap in function
 -->
 <div class="lshtm_widget_filter">
-  <p><strong>Stratify Data</strong></p>
+  <p><strong>Stratify data by</strong></p>
   <div class="filter_content">
   <fieldset>
-    <legend>Stratify data by</legend>
+    <!--<legend>Stratify data by</legend>-->
     <label>
       <input type="checkbox" name="data_filter" value="sex">
       Sex

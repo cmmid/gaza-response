@@ -79,6 +79,10 @@ source(here("R", "data-analysis/ggplot_theme.R"))
       <input type="checkbox" name="data_filter" value="role">
       Role
     </label>
+    <label>
+      <input type="checkbox" name="data_filter" value="children_feeding">
+      Dependent children
+    </label><br>
   </fieldset>
 </div>
 </div>

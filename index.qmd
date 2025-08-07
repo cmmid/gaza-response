@@ -127,6 +127,8 @@ for(i in strata) {
 }
 ```
 </div>
+Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
+
 :::
 
 
@@ -136,7 +138,7 @@ for(i in strata) {
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight, results="asis"}
 #| fig-width: 10
-#| fig-asp: 1.5
+#| fig-asp: 1.3
 #| fig-align: center
 for(i in strata) {
   # show the first stratum (overall) by default
@@ -153,11 +155,12 @@ for(i in strata) {
 }
 ```
 </div>
+Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
 :::
 
 
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion Study in WHO Body Mass Index Categories Over Time" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="Proportion of Study Participants in WHO Body Mass Index Categories Over Time" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi, results="asis"}
@@ -227,6 +230,7 @@ for(i in strata) {
 }
 ```
 </div>
+Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
 
@@ -253,11 +257,12 @@ for(i in strata) {
 }
 ```
 </div>
+Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
 :::
 
 
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion Study in WHO Body Mass Index Categories Over Time" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="Proportion of Study Participants in WHO Body Mass Index Categories Over Time" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi_stc, results="asis"}
@@ -327,6 +332,7 @@ for(i in strata) {
 }
 ```
 </div>
+Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
 
@@ -353,11 +359,12 @@ for(i in strata) {
 }
 ```
 </div>
+Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
 :::
 
 
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion Study in WHO Body Mass Index Categories Over Time" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="Proportion of Study Participants in WHO Body Mass Index Categories Over Time" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi_unrwa, results="asis"}

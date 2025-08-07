@@ -35,7 +35,8 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     dplyr::filter(date <= Sys.Date()) %>%
     #dplyr::filter(!sex == "other/prefer not to share") %>%
     pivot_wider(names_from = stat, values_from = value) %>%
-    dplyr::filter(!is.na(mean))
+    dplyr::filter(!is.na(mean)) |>
+    filter(!grepl("_firstmeasurement", variable))
 
   if (strata == "Overall") {
     # Generate plot

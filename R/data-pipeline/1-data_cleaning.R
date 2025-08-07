@@ -48,38 +48,58 @@ clean_data <- function(base_data, fup_data) {
   full_data <- full_data |>
     dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
 
-  matched_data <- full_data %>%
-    dplyr::group_by(id) %>%
+  matched_data <- full_data |>
+    dplyr::group_by(id) |>
     # time in cohort
     dplyr::mutate(date_first_measurement = min(date[!is.na(weight)]),
-                  days_in_study = as.integer(
-                    difftime(date, date_first_measurement, units = "days"))) %>%
+                  participant_cumulative_days_enrolled = 1 + as.integer(
+                    difftime(date, date_first_measurement, units = "days")),
+                  participant_cumulative_days_recorded = cumsum(!is.na(weight))) |>
     # remove records from before enrolment
-    filter(days_in_study >= 0)
+    filter(participant_cumulative_days_enrolled >= 1) |>
+    ungroup()
 
   #...............................................................................
   ### Add BMI and % wt change
   #...............................................................................
 
   matched_data <- matched_data |>
-    dplyr::mutate(bmi = weight / (height/100)^2,
-                  bmi_prewar = weight_prewar / (height/100)^2,
-                  first_weight_measurement = weight[date == date_first_measurement],
-                  percent_change_firstmeasurement = ((weight - first_weight_measurement)/first_weight_measurement)*100,
-                  percent_change_prewar = ((weight - weight_prewar)/weight_prewar)*100) |>
+    group_by(id) |>
+    dplyr::mutate(
+      # daily absolute number
+      bmi = weight / (height/100)^2,
+      bmi_prewar = weight_prewar / (height/100)^2,
+      # prewar absolute
+      first_weight_measurement = weight[date == date_first_measurement],
+      first_bmi_measurement = bmi[date == date_first_measurement],
+      # change since enrolment
+      weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/
+                                                  first_weight_measurement)*100,
+      bmi_percent_change_firstmeasurement = ((bmi - first_bmi_measurement)/
+                                               first_bmi_measurement)*100,
+      # change since prewar
+      weight_percent_change_prewar = ((weight - weight_prewar)/
+                                        weight_prewar)*100,
+      bmi_percent_change_prewar = ((bmi - bmi_prewar)/
+                                     bmi_prewar)*100) |>
     ungroup()
 
-  weight_change_from_previous <- matched_data %>%
+ change_from_previous <- matched_data %>%
     dplyr::arrange(id, date) %>%
     dplyr::group_by(id) %>%
     dplyr::filter(!is.na(weight)) %>%
-    dplyr::mutate(previous_weight = lag(weight)) %>%
-    dplyr::mutate(percent_change_previousmeasurement = ((weight - previous_weight) / previous_weight)*100) %>%
-    dplyr::select(id, date, percent_change_previousmeasurement) |>
+    dplyr::mutate(previous_weight = lag(weight),
+                  previous_bmi = lag(bmi),
+                  weight_percent_change_previousmeasurement = ((weight - previous_weight) /
+                                                                 previous_weight)*100,
+                  bmi_percent_change_previousmeasurement = ((bmi - previous_bmi) / previous_bmi)*100) %>%
+    dplyr::select(id, date,
+                  weight_percent_change_previousmeasurement,
+                  bmi_percent_change_previousmeasurement) |>
     ungroup()
 
   matched_data <- left_join(matched_data,
-                            weight_change_from_previous, by = c("id", "date"))
+                            change_from_previous, by = c("id", "date"))
 
   # Specify factor variables ------------------------------------------------
   # TODO use data dictionary here
@@ -116,9 +136,9 @@ clean_data <- function(base_data, fup_data) {
   # Flag anomalous data
   matched_data <- matched_data |>
     mutate(
-      include_observation = case_when(
+      observation_valid = case_when(
         !between(bmi, 10, 60) ~ FALSE,
-        percent_change_previousmeasurement >= 10 ~ FALSE,
+        weight_percent_change_previousmeasurement >= 10 ~ FALSE,
         TRUE ~ TRUE)
     )
 

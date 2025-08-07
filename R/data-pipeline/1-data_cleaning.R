@@ -110,20 +110,20 @@ clean_data <- function(base_data, fup_data) {
   matched_data <- matched_data |>
     mutate(
       bmi_category = case_when(
-        bmi <= 10 ~ NA_character_,
+        bmi <= 10 ~ "anomaly",
         bmi < 18.5 ~ "underweight",
         bmi >= 18.5 & bmi < 25 ~ "normal",
         bmi >= 25 & bmi < 30 ~ "overweight",
         bmi >= 30 ~ "obese",
-        bmi >= 60 ~ NA_character_,
+        bmi >= 60 ~ "anomaly",
         TRUE ~ NA_character_),
       bmi_category_prewar = case_when(
-        bmi_prewar <= 10 ~ NA_character_,
+        bmi_prewar <= 10 ~ "anomaly",
         bmi_prewar < 18.5 ~ "underweight",
         bmi_prewar >= 18.5 & bmi_prewar < 25 ~ "normal",
         bmi_prewar >= 25 & bmi_prewar < 30 ~ "overweight",
         bmi_prewar >= 30 ~ "obese",
-        bmi_prewar >= 60 ~ NA_character_,
+        bmi_prewar >= 60 ~ "anomaly",
         TRUE ~ NA_character_)
       )
 
@@ -137,8 +137,9 @@ clean_data <- function(base_data, fup_data) {
   matched_data <- matched_data |>
     mutate(
       observation_valid = case_when(
-        !between(bmi, 10, 60) ~ FALSE,
+        bmi_category == "anomaly" ~ FALSE,
         weight_percent_change_previousmeasurement >= 10 ~ FALSE,
+        is.na(weight) ~ NA,
         TRUE ~ TRUE)
     )
 

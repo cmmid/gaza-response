@@ -182,6 +182,8 @@ for(i in strata) {
 }
 ```
 </div>
+Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
+
 :::
 
 
@@ -284,6 +286,8 @@ for(i in strata) {
 }
 ```
 </div>
+Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
+
 :::
 
 
@@ -386,6 +390,7 @@ for(i in strata) {
 }
 ```
 </div>
+Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
 :::
 
 

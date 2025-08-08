@@ -40,6 +40,7 @@ recode_data_table <- function(dataframe){
                         "normal",
                         "overweight",
                         "obese")
+  agegroup_levels <- c("Under 30 years", "30-44 years", "Over 45 years")
 
   # Filter data for the selected option
   datarecoded_df <- dataframe |>
@@ -58,10 +59,15 @@ recode_data_table <- function(dataframe){
     ))
 
   factored_df <- datarecoded_df |>
-    mutate(variable = factor(variable, levels = variable_levels[variable_levels %in% unique(datarecoded_df$variable)]))
+    mutate(variable = factor(variable, levels = variable_levels[variable_levels %in% unique(datarecoded_df$variable)]),
+           agegroup = factor(agegroup, levels = agegroup_levels[agegroup_levels %in% unique(datarecoded_df$agegroup)])) |>
+    arrange(agegroup)
+
+  final_factored_df <- factored_df |>
+    mutate(label = factor(label, levels = unique(factored_df$label)))
 
 
-  return(factored_df)
+  return(final_factored_df)
 
 }
 

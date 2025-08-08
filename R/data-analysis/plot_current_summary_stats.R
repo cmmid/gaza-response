@@ -60,7 +60,7 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
       geom_errorbarh(aes(xmin = q1, xmax = q3, color = label), show.legend = F, height = 0, linewidth = 0.5) +
       geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
       geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
+      facet_wrap(~variable, nrow = 2, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "O = median; X = mean; - = IQR") +
       #theme_bw() +

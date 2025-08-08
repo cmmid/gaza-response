@@ -15,7 +15,6 @@
 pacman::p_load(
   ggplot2,       # Visualise data
   tidyverse)     # Tidyverse suite of packages
-
 #...............................................................................
 ### Read in current summary statistics data
 #...............................................................................
@@ -27,11 +26,12 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_current_summary_stats <- function(data, strata = "Overall"){
+plot_current_summary_stats <- function(data, strata = "Overall",
+                                       plot_palette = NULL){
 
-  plot_caption <- "Summary: the dark point shows the typical value (the median).
+  plot_caption <- "The dark 0 point shows the typical value (the median).
            The line shows the most common range of values (the value for between 25% and 75% of participants).
-           The X cross shows the mean value, which can be influenced by outliers."
+           The X shows the mean value."
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
@@ -46,10 +46,15 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(y = 0)) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0,
-                     color = plot_palette[["stat_range"]], linewidth = 0.5) +
-      geom_point(aes(x = median), color = plot_palette[["stat_central"]], size = 3) +
-      geom_point(aes(x = mean), color = plot_palette[["stat_central"]],
+      geom_errorbarh(aes(xmin = q1, xmax = q3),
+                     height = 0,
+                     color = plot_palette[["stat_central"]],
+                     linewidth = 3, alpha = 0.2) +
+      geom_point(aes(x = median),
+                 color = plot_palette[["stat_central"]],
+                 size = 3) +
+      geom_point(aes(x = mean),
+                 color = plot_palette[["stat_central"]],
                  size = 3, shape = 4, stroke = 1) +
       facet_wrap(~variable, nrow = 2, scales = "free", labeller = label_wrap_gen(width = 25)) +
       labs(caption = plot_caption,
@@ -65,9 +70,17 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
   else {
     fig <- data_filter %>%
       ggplot(aes(y = factor(label))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = label), show.legend = F, height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
-      geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3),
+                     color = plot_palette[["stat_central"]],
+                     show.legend = F, height = 0,
+                     linewidth = 1, alpha = 0.2) +
+      geom_point(aes(x = median),
+                 col = plot_palette[["stat_central"]],
+                 show.legend = F, size = 3) +
+      geom_point(aes(x = mean),
+                 col = plot_palette[["stat_central"]],
+                 show.legend = F,
+                 size = 3, shape = 4, stroke = 1) +
       facet_wrap(~variable, nrow = 2, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = NULL,
            caption = plot_caption) +

@@ -22,12 +22,12 @@ pacman::p_load(
 
 # time_series_stats_filename <- "data/time_series_table.csv"
 # time_series_stats <- read.csv(time_series_stats_filename)
-
 #...............................................................................
 ### Plot
 #...............................................................................
 
-plot_time_series_statistics <- function(data, strata = "Overall"){
+plot_time_series_statistics <- function(data, strata = "Overall",
+                                        plot_palette = NULL){
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>

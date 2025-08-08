@@ -1,0 +1,52 @@
+---
+title: "Contact us"
+css: "styles.css"
+toc: true
+---
+
+::: {.callout-note appearance="simple"}
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+:::
+::: {.callout-caution title="Join us"}
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+:::
+
+## Getting involved
+
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. Find out more about getting involved:
+
+::: {.panel-tabset}
+
+##### Organisations
+We are seeking collaborations with humanitarian organisations operating in Gaza. We have a lightweight, low cost process to enable ongoing data collection. 
+
+- Read more in the [study protocol](./protocol#data-collection-and-analysis)
+- Get in touch with the [project team](#project-team) by emailing [Zeina Jamaluddine](mailto:Zeina.Jamaluddine@lshtm.ac.uk) and [Francesco Checchi](mailto:Francesco.Checchi@lshtm.ac.uk)
+
+##### Participants
+We thank all participants providing their data. Participation is voluntary, and participants are welcome to join or leave the study at any time. 
+
+- Read more [about participating](./about#participating-in-the-study)
+- Get in touch with questions or feedback on the [public forum](https://github.com/cmmid/gaza-response/discussions/41) or by contacting the [project team](#project-team)
+
+:::
+
+## Get in touch
+
+#### Project team
+
+-   Get in touch with the project leads by email:
+    -   Zeina Jamaluddine: [Zeina.Jamaluddine\@lshtm.ac.uk](mailto:Zeina.Jamaluddine@lshtm.ac.uk)
+    -   Francesco Checchi: [Francesco.Checchi\@lshtm.ac.uk](mailto:Francesco.Checchi@lshtm.ac.uk)
+
+#### Dashboard production
+
+-   Spotted a bug or issue with the dashboard? [Let us know](https://github.com/cmmid/gaza-response/issues/new)
+
+#### Ideas and feedback
+
+-   We welcome ideas, thoughts, and feedback on this project on an open public forum. [Leave a comment](https://github.com/cmmid/gaza-response/discussions/11)
+
+## Sharing and reuse
+
+You are welcome to freely reuse and distribute any material hosted on this website or our [public repository](https://github.com/cmmid/gaza-response). Please cite this website, and if you are able to, please [let us know](https://github.com/cmmid/gaza-response/discussions/42).  

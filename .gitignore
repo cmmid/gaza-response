@@ -61,3 +61,5 @@ index_files
 index_files/*
 site_libs
 site_libs/*
+/data/processed
+data/processed

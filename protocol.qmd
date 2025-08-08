@@ -3,13 +3,18 @@ title: "Study protocol"
 css: "styles.css"
 ---
 
+::: {.callout-note appearance="simple"}
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+:::
+::: {.callout-caution title="Join us"}
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+:::
+
 ```{r, echo=FALSE, results='asis'}
 # Convert a docx file to quarto markdown and render on this page 
 pacman::p_load(here, rmarkdown)
-pandoc_convert(input = list.files("protocol", 
-                                  pattern = ".docx", 
-                                  full.names = TRUE)[1],
-               wd = here::here(),
+pandoc_convert(input = here("protocol", "protocol.docx"),
+               wd = here(),
                to = "markdown", 
                output = "protocol/protocol.qmd")
 

@@ -18,18 +18,14 @@
 generate_key_insights <- function(data) {
   params <- list(
     # Most recent date
-    latest_date = max(data$time_series_table$Date),
+    latest_date = max(data$overall$date),
     # N
-    observations = data$bmicategory_proportions |>
-      filter(Date == max(Date) & Stratification=="Overall") |>
-      pull(n) |> sum(),
-    # Overall median
-    median_change = data$current_summary_stats |>
-      filter(Stratification=="Overall" &
-               Variable=="% Weight Change from Prewar Value" ) |>
-      pull(median) |> round(digits = 1),
-    # Stratifications
-    strata = unique(data$bmicategory_proportions$Stratification)
+    cohort_size = max(data$overall$cohort_n),
+    # Observations
+    observations = sum(distinct(filter(data$overall, variable == "weight" & stat == "mean"))$cohort_recorded),
+
+    median_change = round(filter(data$overall, date == max(date) & variable == "weight_percent_change_prewar" & stat == "median")$value, 2)
+
   )
   return(params)
 }

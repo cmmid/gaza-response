@@ -30,47 +30,48 @@ pacman::p_load(
 plot_current_summary_stats <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data <- data %>%
-    filter(!Group == "other/prefer not to share") %>% #Manually filtering this out per Francescos advice
-    filter(Stratification == strata) %>%
-    mutate(Group = factor(Group, levels = datadict[[strata]]),
-           Variable = factor(Variable, levels = datadict[["variable"]]))
+  data_filter <- data[[tolower(strata)]] |>
+    filter(date == max(date, na.rm = TRUE)) %>%
+    pivot_wider(names_from = stat, values_from = value) %>%
+    dplyr::filter(!is.na(mean)) |>
+    filter(!grepl("_firstmeasurement", variable))
+
+  data_filter <- recode_data_table(data_filter)
 
   if (strata == "Overall") {
     # Generate plot
-    fig <- data %>%
+    fig <- data_filter %>%
       ggplot(aes(y = 0)) +
       geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
       geom_point(aes(x = median), color = "darkblue", size = 3) +
       geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~Variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
+      facet_wrap(~variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "Blue point = median; X = mean; blue line = IQR") +
       #theme_bw() +
       theme(#strip.background = element_blank(),
-            #strip.text  = "outside",
-            axis.text.y  = element_blank(),
-            axis.ticks.y = element_blank(),
-            axis.title.y = element_blank())
+        #strip.text  = "outside",
+        axis.text.y  = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank())
   }
 
   else {
-    fig <- data %>%
-      ggplot(aes(y = factor(Group))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = Group), height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = Group), size = 3) +
-      geom_point(aes(x = mean, col = Group), size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~Variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
+    fig <- data_filter %>%
+      ggplot(aes(y = factor(label))) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3, color = label), show.legend = F, height = 0, linewidth = 0.5) +
+      geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
+      geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
+      facet_wrap(~variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "O = median; X = mean; - = IQR") +
-      labs(color = strata) +
       #theme_bw() +
       theme(#strip.background = element_blank(),
-            #strip.placement  = "outside",
-            axis.text.y  = element_blank(),
-            axis.ticks.y = element_blank(),
-            axis.title.y = element_blank(),
-            legend.position = "bottom")
+        #strip.placement  = "outside",
+        #axis.text.y  = element_blank(),
+        #åaxis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "bottom")
   }
 
 

@@ -1,6 +1,6 @@
 /* css styles */
 div#quarto-content {
-  /*height: auto !important;*/
+  height: auto !important;*/
   /*min-height: 100vh;*/
 }
 /* Remove vertical margin/padding between rows */
@@ -59,7 +59,36 @@ ul.dropdown-menu li a:hover {
     background-color: #EEEEEE;
 }
 
-/* customizing the plot content
+.card-body.html-fill-item.html-fill-container {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+.bslib-tooltip:empty {
+  display: none !important;
+}
+
+
+.quarto-figure > svg,
+.quarto-figure > img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.quarto-figure {
+  width: 100% !important;
+}
+
+@media (max-width: 600px) {
+  .navbar-title {
+    font-size: 1rem; /* smaller title */
+    white-space: normal; /* allow wrapping */
+  }
+}
+
+/*
 #current_summary {
   min-height: 200px;
   max-height: 300px;
@@ -68,6 +97,7 @@ ul.dropdown-menu li a:hover {
   min-height: 200px;
   max-height: 300px;
 }
+
 
 .card.current_summary_card {
   min-height: 300px;

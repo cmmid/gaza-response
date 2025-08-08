@@ -4,43 +4,84 @@ css: "styles.css"
 toc: true
 ---
 
-This study aims to monitor the nutritional status of humanitarian staff currently working in Gaza by tracking their weight. 
-The aim of this project is to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population by providing real-time information on the nutritional status of humanitarian staff in Gaza. 
-Read more about the project in the [study protocol](./protocol).
+::: {.callout-note appearance="simple"}
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+:::
+::: {.callout-caution title="Join us"}
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+:::
 
-### Contributions
+::: {.panel-tabset}
+
+### Background
+
+The project aims to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population. 
+In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
+This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
+All participation from those providing data, resources, support, and analysis, is entirely voluntary.
+
+We recognise that the sub-population of humanitarian staff may not be representative of the overall population (and may in fact have relatively higher socio-economic status). 
+However, this system is intended to track the evolution of nutritional status within a well-defined and accessible group inside Gaza. 
+We thereby offer additional evidence for nutritional and food insecurity monitoring.
+
+Our specific objectives are to:
+
+1. Estimate average weight and body-mass index (BMI) change since pre-war (7 October 2023) levels;
+2. Monitor the relative and absolute evolution of weight and BMI over time;
+3. Describe differences in weight and BMI change by sex, age, governorate of residence, professional role and number of children dependants.
+
+Find out more about the project and how it works in the [study protocol](./protocol).
+
+### Participation
+
+This initiative is meant to give a voice to the lived experience of staff who are facing severe food insecurity, and make this information available publicly for advocacy purposes. 
+We thank all participants in this project. 
+For those participating in the study, we emphasise that:
+
+- Taking part in data collection is completely up to each participant; there will be no monitoring of who is providing data or not, and not providing data will not change anything for participants. 
+The data are not collected for the purpose of food aid registration: there is no immediate direct benefit to participating.
+- Participants can enter data on their mobile, their computer, or even someone else’s mobile/computer; they can use a different device on any given day. Data entry should only take a few seconds; it would be great if participants enter their weight every day, but as often as possible is good too. As soon as the device has an internet connection, the data will be automatically uploaded.
+-	All the information is anonymised and encrypted at the point of data entry, so that it will not be possible for anyone to identify participants from the data they provide.
+-	We will generate analyses from everyone’s data and publish them automatically online, but also share these with participants, so that you can also monitoring the evolution of the situation.
+
+Find out more about [information for participants](./protocol#appendix-information-sheet-and-online-consent-statement).
+
+### Analysis
+
+We are actively developing this project during a rapidly changing situation, and we expect our analyses to evolve over time. 
+When looking at the results, we encourage you to consider that:
+
+- We have only recently begun collecting data for this study, with limited participation. 
+- All participants in this study are humanitarian staff.
+Their nutritional status may not be representative of all those who are affected.
+For example, participants in this project may have relatively higher socio-economic status.
+- Changes to weight and BMI are only an indicator of nutritional status.
+Participants may be experiencing other changes in nutrition, such as the availability or cost of meeting nutritional needs.
+
+### Project team
 
 The project is implemented by Save the Children (SCI) with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
-There is no specific funding source for this study.
-
-All participation is voluntary, with thanks to staff contributing their data and time.
+There is no specific funding source for this study. 
 
 LSHTM project team led by: 
 
 - Francesco Checchi 
 - Zeina Jamaluddine
 
-Analysis support contributed by:
+With support from:
 
 - Kevin van Zandvoort
 - Ciara Judge
-- Clara Brigitta
 - Kath Sherratt
-- Ali Fahmi
+- Clara Brigitta
 
 Additional contributions from:
 
 - Mervat Alhaffar
 - Catharina Van Der Boor
 
-We welcome new contributions to this project.
-
-### Contact
-
-- Email Zeina Jamaluddine at [Zeina.Jamaluddine@lshtm.ac.uk](mailto:Zeina.Jamaluddine@lshtm.ac.uk), cc [Francesco.Checchi@lshtm.ac.uk](mailto:Francesco.Checchi@lshtm.ac.uk)
-- Get in touch on the [open forum](https://github.com/cmmid/gaza-response/discussions/new?category=general)
-- Spotted a bug? [Let us know](https://github.com/cmmid/gaza-response/issues/new).
-
 ### Reuse
 
-You are welcome to freely reuse and distribute any material on this website. Please [let us know](https://github.com/cmmid/gaza-response/discussions/new?category=general).  
+You are welcome to freely share, reuse, and distribute any material hosted on this website or our [public repository](https://github.com/cmmid/gaza-response). Please cite this website, and if you are able to, please [let us know](https://github.com/cmmid/gaza-response/discussions/42).  
+
+:::

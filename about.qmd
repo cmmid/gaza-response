@@ -7,12 +7,12 @@ toc: true
 This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population.
 
 :::{.callout-info title="Interested in contributing?"}
-We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. Find out more about [getting involved](./contact).
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
 :::
 
 ::: {.panel-tabset}
 
-### About the study
+### Background
 
 The project aims to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the affected population. 
 In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
@@ -24,13 +24,14 @@ However, this system is intended to track the evolution of nutritional status wi
 We thereby offer additional evidence for nutritional and food insecurity monitoring.
 
 Our specific objectives are to:
-1.	Estimate average weight and body-mass index (BMI) change since pre-war (7 October 2023) levels;
-2.	Monitor the relative and absolute evolution of weight and BMI over time;
-3.	Describe differences in weight and BMI change by sex, age, governorate of residence, professional role and number of children dependants.
+
+1. Estimate average weight and body-mass index (BMI) change since pre-war (7 October 2023) levels;
+2. Monitor the relative and absolute evolution of weight and BMI over time;
+3. Describe differences in weight and BMI change by sex, age, governorate of residence, professional role and number of children dependants.
 
 Find out more about the project and how it works in the [study protocol](./protocol).
 
-### Participating in the study
+### Participation
 
 This initiative is meant to give a voice to the lived experience of staff who are facing severe food insecurity, and make this information available publicly for advocacy purposes. 
 We thank all participants in this project. 
@@ -44,7 +45,7 @@ The data are not collected for the purpose of food aid registration: there is no
 
 Find out more about [information for participants](./protocol#appendix-information-sheet-and-online-consent-statement).
 
-### Analysis and results
+### Analysis
 
 We are actively developing this project during a rapidly changing situation, and we expect our analyses to evolve over time. 
 When looking at the results, we encourage you to consider that:
@@ -78,8 +79,8 @@ Additional contributions from:
 - Mervat Alhaffar
 - Catharina Van Der Boor
 
+### Reuse
+
+You are welcome to freely share, reuse, and distribute any material hosted on this website or our [public repository](https://github.com/cmmid/gaza-response). Please cite this website, and if you are able to, please [let us know](https://github.com/cmmid/gaza-response/discussions/42).  
+
 :::
-
-### Sharing and reuse
-
-You are welcome to freely reuse and distribute any material on this website. Please cite this website, and if you are able to, please [let us know](https://github.com/cmmid/gaza-response/discussions/new?category=general).  

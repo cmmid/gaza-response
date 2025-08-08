@@ -29,6 +29,9 @@ pacman::p_load(
 
 plot_time_series_statistics <- function(data, strata = "Overall"){
 
+  variables <- c("bmi_percent_change_firstmeasurement",
+                 "bmi",
+                 "weight")
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
     # filter out the duplicate "current" records
@@ -36,7 +39,8 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     #dplyr::filter(!sex == "other/prefer not to share") %>%
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean)) |>
-    filter(!grepl("_firstmeasurement", variable))
+    #filter(!grepl("_firstmeasurement", variable)) |>
+    filter(variable %in% variables)
 
   data_filter <- recode_data_table(data_filter)
 

@@ -16,8 +16,8 @@ website:
             href: about.qmd
           - text: Study protocol
             href: protocol.qmd
-          - text: Report an issue
-            href: https://github.com/cmmid/gaza-response/issues/new
+          - text: Contact
+            href: contact.qmd
       - icon: translate
         menu:
           - text: English
@@ -26,15 +26,20 @@ website:
             href: arabic.qmd
       - icon: github
         href:  https://github.com/cmmid/gaza-response
-
+  announcement:
+    icon: cone-striped
+    dismissable: true
+    position: below-navbar
+    content: "**Active development:** We are actively collecting data and developing this resource. [Find out more](./about) and [get involved](./contact)"
+    type: warning
+  site_url: "https://cmmid.github.io/gaza-response/"
+  open-graph: true
   body-footer: <script data-goatcounter="https://gaza-response.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
 format:
   html:
-    theme:
-      light: flatly
-      dark: darkly
+    theme: flatly
     css: styles.css
     toc: true
 

@@ -11,6 +11,9 @@ if(interactive()) {
   base <- here("R", "data-pipeline")
 } else {
   base <- sprintf("%s/R/data-pipeline", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
+  
+  #do not show summarise message unless in interactive session
+  options(dplyr.summarise.inform = FALSE)
 }
 
 pipeline_functions <- paste0(base,

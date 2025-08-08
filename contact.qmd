@@ -1,0 +1,41 @@
+---
+title: "Contact us"
+css: "styles.css"
+toc: true
+---
+
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. Find out more [about the project](./about).
+
+## Get involved
+
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. Find out more:
+
+::: {.callout-info}
+##### For organisations
+- We are seeking collaborations with humanitarian organisations operating in Gaza. We have a lightweight, low cost process to enable ongoing data collection. Read more in the [study protocol](./protocol#data-collection-and-analysis), and please get in touch with the [project team](#get-in-touch).
+:::
+
+::: {.callout-info collapse="true"}
+##### For participants
+- We thank all participants providing their data. Participation is voluntary, and participants are welcome to join or leave the study at any time. Read more about [information for participants](./protocol#appendix-information-sheet-and-online-consent-statement).
+:::
+
+## Get in touch
+
+#### Project team
+
+-   Get in touch with the project leads by email:
+    -   Zeina Jamaluddine: [Zeina.Jamaluddine\@lshtm.ac.uk](mailto:Zeina.Jamaluddine@lshtm.ac.uk)
+    -   Francesco Checchi: [Francesco.Checchi\@lshtm.ac.uk](mailto:Francesco.Checchi@lshtm.ac.uk)
+
+#### Dashboard production
+
+-   Spotted a bug or issue with the dashboard? [Let us know](https://github.com/cmmid/gaza-response/issues/new)
+
+#### Ideas and feedback
+
+-   We welcome ideas, thoughts, and feedback on this project on an open forum. [Leave a comment](https://github.com/cmmid/gaza-response/discussions/new?category=general)
+
+## Content re-use
+
+You are welcome to freely reuse and distribute any material on this website. Please [let us know](https://github.com/cmmid/gaza-response/discussions/new?category=general).

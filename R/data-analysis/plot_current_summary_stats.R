@@ -29,6 +29,10 @@ pacman::p_load(
 
 plot_current_summary_stats <- function(data, strata = "Overall"){
 
+  plot_caption <- "Summary: the dark point shows the typical value (the median).
+           The line shows the most common range of values (the value for between 25% and 75% of participants).
+           The X cross shows the mean value, which can be influenced by outliers."
+
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
     filter(date == max(date, na.rm = TRUE)) %>%
@@ -43,13 +47,13 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
     fig <- data_filter %>%
       ggplot(aes(y = 0)) +
       geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0,
-                     color = palette[["stat_range"]], linewidth = 0.5) +
-      geom_point(aes(x = median), color = palette[["stat_central"]], size = 3) +
-      geom_point(aes(x = mean), color = palette[["stat_central"]],
+                     color = plot_palette[["stat_range"]], linewidth = 0.5) +
+      geom_point(aes(x = median), color = plot_palette[["stat_central"]], size = 3) +
+      geom_point(aes(x = mean), color = plot_palette[["stat_central"]],
                  size = 3, shape = 4, stroke = 1) +
       facet_wrap(~variable, nrow = 2, scales = "free", labeller = label_wrap_gen(width = 25)) +
-      labs(x = "Value",
-           caption = "Blue point = median; X = mean; blue line = IQR") +
+      labs(caption = plot_caption,
+           x = NULL) +
       #theme_bw() +
       theme(#strip.background = element_blank(),
         #strip.text  = "outside",
@@ -65,8 +69,8 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
       geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
       geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
       facet_wrap(~variable, nrow = 2, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
-      labs(x = "Value",
-           caption = "O = median; X = mean; - = IQR") +
+      labs(x = NULL,
+           caption = plot_caption) +
       #theme_bw() +
       theme(#strip.background = element_blank(),
         #strip.placement  = "outside",

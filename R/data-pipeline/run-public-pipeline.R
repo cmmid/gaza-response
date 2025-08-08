@@ -3,11 +3,15 @@
 # Set up -------
 pacman::p_load(here, purrr, dplyr)
 
-# Load the pipeline functions, locally or from github
-#if(interactive()) {
+# Get wd from passed argument if ran on server
+.args = if(interactive()) c(getwd()) else commandArgs(trailingOnly = TRUE)
+.args = setNames(.args, c("wd"))
+
+if(interactive()) {
   base <- here("R", "data-pipeline")
-#} else {
-#  base <- "https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline" }
+} else {
+  base <- sprintf("%s/R/data-pipeline", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
+}
 
 pipeline_functions <- paste0(base,
                              c("/1-data_cleaning.R",

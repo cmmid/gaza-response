@@ -36,3 +36,17 @@ lshtm_theme <- function() {
   )
 }
 theme_set(lshtm_theme())
+
+# Colour palettes
+# https://venngage.com/tools/accessible-color-palette-generator
+get_plot_palette <- function(){
+  plot_palette <- list("lshtm" = "#0D5257",
+                     "stat_central" = "#331941",
+                     "stat_range" ="#5e2b70",
+                     "sequential" = rev(c("#21572e", "#0c5139", "#0d5257", "#184978", "#2e3d82")),
+                     "bmi" = c("underweight" = "#c43b13",
+                               "normal" = "#00bf6f",
+                               "overweight" = "#5234ed",
+                               "obese" = "#2f1ab9"))
+  return(plot_palette)
+}

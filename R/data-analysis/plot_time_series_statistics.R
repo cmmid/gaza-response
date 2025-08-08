@@ -49,7 +49,7 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
       geom_ribbon(aes(ymin = q1, ymax = q3,  fill = "IQR"), alpha = 0.2, linetype = 0) +
       scale_colour_manual(values = c("Mean" = "darkred", "Median" = "darkblue")) +
       scale_fill_manual(values = c("IQR" = "darkblue")) +
-      facet_wrap(~variable, ncol = 1, scales = "free_y") +
+      facet_wrap(~variable, ncol = 2, scales = "free_y") +
       labs(x = "Date", y = "Value") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             legend.title     = element_blank(),
@@ -64,7 +64,7 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
       geom_line(aes(y = mean,  colour = label), linetype = "solid", show.legend = F) +
       #geom_line(aes(y = median,  colour = label), linetype = "dashed", show.legend = F) +
       geom_ribbon(aes(ymin = q1, ymax = q3, fill = label), alpha = 0.2, linetype = 0) +
-      facet_wrap(~variable, ncol = 1, scales = "free_y") +
+      facet_wrap(~variable, ncol = 2, scales = "free_y") +
       labs(x = "Date", y = "Value") +
       labs(fill = strata) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),

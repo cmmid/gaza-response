@@ -7,17 +7,18 @@ website:
   title: "Monitoring the nutritional status of humanitarian workers in Gaza"
   navbar:
     right:
-      - icon: house
-        text: " "
-        href: index.qmd
-      - icon: question-circle
+      - icon: question-circle-fill
+        text: About
         menu:
-          - text: About the project
+          - icon: info-circle
+            text: About
             href: about.qmd
-          - text: Study protocol
+          - icon: file-earmark-text
+            text: Study protocol
             href: protocol.qmd
-          - text: Contact
-            href: contact.qmd
+      - icon: people-fill
+        text: Join us
+        href: contact.qmd
       - icon: translate
         menu:
           - text: English
@@ -26,6 +27,9 @@ website:
             href: arabic.qmd
       - icon: github
         href:  https://github.com/cmmid/gaza-response
+      - icon: house-fill
+        text: " "
+        href: index.qmd
   announcement:
     icon: cone-striped
     dismissable: true

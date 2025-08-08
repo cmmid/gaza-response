@@ -29,12 +29,16 @@ pacman::p_load(
 
 plot_current_summary_stats <- function(data, strata = "Overall"){
 
+  variables <- c("bmi_percent_change_prewar",
+                 "bmi",
+                 "weight")
+
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
     filter(date == max(date, na.rm = TRUE)) %>%
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean)) |>
-    filter(!grepl("_firstmeasurement", variable))
+    filter(variable %in% variables)
 
   data_filter <- recode_data_table(data_filter)
 

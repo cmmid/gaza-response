@@ -61,7 +61,7 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
   else {
     fig <- data_filter %>%
       ggplot(aes(x = date)) +
-      geom_line(aes(y = median,  colour = label), linetype = "solid", show.legend = F) +
+      geom_line(aes(y = median,  colour = label), linetype = "solid", alpha = 0.8, show.legend = F) +
       #geom_line(aes(y = median,  colour = label), linetype = "dashed", show.legend = F) +
       geom_ribbon(aes(ymin = q1, ymax = q3, fill = label), alpha = 0.2, linetype = 0) +
       facet_wrap(~variable, ncol = 1, scales = "free_y") +

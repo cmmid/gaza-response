@@ -36,10 +36,10 @@ recode_data_table <- function(dataframe){
                         "% change in BMI from first measurement",
                         "% change in BMI since October 2023",
                         "NA",
-                        "underweight",
-                        "normal",
-                        "overweight",
-                        "obese")
+                        "Underweight",
+                        "Normal",
+                        "Overweight",
+                        "Obese")
   agegroup_levels <- c("Under 30 years", "30-44 years", "Over 45 years")
 
   # Filter data for the selected option

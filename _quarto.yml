@@ -32,7 +32,7 @@ website:
     position: below-navbar
     content: "**Active development:** We are actively collecting data and developing this resource. [Find out more](./about) and [get involved](./contact)"
     type: warning
-  site_url: "https://cmmid.github.io/gaza-response/"
+  site-url: "https://cmmid.github.io/gaza-response/"
   open-graph: true
   body-footer: <script data-goatcounter="https://gaza-response.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>

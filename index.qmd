@@ -10,6 +10,7 @@ format:
     fig-format: svg
   #html:
   #  page-layout: custom
+toc: true
 execute: 
   echo: false
 ---
@@ -56,9 +57,11 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 
 # {.sidebar}
 
-### About the project
-This project aims to inform humanitarian decision-making, advocacy and diplomatic action to improve the lives of the famine-affected population in Gaza by providing real-time information on the nutritional status of humanitarian staff. The project is implemented with the support of the London School of Hygiene and Tropical Medicine (LSHTM).
-All participation is entirely voluntary.
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+
+::: {.callout-caution title="Join us"}
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+:::
 
 <!-- Add data filter
  - todo: change to pandoc format
@@ -99,12 +102,6 @@ data_filtered <- data$all
 params <- generate_key_insights(data_filtered)
 ```
 
-::: {.callout-caution}
-## Caution
-This project remains under active development, with data collection and analysis occurring in 
-real time in an evolving situation. To get involved, read more about the project in the [About](./about) section.
-:::
-
 ## Row
 
 ::: {.card fill="false" title="Key insights"}
@@ -112,7 +109,6 @@ real time in an evolving situation. To get involved, read more about the project
 - Collected  **`r params$observations` observations** from **`r params$cohort_size` participants**
 - Median change of **`r params$median_change`%** compared to pre-war weight
 :::
-
 
 ## Row
 

@@ -6,18 +6,18 @@ toc: true
 
 This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. Find out more [about the project](./about).
 
-## Get involved
+## Getting involved
 
-We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. Find out more:
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. Find out more about getting involved:
 
 ::: {.callout-info}
 ##### For organisations
-- We are seeking collaborations with humanitarian organisations operating in Gaza. We have a lightweight, low cost process to enable ongoing data collection. Read more in the [study protocol](./protocol#data-collection-and-analysis), and please get in touch with the [project team](#get-in-touch).
+- We are seeking collaborations with humanitarian organisations operating in Gaza. We have a lightweight, low cost process to enable ongoing data collection. Read more in the [study protocol](./protocol#data-collection-and-analysis), and please get in touch with the [project team](#project-team).
 :::
 
 ::: {.callout-info collapse="true"}
 ##### For participants
-- We thank all participants providing their data. Participation is voluntary, and participants are welcome to join or leave the study at any time. Read more about [information for participants](./protocol#appendix-information-sheet-and-online-consent-statement).
+- We thank all participants providing their data. Participation is voluntary, and participants are welcome to join or leave the study at any time. Read more [about participating](./about#participating-in-the-study), and get in touch with questions or feedback on the [public forum](https://github.com/cmmid/gaza-response/discussions/41) or by contacting the [project team](#project-team).
 :::
 
 ## Get in touch
@@ -34,8 +34,8 @@ We are actively seeking participants to support the project, and welcome new col
 
 #### Ideas and feedback
 
--   We welcome ideas, thoughts, and feedback on this project on an open forum. [Leave a comment](https://github.com/cmmid/gaza-response/discussions/new?category=general)
+-   We welcome ideas, thoughts, and feedback on this project on an open public forum. [Leave a comment](https://github.com/cmmid/gaza-response/discussions/11)
 
-## Content re-use
+## Sharing and reuse
 
-You are welcome to freely reuse and distribute any material on this website. Please [let us know](https://github.com/cmmid/gaza-response/discussions/new?category=general).
+You are welcome to freely reuse and distribute any material hosted on this website or our [public repository](https://github.com/cmmid/gaza-response). Please cite this website, and if you are able to, please [let us know](https://github.com/cmmid/gaza-response/discussions/42).  

@@ -81,6 +81,13 @@ ul.dropdown-menu li a:hover {
   width: 100% !important;
 }
 
+@media (max-width: 600px) {
+  .navbar-title {
+    font-size: 1rem; /* smaller title */
+    white-space: normal; /* allow wrapping */
+  }
+}
+
 /*
 #current_summary {
   min-height: 200px;

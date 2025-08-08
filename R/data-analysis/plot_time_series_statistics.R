@@ -47,8 +47,9 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
       geom_line(aes(y = mean, colour = "Mean"), linetype = "solid") +
       geom_line(aes(y = median,  colour = "Median"), linetype = "dashed") +
       geom_ribbon(aes(ymin = q1, ymax = q3,  fill = "IQR"), alpha = 0.2, linetype = 0) +
-      scale_colour_manual(values = c("Mean" = "darkred", "Median" = "darkblue")) +
-      scale_fill_manual(values = c("IQR" = "darkblue")) +
+      scale_colour_manual(values = c("Mean" = palette[["stat_central"]],
+                                     "Median" = palette[["stat_central"]])) +
+      scale_fill_manual(values = c("IQR" = palette[["stat_range"]])) +
       facet_wrap(~variable, ncol = 2, scales = "free_y") +
       labs(x = "Date", y = "Value") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),

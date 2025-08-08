@@ -42,9 +42,11 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(y = 0)) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
-      geom_point(aes(x = median), color = "darkblue", size = 3) +
-      geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0,
+                     color = palette[["stat_range"]], linewidth = 0.5) +
+      geom_point(aes(x = median), color = palette[["stat_central"]], size = 3) +
+      geom_point(aes(x = mean), color = palette[["stat_central"]],
+                 size = 3, shape = 4, stroke = 1) +
       facet_wrap(~variable, nrow = 2, scales = "free", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "Blue point = median; X = mean; blue line = IQR") +

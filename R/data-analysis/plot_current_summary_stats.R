@@ -36,6 +36,8 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
     dplyr::filter(!is.na(mean)) |>
     filter(!grepl("_firstmeasurement", variable))
 
+  data_filter <- recode_data_table(data_filter)
+
   if (strata == "Overall") {
     # Generate plot
     fig <- data_filter %>%

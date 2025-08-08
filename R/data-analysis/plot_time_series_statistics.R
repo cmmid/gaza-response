@@ -38,6 +38,8 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     dplyr::filter(!is.na(mean)) |>
     filter(!grepl("_firstmeasurement", variable))
 
+  data_filter <- recode_data_table(data_filter)
+
   if (strata == "Overall") {
     # Generate plot
     fig <- data_filter %>%
@@ -60,7 +62,7 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     fig <- data_filter %>%
       ggplot(aes(x = date)) +
       geom_line(aes(y = mean,  colour = label), linetype = "solid", show.legend = F) +
-      geom_line(aes(y = median,  colour = label), linetype = "dashed", show.legend = F) +
+      #geom_line(aes(y = median,  colour = label), linetype = "dashed", show.legend = F) +
       geom_ribbon(aes(ymin = q1, ymax = q3, fill = label), alpha = 0.2, linetype = 0) +
       facet_wrap(~variable, ncol = 1, scales = "free_y") +
       labs(x = "Date", y = "Value") +

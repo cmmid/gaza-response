@@ -7,17 +7,18 @@ website:
   title: "Monitoring the nutritional status of humanitarian workers in Gaza"
   navbar:
     right:
-      - icon: house
-        text: " "
-        href: index.qmd
-      - icon: question-circle
+      - icon: question-circle-fill
+        text: About
         menu:
-          - text: About the project
+          - icon: info-circle
+            text: About
             href: about.qmd
-          - text: Study protocol
+          - icon: file-earmark-text
+            text: Study protocol
             href: protocol.qmd
-          - text: Report an issue
-            href: https://github.com/cmmid/gaza-response/issues/new
+      - icon: people-fill
+        text: Join us
+        href: contact.qmd
       - icon: translate
         menu:
           - text: English
@@ -26,15 +27,23 @@ website:
             href: arabic.qmd
       - icon: github
         href:  https://github.com/cmmid/gaza-response
-
+      - icon: house-fill
+        text: " "
+        href: index.qmd
+  announcement:
+    icon: cone-striped
+    dismissable: true
+    position: below-navbar
+    content: "**Active development:** We are actively collecting data and developing this resource. [Find out more](./about) and [get involved](./contact)"
+    type: warning
+  site-url: "https://cmmid.github.io/gaza-response/"
+  open-graph: true
   body-footer: <script data-goatcounter="https://gaza-response.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
 format:
   html:
-    theme:
-      light: flatly
-      dark: darkly
+    theme: flatly
     css: styles.css
     toc: true
 

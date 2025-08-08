@@ -40,6 +40,8 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
     filter(!grepl("_prewar_", variable)) |>
     filter(!grepl("NA", variable))
 
+  data_filter <- recode_data_table(data_filter)
+
   if (strata == "Overall") {
     fig <- data_filter %>%
       ggplot() +
@@ -80,8 +82,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
            y = "Percentage of Survey Participants (%)",
            fill = "Category") +
       #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank()) +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
       facet_grid(facet1~facet2, labeller = label_wrap_gen(width = 25), scales = "free")
   }
 

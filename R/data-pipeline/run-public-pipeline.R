@@ -77,6 +77,6 @@ if(interactive()){
 
 # save ----------------------
 output_file = ifelse(interactive(), here("data", "public", "summary-stats.RDS"), sprintf("%s/data/public/summary-stats.RDS", .args["wd"]))
-saveRDS(summary, here("data", "public", "summary-stats.RDS"))
+saveRDS(summary, output_file)
 
 # RDS data pushed to Github public repo

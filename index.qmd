@@ -45,6 +45,7 @@ organisations <- names(data)[2:length(data)]
 
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))
+source(here("R", "data-analysis/recode_data_table.R"))
 source(here("R", "data-analysis/plot_participants_over_time.R"))
 source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
@@ -116,7 +117,7 @@ params <- generate_key_insights(data_filtered)
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary, results="asis"}
-#| fig-width: 10
+#| fig-width: 8
 #| fig-asp: 0.4
 #| fig-align: center
 for(i in strata) {
@@ -143,7 +144,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight, results="asis"}
-#| fig-width: 10
+#| fig-width: 8
 #| fig-asp: 1.3
 #| fig-align: center
 for(i in strata) {
@@ -170,7 +171,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi, results="asis"}
-#| fig-width: 10
+#| fig-width: 8
 #| fig-asp: 1
 #| fig-align: center
 for(i in strata) {
@@ -239,7 +240,7 @@ params <- generate_key_insights(data_filtered)
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary_stc, results="asis"}
-#| fig-width: 10
+#| fig-width: 8
 #| fig-asp: 0.4
 #| fig-align: center
 for(i in strata) {
@@ -266,7 +267,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight_stc, results="asis"}
-#| fig-width: 10
+#| fig-width: 8
 #| fig-asp: 1.5
 #| fig-align: center
 for(i in strata) {
@@ -293,7 +294,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi_stc, results="asis"}
-#| fig-width: 10
+#| fig-width: 8
 #| fig-asp: 1
 #| fig-align: center
 for(i in strata) {

@@ -28,7 +28,8 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions <- function(data, strata = "Overall"){
+plot_bmicategory_proportions <- function(data, strata = "Overall",
+                                         plot_palette = NULL){
 
   # Filter data for the selected option
   data <- data %>%

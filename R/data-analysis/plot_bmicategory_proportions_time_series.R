@@ -28,7 +28,7 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
+plot_bmicategory_proportions_time_series <- function(data, strata = "Overall", plot_palette = NULL){
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
@@ -47,9 +47,9 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
       ggplot() +
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),
                 position = "stack", alpha = 0.8) +
-      scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+      scale_fill_manual(values = plot_palette[["bmi"]]) +
+      labs(x = NULL,
+           y = "Percentage of daily participants (%)",
            fill = "Category") +
       #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
@@ -61,9 +61,9 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
       ggplot() +
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),
                 position = "stack", alpha = 0.8) +
-      scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+      scale_fill_manual(values = plot_palette[["bmi"]]) +
+      labs(x = NULL,
+           y = "Percentage of daily participants (%)",
            fill = "Category") +
       #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
@@ -77,9 +77,9 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
       ggplot() +
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),
                 position = "stack", alpha = 0.8) +
-      scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+      scale_fill_manual(values = plot_palette[["bmi"]]) +
+      labs(x = NULL,
+           y = "Percentage of daily participants (%)",
            fill = "Category") +
       #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +

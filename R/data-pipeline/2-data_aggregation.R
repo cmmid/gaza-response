@@ -9,7 +9,7 @@ pacman::p_load(dplyr, tidyr, purrr)
 
 # summarise by any given strata ------------------------------------
 summarise_ids <- function(data, group_cols) {
-  print(group_cols)
+  #if(interactive()) print(group_cols)
 
   # summarise participants per group -----
   df_participants <- data |>

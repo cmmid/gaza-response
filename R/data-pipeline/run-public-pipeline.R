@@ -4,7 +4,7 @@
 pacman::p_load(here, purrr, dplyr)
 
 # Get wd from passed argument if ran on server
-.args = if(interactive()) c(getwd()) else commandArgs(trailingOnly = TRUE)
+.args = if(interactive()) here() else commandArgs(trailingOnly = TRUE)
 .args = setNames(.args, c("wd"))
 
 if(interactive()) {
@@ -60,12 +60,23 @@ data_id_latest <- data_id |>
 data_id_dated <- bind_rows(data_id, data_id_latest)
 
 # summarise by date, organisation, and group -----
-summary <- imap(group_cols,
-                     ~ data_id_dated |>
-                       summarise_ids(group_cols = .x)) |>
-  clean_aggregated_data()
+#' Do not print all messages when running on server
+if(interactive()){
+  summary <- imap(group_cols,
+                  ~ data_id_dated |>
+                    summarise_ids(group_cols = .x)) |>
+    clean_aggregated_data()
+} else {
+  suppressMessages({
+    summary <- imap(group_cols,
+                    ~ data_id_dated |>
+                      summarise_ids(group_cols = .x)) |>
+      clean_aggregated_data()
+  })
+}
 
 # save ----------------------
+output_file = ifelse(interactive(), here("data", "public", "summary-stats.RDS"), sprintf("%s/data/public/summary-stats.RDS", .args["wd"]))
 saveRDS(summary, here("data", "public", "summary-stats.RDS"))
 
 # RDS data pushed to Github public repo

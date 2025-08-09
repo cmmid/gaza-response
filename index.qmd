@@ -60,7 +60,7 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 
 This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
 
-::: {.callout-caution title="Join us"}
+::: {.callout-caution title="Join us" collapse="true"}
 We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
 :::
 

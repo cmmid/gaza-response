@@ -1,17 +1,19 @@
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'  # Runs every midnight
-  push:
-    branches: main
+name: Quarto Preview
 
-name: Quarto Publish
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -35,3 +37,8 @@ jobs:
           target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy PR Preview
+        uses: rossjrw/pr-preview-action@v1.4.8
+        with:
+          source-dir: ./_site/

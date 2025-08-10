@@ -11,7 +11,7 @@ if(interactive()) {
   base <- here("R", "data-pipeline")
 } else {
   base <- sprintf("%s/R/data-pipeline", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
-  
+
   #do not show summarise message unless in interactive session
   options(dplyr.summarise.inform = FALSE)
 }
@@ -40,7 +40,7 @@ group_cols <- append(map(group_cols,
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
 # TODO fix this very hacky code
 # TODO set this interactively so not fixed to now
-current_days <- seq.Date(Sys.Date() - 3, length.out = 3, by = "day")
+current_days <- seq.Date(Sys.Date() - 3, length.out = 4, by = "day")
 
 # filter to current data
 data_id_latest <- data_id |>
@@ -56,7 +56,7 @@ data_id_latest <- data_id |>
   # set date to the future to use as a flag that this is the most recent record (noting all group calculations include date so will not be double-counted)
   mutate(date = Sys.Date() + 3650)
 
-# bind latest data with fill time series
+# bind latest data with full time series
 data_id_dated <- bind_rows(data_id, data_id_latest)
 
 # summarise by date, organisation, and group -----

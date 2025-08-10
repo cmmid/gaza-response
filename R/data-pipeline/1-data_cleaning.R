@@ -104,6 +104,21 @@ clean_data <- function(base_data, fup_data) {
   matched_data <- left_join(matched_data,
                             change_from_previous, by = c("id", "date"))
 
+  # Data quality checks -----------------------------------------------------
+  # Flag anomalous data
+  matched_data <- matched_data |>
+    mutate(
+      weight_anomaly = case_when(
+        !between(bmi, 10, 60) ~ TRUE,
+        weight_percent_change_previousmeasurement >= 10 ~ TRUE,
+        TRUE ~ FALSE)
+    )
+  # Set anomalous data to NA
+  matched_data <- matched_data |>
+    mutate(across(contains(c("weight", "bmi")),
+                  ~ ifelse(weight_anomaly, NA, .x)))
+
+
   # Specify factor variables ------------------------------------------------
   # TODO use data dictionary here
   matched_data <- matched_data |>

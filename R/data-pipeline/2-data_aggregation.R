@@ -15,22 +15,15 @@ summarise_ids <- function(data, group_cols) {
   df_participants <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
-      # participants ---
-      cohort_n = length(unique(id)),
-      cohort_days_enrolled = n(),
-      # data quality ---
-      ## % records missing weight observations
-      cohort_recorded = sum(!is.na(weight)),
-      cohort_missing = sum(is.na(weight)),
-      cohort_anomalous = sum(!observation_valid),
-      cohort_invalid_percent = (cohort_missing + cohort_anomalous) /
-        cohort_days_enrolled * 100) |>
-    ungroup()
+      # anomalous weight among recorded weights, denominator: cohort_obs_recorded
+      cohort_obs_anomalous = sum(!weight_anomaly),
+      .groups = "drop"
+      )
 
   # summarise observed metrics -----
-  ## drop anomalous observations
+  ## drop anomalous and missing observations
   data <- data |>
-    filter(observation_valid)
+    filter(!is.na(weight) & !weight_anomaly)
 
   # averages
   df_centraltendency <- data |>
@@ -47,7 +40,8 @@ summarise_ids <- function(data, group_cols) {
                median = ~ median(., na.rm = TRUE),
                q1 = ~ quantile(., probs = 0.25, na.rm = TRUE),
                q3 = ~ quantile(., probs = 0.75, na.rm = TRUE)),
-             .names = "{.col}.{.fn}")
+             .names = "{.col}.{.fn}"),
+      .groups = "drop"
     ) |>
     pivot_longer(cols = -group_cols) %>%
     separate(name, into = c("variable", "stat"), sep = "\\.")
@@ -65,21 +59,6 @@ summarise_ids <- function(data, group_cols) {
     ungroup() |>
     dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
     complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))
-
-  #TODO fix this copy-paste
-  df_bmi_prewar <- data |>
-    group_by(across(all_of(c(group_cols,
-                             "bmi_category_prewar")))) |>
-    summarise(count = n()) |>
-    left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_n")))) |>
-    mutate(value = count / cohort_n * 100,
-           stat = "percent",
-           variable = paste0("bmi_category_prewar_", bmi_category_prewar)) |>
-    ungroup() |>
-    dplyr::select(all_of(c(group_cols, "value", "stat", "variable")))
-
-  df_bmi_props <- bind_rows(df_bmi_current, df_bmi_prewar)
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,

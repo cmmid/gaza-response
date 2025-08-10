@@ -68,6 +68,7 @@ summarise_ids <- function(data, group_cols) {
            variable = paste0(bmi_period, "_", bmi_category)) |>
     ungroup() |>
     dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
+    # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
     complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))
 
   # combine summaries -----
@@ -83,11 +84,23 @@ summarise_ids <- function(data, group_cols) {
   return(df_summary)
 }
 
-clean_aggregated_data <- function(summary_list) {
-  # drop "other" sex category
+clean_aggregated_data <- function(summary_list, latest_date) {
+
   summary_df <- list_rbind(summary_list) |>
     ungroup()
 
+  # label summary stats based on the 72h window as the "current_summary_date",
+  #   setting "date" to NA (as this is a summary of multiple dates),
+  #   and marking these records with "current_summary_date" = latest date in the data
+  summary_df <- summary_df |>
+    mutate(date = replace(date, date > Sys.Date(), NA),
+           current_summary_date = latest_date) |>
+    group_by(group, label) |>
+    mutate(cohort_id_enrolled_alltime = ifelse(!is.na(current_summary_date),
+                                               max(cohort_id_enrolled), NA)) |>
+    ungroup()
+
+  # drop "other" sex category
   summary_df <- summary_df |>
     filter(!grepl("other/prefer not to share", sex))
 

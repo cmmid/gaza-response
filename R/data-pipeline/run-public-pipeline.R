@@ -26,43 +26,33 @@ base_data <- readRDS(here("data", "processed", "df_base.RDS"))
 fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 
 # Clean data -----
-data_id <- clean_data(base_data, fup_data)
-
-# Create 2 levels of stratification for now ----
-group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
-group_cols <- combn(group_cols, 2, simplify = FALSE)
-group_cols <- append(group_cols, as.list(c("overall", "agegroup", "children_feeding", "governorate", "role", "sex")))
-group_cols <- append(map(group_cols,
-                         ~ c("date", "organisation", sort(.x))),
-                     map(group_cols,
-                         ~ c("date", sort(.x))))
+data_id_daily <- clean_data(base_data, fup_data)
 
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
-# TODO fix this very hacky code
-# TODO set this interactively so not fixed to now
-latest_date <- as.Date(max(data_id$date, na.rm = TRUE))
+# filter to most recent observation for all participants
+# TODO consider adding a summary of this (ie. full cohort) in addition to 72h
+data_id_latest <- data_id_daily |>
+  group_by(id) |>
+  # only include observations that are recorded & in valid range
+  filter(!is.na(weight) & !weight_anomaly) |>
+  # only latest for each participant
+  filter(date == max(date, na.rm = TRUE)) |>
+  ungroup()
+
+# current summary: only observations within most recent 72h window
+latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
 recent_days <- seq.Date(from = latest_date - 3,
                         length.out = 4, by = "day")
-
-# filter to current data
-data_id_latest <- data_id |>
-  group_by(id) |>
-  filter(
-    # only include observations that are recorded & in valid range
-    observation_valid &
-      # only within most recent window
-      date %in% recent_days &
-      # only latest for each participant
-      date == max(date, na.rm = TRUE)) |>
-  ungroup() |>
-  # set date to the future to use as a flag that this is the most recent record (noting all group calculations include date so will not be double-counted)
+data_id_current <- data_id_latest |>
+  filter(date %in% recent_days) |>
+  # set date to the future to use as a flag that this is the most recent record
+  #   (noting all group calculations include date so will not be double-counted)
   mutate(date = Sys.Date() + 3650)
 
 # bind latest data with full time series
-data_id_dated <- bind_rows(data_id, data_id_latest)
+data_id <- bind_rows(data_id_daily, data_id_current)
 
 # summarise by date, organisation, and group -----
-
 # Create 2 levels of stratification
 group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
@@ -75,15 +65,15 @@ group_cols <- append(map(group_cols,
 #' Do not print all messages when running on server
 if(interactive()){
   summary <- imap(group_cols,
-                  ~ data_id_dated |>
+                  ~ data_id |>
                     summarise_ids(group_cols = .x)) |>
-    clean_aggregated_data()
+    clean_aggregated_data(latest_date = latest_date)
 } else {
   suppressMessages({
     summary <- imap(group_cols,
-                    ~ data_id_dated |>
+                    ~ data_id |>
                       summarise_ids(group_cols = .x)) |>
-      clean_aggregated_data()
+      clean_aggregated_data(latest_date = latest_date)
   })
 }
 

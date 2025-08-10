@@ -139,7 +139,7 @@ clean_data <- function(base_data, fup_data) {
   # Flag anomalous data
   matched_data <- matched_data |>
     mutate(
-      observation_valid = case_when(
+      weight_anomaly = case_when(
         !between(bmi, 10, 60) ~ FALSE,
         weight_percent_change_previousmeasurement >= 10 ~ FALSE,
         TRUE ~ TRUE)

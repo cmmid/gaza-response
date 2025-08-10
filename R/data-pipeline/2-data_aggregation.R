@@ -15,6 +15,13 @@ summarise_ids <- function(data, group_cols) {
   df_participants <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
+      # participants enrolled ---
+      cohort_id_enrolled = length(unique(id)),
+      # daily observations ---
+      # number of recorded weights, denominator: cohort_n
+      cohort_obs_recorded = sum(!is.na(weight)),
+      # missing weight among all enrolled, denominator: cohort_n
+      cohort_obs_missing = sum(is.na(weight)),
       # anomalous weight among recorded weights, denominator: cohort_obs_recorded
       cohort_obs_anomalous = sum(!weight_anomaly),
       .groups = "drop"
@@ -55,7 +62,6 @@ summarise_ids <- function(data, group_cols) {
                             all_of(c(group_cols, "cohort_recorded")))) |>
     mutate(value = count / cohort_recorded * 100,
            stat = "percent",
-           variable = paste0("bmi_category_", bmi_category)) |>
     ungroup() |>
     dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
     complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))

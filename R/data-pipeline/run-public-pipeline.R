@@ -40,7 +40,9 @@ group_cols <- append(map(group_cols,
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
 # TODO fix this very hacky code
 # TODO set this interactively so not fixed to now
-current_days <- seq.Date(Sys.Date() - 3, length.out = 4, by = "day")
+latest_date <- as.Date(max(data_id$date, na.rm = TRUE))
+recent_days <- seq.Date(from = latest_date - 3,
+                        length.out = 4, by = "day")
 
 # filter to current data
 data_id_latest <- data_id |>
@@ -49,7 +51,7 @@ data_id_latest <- data_id |>
     # only include observations that are recorded & in valid range
     observation_valid &
       # only within most recent window
-      date %in% current_days &
+      date %in% recent_days &
       # only latest for each participant
       date == max(date, na.rm = TRUE)) |>
   ungroup() |>

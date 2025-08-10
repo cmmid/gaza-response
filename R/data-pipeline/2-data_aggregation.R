@@ -23,7 +23,7 @@ summarise_ids <- function(data, group_cols) {
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
       # anomalous weight among recorded weights, denominator: cohort_obs_recorded
-      cohort_obs_anomalous = sum(!weight_anomaly),
+      cohort_obs_anomalous = sum(weight_anomaly),
       .groups = "drop"
       )
 

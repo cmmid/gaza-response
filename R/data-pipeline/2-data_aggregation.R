@@ -95,11 +95,10 @@ summarise_ids <- function(data, group_cols) {
 }
 
 clean_aggregated_data <- function(summary_list) {
-  # Restructuring into a list by organisation
+  # drop "other" sex category
   summary_df <- list_rbind(summary_list) |>
     ungroup()
 
-  # drop "other" sex category
   summary_df <- summary_df |>
     filter(!grepl("other/prefer not to share", sex))
 

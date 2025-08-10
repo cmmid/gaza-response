@@ -82,7 +82,10 @@ clean_data <- function(base_data, fup_data) {
                                         weight_prewar)*100,
       bmi_percent_change_prewar = ((bmi - bmi_prewar)/
                                      bmi_prewar)*100) |>
-    ungroup()
+    ungroup() |>
+    # drop 0 percent change on date of first measurement
+    mutate(across(contains("_percent_change_firstmeasurement"),
+           ~ ifelse(date == date_first_measurement, NA, .x)))
 
  change_from_previous <- matched_data %>%
     dplyr::arrange(id, date) %>%

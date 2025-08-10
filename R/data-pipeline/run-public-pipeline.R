@@ -62,6 +62,16 @@ data_id_latest <- data_id |>
 data_id_dated <- bind_rows(data_id, data_id_latest)
 
 # summarise by date, organisation, and group -----
+
+# Create 2 levels of stratification
+group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
+group_cols <- combn(group_cols, 2, simplify = FALSE)
+group_cols <- append(group_cols, as.list(c("overall", "agegroup", "children_feeding", "governorate", "role", "sex")))
+group_cols <- append(map(group_cols,
+                         ~ c("date", "organisation", sort(.x))),
+                     map(group_cols,
+                         ~ c("date", sort(.x))))
+
 #' Do not print all messages when running on server
 if(interactive()){
   summary <- imap(group_cols,

@@ -113,7 +113,7 @@ params <- generate_key_insights(data_filtered)
 
 ## Row
 
-::: {.card .current_summary_card .lshtm_widget title="Current Summary" fill = "false"}
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary, results="asis"}
@@ -140,7 +140,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Trends over time" fill = "false"}
+::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight, results="asis"}
@@ -167,7 +167,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion of Study Participants in WHO Body Mass Index Categories Over Time" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi, results="asis"}
@@ -194,7 +194,7 @@ Trends over time of proportion of staff with BMI in different [WHO categories](h
 
 ## Row
 
-::: {.card fill="false" .lshtm_widget title="Participants over time"}
+::: {.card fill="false" .lshtm_widget title="Study participation"}
 <div class="lshtm_widget_identifier" id="participants_over_time">
 ```{r plot-participants-over-time, results="asis"}
 #| fig-width: 7
@@ -236,7 +236,7 @@ params <- generate_key_insights(data_filtered)
 :::
 
 
-::: {.card .current_summary_card .lshtm_widget title="Current Summary" fill = "false"}
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary_stc, results="asis"}
@@ -263,7 +263,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 
 
 <!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Trends over time" fill = "false"}
+::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight_stc, results="asis"}
@@ -290,7 +290,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 
 
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="Proportion of Study Participants in WHO Body Mass Index Categories Over Time" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi_stc, results="asis"}
@@ -312,13 +312,13 @@ for(i in strata) {
 }
 ```
 </div>
-Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
+Trends over time in % staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
 
 :::
 
 ## Row
 
-::: {.card fill="false" .lshtm_widget title="Participants over time"}
+::: {.card fill="false" .lshtm_widget title="Study participation"}
 <div class="lshtm_widget_identifier" id="participants_over_time">
 ```{r plot-participants-over-time-stc, results="asis"}
 #| fig-width: 7

@@ -66,10 +66,10 @@ clean_data <- function(base_data, fup_data) {
   matched_data <- matched_data |>
     group_by(id) |>
     dplyr::mutate(
-      # daily absolute number
+      # BMI
       bmi = weight / (height/100)^2,
       bmi_prewar = weight_prewar / (height/100)^2,
-      # prewar absolute
+      # enrolment value
       first_weight_measurement = weight[date == date_first_measurement],
       first_bmi_measurement = bmi[date == date_first_measurement],
       # change since enrolment
@@ -82,7 +82,10 @@ clean_data <- function(base_data, fup_data) {
                                         weight_prewar)*100,
       bmi_percent_change_prewar = ((bmi - bmi_prewar)/
                                      bmi_prewar)*100) |>
-    ungroup()
+    ungroup() |>
+    # drop 0 percent change on date of first measurement
+    mutate(across(contains("_percent_change_firstmeasurement"),
+           ~ ifelse(date == date_first_measurement, NA, .x)))
 
  change_from_previous <- matched_data %>%
     dplyr::arrange(id, date) %>%
@@ -100,6 +103,21 @@ clean_data <- function(base_data, fup_data) {
 
   matched_data <- left_join(matched_data,
                             change_from_previous, by = c("id", "date"))
+
+  # Data quality checks -----------------------------------------------------
+  # Flag anomalous data
+  matched_data <- matched_data |>
+    mutate(
+      weight_anomaly = case_when(
+        !between(bmi, 10, 60) ~ TRUE,
+        weight_percent_change_previousmeasurement >= 10 ~ TRUE,
+        TRUE ~ FALSE)
+    )
+  # Set anomalous data to NA
+  matched_data <- matched_data |>
+    mutate(across(contains(c("weight", "bmi")),
+                  ~ ifelse(weight_anomaly, NA, .x)))
+
 
   # Specify factor variables ------------------------------------------------
   # TODO use data dictionary here
@@ -130,17 +148,6 @@ clean_data <- function(base_data, fup_data) {
   # add "overall" variable for total-cohort summaries
   matched_data <- matched_data |>
     mutate(overall = "overall")
-
-  # Data quality checks -----------------------------------------------------
-
-  # Flag anomalous data
-  matched_data <- matched_data |>
-    mutate(
-      observation_valid = case_when(
-        !between(bmi, 10, 60) ~ FALSE,
-        weight_percent_change_previousmeasurement >= 10 ~ FALSE,
-        TRUE ~ TRUE)
-    )
 
   matched_data <- ungroup(matched_data)
 

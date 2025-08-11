@@ -42,9 +42,8 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(y = 0)) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
-      geom_point(aes(x = median), color = "darkblue", size = 3) +
-      geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "black", linewidth = 0.5) +
+      geom_point(aes(x = median), color = "black", size = 3) +
       facet_wrap(~variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "Blue point = median; X = mean; blue line = IQR") +
@@ -59,9 +58,8 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
   else {
     fig <- data_filter %>%
       ggplot(aes(y = factor(label))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = label), show.legend = F, height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
-      geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
+      geom_errorbarh(aes(xmin = q1, xmax = q3), color = "black", show.legend = F, height = 0, linewidth = 0.5) +
+      geom_point(aes(x = median), color = "black", show.legend = F, size = 3) +
       facet_wrap(~variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
       labs(x = "Value",
            caption = "O = median; X = mean; - = IQR") +

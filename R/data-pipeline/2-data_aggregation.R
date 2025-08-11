@@ -29,8 +29,8 @@ summarise_ids <- function(data, group_cols) {
 
   # summarise observed metrics -----
   ## drop anomalous and missing observations
-  data <- data |>
-    filter(!is.na(weight) & !weight_anomaly)
+  # data <- data |>
+  #   filter(!is.na(weight) & !weight_anomaly)
 
   # averages
   df_centraltendency <- data |>

@@ -33,9 +33,6 @@ data_id_daily <- clean_data(base_data, fup_data)
 # TODO consider adding a summary of this (ie. full cohort) in addition to 72h
 data_id_latest <- data_id_daily |>
   group_by(id) |>
-  # only include observations that are recorded & in valid range
-  filter(!is.na(weight) & !weight_anomaly) |>
-  # only latest for each participant
   filter(date == max(date, na.rm = TRUE)) |>
   ungroup()
 

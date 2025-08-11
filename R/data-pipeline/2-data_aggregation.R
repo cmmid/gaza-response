@@ -112,9 +112,5 @@ clean_aggregated_data <- function(summary_list, latest_date) {
   org_split <- map(org_split,
                    ~ split(., .$group))
 
-  # TODO temporary - remove as needed
-  # include the long dataframe to demonstrate options for downstream use
-  org_split$one_long_df <- summary_df
-
   return(org_split)
 }

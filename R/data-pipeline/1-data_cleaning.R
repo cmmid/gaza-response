@@ -34,31 +34,48 @@ pacman::p_load(
 
 clean_data <- function(base_data, fup_data) {
 
-  fup_data_expanded <- fup_data %>%
-      dplyr::left_join(dplyr::select(base_data, !c(date, weight)),
-                       by = "id")
+  # parse dates in raw data
+  base_data <- base_data |>
+    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
+  fup_data <- fup_data |>
+    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
 
-  full_data <- rbind(base_data, fup_data_expanded) %>%
-    dplyr::arrange(id, date, desc(!is.na(weight))) %>%  # Put non-NA weights first
-    # TODO remove duplicate records by ID and date - add n to quality checks
-    dplyr::distinct(id, date, .keep_all = TRUE)
+  # Create complete grid of all possible participant dates
+  id_date_grid <- expand_grid(
+    date = seq.Date(min(as.Date(base_data$date), na.rm = TRUE),
+                    max(as.Date(fup_data$date), na.rm = TRUE),
+                    by = "day"),
+    id = unique(base_data$id))
+
+  # add follow up weight measurements to complete grid
+  id_date_grid <- id_date_grid |>
+    left_join(fup_data, by = c("id", "date"))
+
+  # add baseline characteristics and weight reading to complete grid
+  # - relabel baseline weight measurement
+  base_weight <- base_data |>
+    rename("date_first_measurement" = date,
+           "first_weight_measurement" = weight)
+  # - add to grid as new variables
+  fup_data_expanded <- left_join(id_date_grid,
+                            base_weight,
+                            by = c("id"))
+
+  # use baseline weight reading as first day's weight
+  fup_data_expanded <- fup_data_expanded |>
+    mutate(weight = ifelse(date == date_first_measurement,
+                           first_weight_measurement, weight)) |>
+    # remove records from before enrolment
+    filter(date >= date_first_measurement)
 
 
 # Dates & cohort time -----------------------------------------------------
-  full_data <- full_data |>
-    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
-
-  matched_data <- full_data |>
+  matched_data <- fup_data_expanded |>
     dplyr::group_by(id) |>
     # time in cohort
-    dplyr::mutate(date_first_measurement = min(date[!is.na(weight)]),
-                  participant_cumulative_days_enrolled = 1 + as.integer(
+    dplyr::mutate(participant_cumulative_days_enrolled = 1 + as.integer(
                     difftime(date, date_first_measurement, units = "days")),
-                  participant_cumulative_days_recorded = cumsum(!is.na(weight))) |>
-    # remove records from before enrolment
-    filter(participant_cumulative_days_enrolled >= 1) |>
-    ungroup()
-
+                  participant_cumulative_days_recorded = cumsum(!is.na(weight)))
   #...............................................................................
   ### Add BMI and % wt change
   #...............................................................................
@@ -69,10 +86,9 @@ clean_data <- function(base_data, fup_data) {
       # BMI
       bmi = weight / (height/100)^2,
       bmi_prewar = weight_prewar / (height/100)^2,
-      # enrolment value
-      first_weight_measurement = weight[date == date_first_measurement],
       first_bmi_measurement = bmi[date == date_first_measurement],
-      # change since enrolment
+        # TODO add bmi categories here for tidiness
+      # calculate change since enrolment
       weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/
                                                   first_weight_measurement)*100,
       bmi_percent_change_firstmeasurement = ((bmi - first_bmi_measurement)/

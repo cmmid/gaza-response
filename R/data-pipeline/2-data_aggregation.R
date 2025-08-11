@@ -29,8 +29,8 @@ summarise_ids <- function(data, group_cols) {
 
   # summarise observed metrics -----
   ## drop anomalous and missing observations
-  data <- data |>
-    filter(!is.na(weight) & !weight_anomaly)
+  # data <- data |>
+  #   filter(!is.na(weight) & !weight_anomaly)
 
   # averages
   df_centraltendency <- data |>
@@ -93,12 +93,10 @@ clean_aggregated_data <- function(summary_list, latest_date) {
   #   setting "date" to NA (as this is a summary of multiple dates),
   #   and marking these records with "current_summary_date" = latest date in the data
   summary_df <- summary_df |>
-    mutate(date = replace(date, date > Sys.Date(), NA),
-           current_summary_date = latest_date) |>
-    group_by(group, label) |>
-    mutate(cohort_id_enrolled_alltime = ifelse(!is.na(current_summary_date),
-                                               max(cohort_id_enrolled), NA)) |>
-    ungroup()
+    mutate(current_summary_date = as.Date(ifelse(date > Sys.Date(),
+                                         latest_date, date)),
+           date = replace(date, date > Sys.Date(), NA))
+
 
   # drop "other" sex category
   summary_df <- summary_df |>
@@ -113,5 +111,10 @@ clean_aggregated_data <- function(summary_list, latest_date) {
   org_split <- split(org_split, org_split$organisation)
   org_split <- map(org_split,
                    ~ split(., .$group))
+
+  # TODO temporary - remove as needed
+  # include the long dataframe to demonstrate options for downstream use
+  org_split$one_long_df <- summary_df
+
   return(org_split)
 }

@@ -31,12 +31,8 @@ jobs:
         with:
           cache-version: 1
 
-      - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Render Quarto Project
+        uses: quarto-dev/quarto-actions/render@v2
 
       - name: Deploy PR Preview
         uses: rossjrw/pr-preview-action@v1.4.8

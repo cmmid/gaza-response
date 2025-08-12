@@ -1,9 +1,5 @@
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'  # Runs every midnight
-  push:
-    branches: main
 
 name: Quarto Publish
 
@@ -29,9 +25,22 @@ jobs:
         with:
           cache-version: 1
 
-      - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@v2
+      - name: Render site
+        run: quarto render
+
+      - name: Upload website
+        uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
         with:
-          target: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: site
+          retention-days: 5
+          path: _site
+
+      - name: Deploy to GitHub pages 🚀
+        if: github.ref_name == 'main'
+        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        with:
+          branch: gh-pages
+          folder: _site
+          single-commit: true
+          clean: true

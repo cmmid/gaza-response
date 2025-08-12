@@ -156,6 +156,45 @@
       ],
       "Hash": "2288423bb0f20a457800d7fc47f6aa54"
     },
+    "RcppEigen": {
+      "Package": "RcppEigen",
+      "Version": "0.3.4.0.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "stats",
+        "utils"
+      ],
+      "Hash": "4ac8e423216b8b70cb9653d1b3f71eb9"
+    },
+    "SparseM": {
+      "Package": "SparseM",
+      "Version": "1.81",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "2042cd9759cc89a453c4aefef0ce9aae"
+    },
+    "abind": {
+      "Package": "abind",
+      "Version": "1.4-8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods",
+        "utils"
+      ],
+      "Hash": "2288423bb0f20a457800d7fc47f6aa54"
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.2.1",
@@ -1210,6 +1249,18 @@
       ],
       "Hash": "f9d226d88d4087d817d4e616626ce8e5"
     },
+    "microbenchmark": {
+      "Package": "microbenchmark",
+      "Version": "1.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "stats"
+      ],
+      "Hash": "f9d226d88d4087d817d4e616626ce8e5"
+    },
     "mime": {
       "Package": "mime",
       "Version": "0.13",
@@ -1261,6 +1312,38 @@
         "utils"
       ],
       "Hash": "b1d2ea08d5d392831fbc32c872362b06"
+    },
+    "nloptr": {
+      "Package": "nloptr",
+      "Version": "2.0.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "testthat"
+      ],
+      "Hash": "277c67a08f358f42b6a77826e4492f79"
+    },
+    "nnet": {
+      "Package": "nnet",
+      "Version": "7.3-18",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "stats",
+        "utils"
+      ],
+      "Hash": "170da2130d5332bea7d6ede01875ba1d"
+    },
+    "numDeriv": {
+      "Package": "numDeriv",
+      "Version": "2016.8-1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "df58958f293b166e4ab885ebcad90e02"
     },
     "nloptr": {
       "Package": "nloptr",
@@ -1351,6 +1434,21 @@
         "vctrs"
       ],
       "Hash": "1098920a19b5cd5a15bacdc74a89979d"
+    },
+    "pkgbuild": {
+      "Package": "pkgbuild",
+      "Version": "1.4.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "R6",
+        "callr",
+        "cli",
+        "desc",
+        "processx"
+      ],
+      "Hash": "fc9fc4162e79a94f760aac8d328ee6c9"
     },
     "pkgbuild": {
       "Package": "pkgbuild",
@@ -1526,6 +1624,24 @@
         "vctrs"
       ],
       "Hash": "cc8b5d43f90551fa6df0a6be5d640a4f"
+    },
+    "quantreg": {
+      "Package": "quantreg",
+      "Version": "5.95",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "MASS",
+        "Matrix",
+        "MatrixModels",
+        "R",
+        "SparseM",
+        "graphics",
+        "methods",
+        "stats",
+        "survival"
+      ],
+      "Hash": "6cdf5a3dc958f55529b0401a8e5869e3"
     },
     "quantreg": {
       "Package": "quantreg",
@@ -1734,6 +1850,29 @@
       ],
       "Hash": "5045fbb71b143878d8c51975d1d7d56d"
     },
+    "rstatix": {
+      "Package": "rstatix",
+      "Version": "0.7.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "broom",
+        "car",
+        "corrplot",
+        "dplyr",
+        "generics",
+        "magrittr",
+        "purrr",
+        "rlang",
+        "stats",
+        "tibble",
+        "tidyr",
+        "tidyselect",
+        "utils"
+      ],
+      "Hash": "5045fbb71b143878d8c51975d1d7d56d"
+    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.17.1",
@@ -1870,6 +2009,35 @@
         "lifecycle"
       ],
       "Hash": "213b6b8ed5afbf934843e6c3b090d418"
+    },
+    "testthat": {
+      "Package": "testthat",
+      "Version": "3.2.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "R6",
+        "brio",
+        "callr",
+        "cli",
+        "desc",
+        "digest",
+        "evaluate",
+        "jsonlite",
+        "lifecycle",
+        "magrittr",
+        "methods",
+        "pkgload",
+        "praise",
+        "processx",
+        "ps",
+        "rlang",
+        "utils",
+        "waldo",
+        "withr"
+      ],
+      "Hash": "42f889439ccb14c55fc3d75c9c755056"
     },
     "testthat": {
       "Package": "testthat",

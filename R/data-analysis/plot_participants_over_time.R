@@ -40,7 +40,7 @@ plot_participants_over_time <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot() +
-      geom_area(aes(x = date, y = cohort_n, fill = label, group = label),
+      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
                 position = "stack", alpha = 0.8, show.legend = F) +
       labs(x = "Date",
            y = "Participants",
@@ -53,7 +53,7 @@ plot_participants_over_time <- function(data, strata = "Overall"){
   else {
     fig <- data_filter %>%
       ggplot() +
-      geom_area(aes(x = date, y = cohort_n, fill = label, group = label),
+      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
                 position = "stack", alpha = 0.8) +
       labs(x = "Date",
            y = "Participants",

@@ -44,11 +44,10 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(x = date)) +
-      geom_line(aes(y = mean, colour = "Mean"), linetype = "solid") +
-      geom_line(aes(y = median,  colour = "Median"), linetype = "dashed") +
+      geom_line(aes(y = median,  colour = "Median"), linetype = "solid") +
       geom_ribbon(aes(ymin = q1, ymax = q3,  fill = "IQR"), alpha = 0.2, linetype = 0) +
-      scale_colour_manual(values = c("Mean" = "darkred", "Median" = "darkblue")) +
-      scale_fill_manual(values = c("IQR" = "darkblue")) +
+      scale_colour_manual(values = c("Median" = "black")) +
+      scale_fill_manual(values = c("IQR" = "black")) +
       facet_wrap(~variable, ncol = 1, scales = "free_y") +
       labs(x = "Date", y = "Value") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),

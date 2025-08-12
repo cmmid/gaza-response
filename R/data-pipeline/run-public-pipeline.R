@@ -43,9 +43,7 @@ data_id_daily <- clean_data(base_data, fup_data)
 # filter to most recent observation for all participants
 # TODO consider adding a summary of this (ie. full cohort) in addition to 72h
 data_id_latest <- data_id_daily |>
-  group_by(id) |>
-  filter(date == max(date, na.rm = TRUE)) |>
-  ungroup()
+  filter(last_measurement)
 
 # current summary: only observations within most recent 72h window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
@@ -53,7 +51,7 @@ recent_days <- seq.Date(from = latest_date - 3,
                         length.out = 4, by = "day")
 data_id_current <- data_id_latest |>
   filter(date %in% recent_days)
-log$recent_days <- unique(data_id_current$date)
+log$recent_days <- count(data_id_current, date)
 
 # set date to the future to use as a flag that this is the most recent record
 #   (noting all group calculations include date so will not be double-counted)
@@ -73,20 +71,13 @@ group_cols <- append(map(group_cols,
                      map(group_cols,
                          ~ c("date", sort(.x))))
 
-#' Do not print all messages when running on server
-if(interactive()){
-  summary <- imap(group_cols,
-                  ~ data_id |>
-                    summarise_ids(group_cols = .x)) |>
-    clean_aggregated_data(latest_date = latest_date)
-} else {
-  suppressMessages({
+#' Do not print all messages
+suppressMessages({
     summary <- imap(group_cols,
                     ~ data_id |>
                       summarise_ids(group_cols = .x)) |>
       clean_aggregated_data(latest_date = latest_date)
   })
-}
 
 # save ----------------------
 output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])

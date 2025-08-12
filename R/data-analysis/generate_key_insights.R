@@ -23,8 +23,8 @@ generate_key_insights <- function(data, strata) {
     latest_date = data$current_summary_date[1],
     # N
     cohort_size = max(data$cohort_id_enrolled, na.rm=TRUE),
-    cohort_percent_participating = data$cohort_obs_recorded /
-      data$cohort_id_enrolled * 100,
+    cohort_percent_participating = (data$cohort_obs_recorded /
+      data$cohort_id_enrolled * 100)[1],
     # Observations
     observations = sum(distinct(filter(data, stat == "mean"))$cohort_obs_recorded),
     median_change = round(filter(data, stat == "median")$value, 1),

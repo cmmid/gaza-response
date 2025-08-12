@@ -113,7 +113,7 @@ params <- generate_key_insights(data_filtered_current, strata = "Overall") # TOD
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-- Recent data from **`r params$cohort_size_current` participants** (**`r params$cohort_percent_currently_participating`%** of all enrolled participants)
+- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
 - Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 

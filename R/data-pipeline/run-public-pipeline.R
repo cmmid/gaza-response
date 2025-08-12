@@ -2,34 +2,29 @@
 
 # Set up -------
 pacman::p_load(here, purrr, dplyr)
+#do not show summarise message
+options(dplyr.summarise.inform = FALSE)
 
 # error logging
 log <- list()
-
 
 # Get wd from passed argument if ran on server
 .args = if(interactive()) here() else commandArgs(trailingOnly = TRUE)
 .args = setNames(.args, c("wd"))
 
-if(interactive()) {
-  base <- here("R", "data-pipeline")
-} else {
-  base <- sprintf("%s/R/data-pipeline", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
+base <- sprintf("%s/", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
 
-  #do not show summarise message unless in interactive session
-  options(dplyr.summarise.inform = FALSE)
-}
-
+# Load functions -----
 pipeline_functions <- paste0(base,
-                             c("/1-data_cleaning.R",
-                               "/2-data_aggregation.R"))
+                             c("R/data-pipeline/1-data_cleaning.R",
+                               "R/data-pipeline/2-data_aggregation.R"))
 walk(pipeline_functions, source)
 
-# Load data stored locally
-base_data <- readRDS(here("data", "processed", "df_base.RDS"))
-fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
+# Load data stored locally -----
+base_data <- readRDS(paste0(base, "data/processed/df_base.RDS"))
+fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
 
-# check columns are correct
+# log columns are correct
 expected_base <- c("id", "date", "organisation", "age", "sex", "governorate",
               "role", "height", "weight_prewar", "weight", "children_feeding")
 log$base_cols_missing <- setdiff(expected_base, colnames(base_data))
@@ -94,11 +89,9 @@ if(interactive()){
 }
 
 # save ----------------------
-output_file = ifelse(interactive(), here("data", "public", "summary-stats.RDS"), sprintf("%s/data/public/summary-stats.RDS", .args["wd"]))
+output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])
 saveRDS(summary, output_file)
 
-output_log = ifelse(interactive(),
-                    here("data", "public", "log.RDS"),
-                    sprintf("%s/data/public/log.RDS", .args["wd"]))
+output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)
 # RDS data pushed to Github public repo

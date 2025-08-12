@@ -1,4 +1,4 @@
-name: Quarto Preview
+name: Test pipeline
 
 on:
   workflow_dispatch:

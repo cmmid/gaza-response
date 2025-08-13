@@ -30,7 +30,7 @@ pacman::p_load(
 plot_current_summary_stats <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
+  data_filter <- filter(data, group == tolower(strata)) |>
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean)) |>
     filter(!grepl("_firstmeasurement", variable))

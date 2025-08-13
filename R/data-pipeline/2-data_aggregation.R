@@ -108,9 +108,6 @@ clean_aggregated_data <- function(summary_list, latest_date) {
     mutate(group = str_replace_all(group, "date-organisation-", "")) |>
     mutate(group = str_replace_all(group, "date-", "")) |>
     dplyr::select(-overall)
-  org_split <- split(org_split, org_split$organisation)
-  org_split <- map(org_split,
-                   ~ split(., .$group))
 
   return(org_split)
 }

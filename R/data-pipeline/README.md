@@ -18,3 +18,5 @@ source(here::here("R", "data-pipeline", "run-public-pipeline.R"))
 ```
 quarto::quarto_render("index.qmd")
 ```
+
+Alternatively, open a PR and a Github Actions workflow [test-simulated-pipeline.yml] will run the full pipeline using simulated data through to rendering the website (displaying the simulated data).

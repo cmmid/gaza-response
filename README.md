@@ -4,6 +4,11 @@ This project provides real-time information on the nutritional status of humanit
 
 We aim to produce a dashboard with aggregated results, stratified by organisation, and by key characteristics (age group, sex, children dependents, staff role, governorate location). See [study protocol](/protocol/protocol.docx) for full analysis objectives. 
 
+## Overview
+
+<img width="958" height="274" alt="image" src="https://github.com/user-attachments/assets/796f3952-cabb-465d-b848-6a3692966596" />
+
+
 ## Data processing
 
 The dataset is longitudinal, meaning that multiple weight measures will be collected for the same individuals, with a unique ID linking sequential observations to each individual (staff member). 

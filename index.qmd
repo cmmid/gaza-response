@@ -105,7 +105,7 @@ data_filtered <- data$all
 # This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
 # 72 hour summary and puts it into the spreadsheet as date = NA
 data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, date == max(date))) # Temporary fix bc the data from the pipeline isnt' matching atm
+                             ~ filter(.x, date == max(date, na.rm=TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
 data_filtered_timeseries <- map(data_filtered,
                              ~ filter(.x, !is.na(date)))
 
@@ -240,7 +240,7 @@ data_filtered <- data$`Save the Children International`
 # This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
 # 72 hour summary and puts it into the spreadsheet as date = NA
 data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, date == max(date))) # Temporary fix bc the data from the pipeline isnt' matching atm
+                             ~ filter(.x, date == max(date, na.rm = TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
 data_filtered_timeseries <- map(data_filtered,
                              ~ filter(.x, !is.na(date)))
 
@@ -375,7 +375,7 @@ data_filtered <- data$UNRWA
 # This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
 # 72 hour summary and puts it into the spreadsheet as date = NA
 data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, date == max(date))) # Temporary fix bc the data from the pipeline isnt' matching atm
+                             ~ filter(.x, date == max(date, na.rm=TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
 data_filtered_timeseries <- map(data_filtered,
                              ~ filter(.x, !is.na(date)))
 

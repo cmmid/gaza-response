@@ -1,48 +1,39 @@
-<!-- Organisation-level data -->
+<!-- Organisation-level container -->
+
+::: {.card}
 
 ```{r, include=FALSE}
 ```
 
+<!--- open: key insights container -------------------------------------------->
 ::: {.callout-tip collapse="false" title="Key insights"}
 Some text
 :::
+<!--- close: key insights container ------------------------------------------->
 
-<!--- open: status indicators box ----------------------------------------->
+
+<!--- open: status indicators container ------------------------------------->
 
 ::: {.card title="Status indicators"}
-
-<!--- open: status indicators tabs ----------------------------------->
 
 ::: {.panel-tabset}
 
 ## Weight
 
-{{< include R/data-analysis/modules/_weight.qmd >}}
-
-<!--- start bmi tab ----------------------------------->
+{{< include /quarto/_weight.qmd >}}
 
 ## BMI
 
-<!--- close: bmi tab --------------------------------->
-
-:::
-
-<!--- open: participants tab ------------------------->
+{{< include /quarto/_bmi.qmd >}}
 
 ## Participants
 
-### Current status
-
-### Demographics
-
-### Missing data
-
-
-<!--- close: status indicators tabs ----------------------------------->
+{{< include /quarto/_participants.qmd >}}
 
 :::
 
-<!--- close: status indicators box ----------------------------------------->
+<!--- close: status indicators container ------------------------------------>
 
 :::
 
+:::

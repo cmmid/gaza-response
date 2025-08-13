@@ -63,6 +63,35 @@ We are actively seeking participants to support the project, and welcome humanit
 [**Join us**](./contact){.btn .btn-outline-success .btn role="button"} 
 :::
 
+<!-- Add data filter
+ - todo: change to pandoc format
+ - todo: fill options automatically or wrap in function
+-->
+<div class="lshtm_widget_filter">
+  <p><strong>Stratify data by</strong></p>
+  <div class="filter_content">
+  <fieldset>
+    <!--<legend>Stratify data by</legend>-->
+    <label>
+      <input type="checkbox" name="data_filter" value="sex">
+      Sex
+    </label><br>
+    <label>
+      <input type="checkbox" name="data_filter" value="agegroup">
+      Age
+    </label><br>
+    <label>
+      <input type="checkbox" name="data_filter" value="governorate">
+      Location
+    </label><br>
+    <label>
+      <input type="checkbox" name="data_filter" value="role">
+      Role
+    </label>
+  </fieldset>
+</div>
+</div>
+
 :::
 
 

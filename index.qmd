@@ -108,23 +108,23 @@ params_meta$organisation <- "all"
 {{< include _organisation.qmd >}}
 
 
-## **UNRW**
+## **UNRWA**
 
 ```{r}
-#params_meta$organisation <- "UNRW"
+params_meta$organisation <- "UNRWA"
 ```
-<!---
+
 {{< include _organisation.qmd >}}
--->
+
 
 ## **Save the Children International**
 
 ```{r}
-#params_meta$organisation <- "Save the Children International"
+params_meta$organisation <- "Save the Children International"
 ```
-<!---
+
 {{< include _organisation.qmd >}}
--->
+
 
 :::
 

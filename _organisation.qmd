@@ -2,7 +2,8 @@
 
 
 ```{r, include=FALSE}
-data_filtered <- data[[params$organisation]]
+strata <- params_meta$strata
+data_filtered <- data[[params_meta$organisation]]
 # split data into current 72h summary, or full timeseries
 # Hi I am commenting this out because it doesn't match the data structure
 # This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
@@ -15,25 +16,23 @@ data_filtered_timeseries <- map(data_filtered,
 params <- generate_key_insights(data_filtered_current, strata = "Overall") # TODO iterate over strata to match other chunks
 ```
 
-## Row
 
-::: {.card fill="false" title="Key insights"}
+
+::: {.callout-note collapse="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
 <!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
 commenting out, because there's a bug here somewhere at least -->
 - Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 
-## Row
-
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
+::: {.callout-note .current_summary_card .lshtm_widget title="Current summary" collapse = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r, results="asis"}
 #| fig-width: 8
 #| fig-asp: 0.4
 #| fig-align: center
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
   visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
@@ -48,19 +47,20 @@ for(i in params$strata) {
 }
 ```
 </div>
+
 Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
-## Row
+
 <!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
+::: {.callout-note .trend_time_card .lshtm_widget title="Recent trends" collapse="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r, results="asis"}
 #| fig-width: 8
 #| fig-asp: 1.3
 #| fig-align: center
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
   visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
@@ -75,19 +75,20 @@ for(i in params$strata) {
 }
 ```
 </div>
+
 Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
 :::
 
-## Row
+
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
+::: {.callout-note .trend_bmi_card .lshtm_widget title="Participants by BMI category" collapse = "false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r, results="asis"}
 #| fig-width: 8
 #| fig-asp: 1
 #| fig-align: center
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
   visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
@@ -105,15 +106,15 @@ for(i in params$strata) {
 Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
 :::
 
-## Row
 
-::: {.card fill="false" .lshtm_widget title="Study participation"}
+
+::: {.callout-note collapse="false" .lshtm_widget title="Study participation"}
 <div class="lshtm_widget_identifier" id="participants_over_time">
 ```{r, results="asis"}
 #| fig-width: 7
 #| fig-asp: 0.5
 #| fig-align: center
-for(i in params$strata) {
+for(i in strata) {
   # show the first stratum (overall) by default
   visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))

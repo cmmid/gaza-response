@@ -28,13 +28,13 @@ pacman::p_load(
 plot_participants_over_time <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
+  data_filter <- filter(data, group == tolower(strata)) |>
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean)) |>
     filter(variable == "weight") |>
-    full_join(expand.grid(list(date = as.Date(min(data[[tolower(strata)]]$date) - 1),
+    full_join(expand.grid(list(date = as.Date(min(filter(data, group == tolower(strata))$date) - 1),
                                cohort_n = 0,
-                               label = unique(data[[tolower(strata)]]$label))))
+                               label = unique(filter(data, group == tolower(strata))$label))))
 
   if (strata == "Overall") {
     # Generate plot

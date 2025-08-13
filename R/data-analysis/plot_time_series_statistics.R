@@ -30,7 +30,7 @@ pacman::p_load(
 plot_time_series_statistics <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
+  data_filter <- filter(data, group == tolower(strata)) |>
     # filter out the duplicate "current" records
     dplyr::filter(date <= Sys.Date()) %>%
     #dplyr::filter(!sex == "other/prefer not to share") %>%

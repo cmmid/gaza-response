@@ -1,0 +1,42 @@
+<!--- open: weight tabs ------------------------------->
+
+::: {.panel-tabset} 
+
+### Current status
+
+```{r echo=FALSE}
+# weight_variable <- "weight_percent_change_prewar"
+# data_filtered_current_weight <- data_filtered_current |> 
+#   filter(variable == weight_variable) |> 
+#   pivot_wider(names_from = stat, values_from = value) 
+# 
+# w_kg <- data_filtered_current_weight |> 
+#   filter(group %in% c("sex", "agegroup", "governorate", "children_feeding")) |> 
+#   mutate(group = as.character(group)) |> 
+#   highlight_key(~ group) 
+# 
+# w_kg_plot <- w_kg |> 
+#   ggplot(aes(y = group, group = group)) +
+#   geom_point(aes(x = median, shape = group, col = label),
+#              position = position_dodge(width = 0.5), 
+#              show.legend = F, size = 3) +
+#     geom_linerange(aes(xmin = q1, xmax = q3,
+#                        col = label),
+#              position = position_dodge(width = 0.5), 
+#              show.legend = F, linewidth = 3, alpha = 0.8)
+# 
+# w_kg_plot <- ggplotly(w_kg_plot) |> 
+#    highlight(on = "plotly_selected", dynamic = TRUE, selectize = TRUE)
+# 
+# w_kg_plot
+```
+
+Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and BMI (body mass index), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. ‘-20%’ indicates an average loss of 20% of weight or BMI.
+
+### Trends
+
+TBD
+
+<!--- close: weight tab ------------------------------->
+
+:::

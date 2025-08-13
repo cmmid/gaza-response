@@ -1,0 +1,48 @@
+<!-- Organisation-level data -->
+
+```{r, include=FALSE}
+```
+
+::: {.callout-tip collapse="false" title="Key insights"}
+Some text
+:::
+
+<!--- open: status indicators box ----------------------------------------->
+
+::: {.card title="Status indicators"}
+
+<!--- open: status indicators tabs ----------------------------------->
+
+::: {.panel-tabset}
+
+## Weight
+
+{{< include R/data-analysis/modules/_weight.qmd >}}
+
+<!--- start bmi tab ----------------------------------->
+
+## BMI
+
+<!--- close: bmi tab --------------------------------->
+
+:::
+
+<!--- open: participants tab ------------------------->
+
+## Participants
+
+### Current status
+
+### Demographics
+
+### Missing data
+
+
+<!--- close: status indicators tabs ----------------------------------->
+
+:::
+
+<!--- close: status indicators box ----------------------------------------->
+
+:::
+

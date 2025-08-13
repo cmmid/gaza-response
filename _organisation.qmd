@@ -16,15 +16,15 @@ insights <- generate_key_insights(data_filtered_current,
 
 ::: {.callout-tip collapse="false" title="Key insights"}
 - Data updated as of **`r insights$latest_date`**
-- Recent data from **`r insights$cohort_size_current` participants** (**`r insights$cohort_percent_currently_participating`%** of all enrolled participants)
+- Recent data from **`r insights$cohort_size` participants** (**`r insights$cohort_percent_currently_participating`%** of all enrolled participants)
 - Median change of **`r insights$median_change`%** compared to pre-war weight (with a typical range of `r insights$lower_change`% to `r insights$upper_change`%)
 :::
 
-::: {.callout-tip collapse="false" title="Nutritional status"}
+:::: {.columns}
 
-::: {.panel-tabset} 
+::: {.column width="50%"}
 
-### Weight change
+::: {.callout-note title="Weight"}
 
 ::: {.panel-tabset} 
 
@@ -65,11 +65,17 @@ TBD
 
 :::
 
-<!--- close weight tab --->
+:::
 
-### BMI
+:::
 
-::: {.panel-tabset}
+<!--- end weight column --->
+
+::: {.column width="50%"}
+
+::: {.callout-note title="BMI"}
+
+::: {.panel-tabset} 
 
 #### Overall
 
@@ -86,3 +92,7 @@ a plot here
 :::
 
 :::
+
+:::
+
+::::

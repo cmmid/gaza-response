@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - './R/data-pipeline'
+      - './R/data-pipeline/**'
 
 jobs:
   deploy:

@@ -30,10 +30,19 @@ datadict <- readRDS("data/data_dictionary.RDS")
 ## Load Data RDS
 data <- readRDS("data/public/summary-stats.RDS")
 
+options <- c("sex", "agegroup", "governorate", "role")
+# Generate all non-empty combinations
+strata <- unlist(
+  #lapply(1:length(options), function(k) {
+  lapply(1:2, function(k) {
+    combn(sort(options), k, FUN = function(x) paste(x, collapse = "-"))
+  })
+)
+# Add 'Overall' as default/fallback
+strata <- c("Overall", strata)
 
 params_meta <- list("organisation" = "all", # set to "all" by default: overwritten for each
-               "strata" = c("Overall", 
-                            "sex", "agegroup", "governorate", "role", "children_feeding"))
+               "strata" = strata)
 
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))

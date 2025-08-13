@@ -53,11 +53,15 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 ::: {.column width="25%"}
 
 ::: {.callout-note collapse="false" title="Dashboard"}
-This project provides real-time information on the **nutritional status of humanitarian staff in Gaza**. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: **please interpret results with caution**. [**Read more**](./about){.btn .btn-outline-primary .btn role="button"} 
+This project provides real-time information on the **nutritional status of humanitarian staff in Gaza**. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: **please interpret results with caution**.
+
+[**Read more**](./about){.btn .btn-outline-primary .btn role="button"} 
 :::
 
 ::: {.callout-caution collapse="false" title="Join us"}
-We are actively seeking participants to support the project, and welcome humanitarian staff to get in touch. [**Join us**](./contact){.btn .btn-outline-success .btn role="button"} 
+We are actively seeking participants to support the project, and welcome humanitarian staff to get in touch. 
+
+[**Join us**](./contact){.btn .btn-outline-success .btn role="button"} 
 :::
 
 :::
@@ -66,7 +70,6 @@ We are actively seeking participants to support the project, and welcome humanit
 ::: {.column width="75%"}
 
 ::: {.panel-tabset}
-
 
 ## **All participants**
 

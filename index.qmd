@@ -29,8 +29,7 @@ datadict <- readRDS("data/data_dictionary.RDS")
 
 ## Load Data RDS
 data <- readRDS("data/public/summary-stats.RDS")
-data <- list_rbind(map(data, ~ list_rbind(.x))) |> 
-  filter(!grepl("-", group))
+
 
 params <- list("organisation" = NULL,
                "strata" = c("overall", 
@@ -91,7 +90,7 @@ params$organisation <- "UNRW"
 ## **Save the Children International**
 
 ```{r}
-params$organisation <- "SCI"
+params$organisation <- "Save the Children International"
 ```
 
 {{< include _organisation.qmd >}}

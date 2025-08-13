@@ -31,8 +31,8 @@ datadict <- readRDS("data/data_dictionary.RDS")
 data <- readRDS("data/public/summary-stats.RDS")
 
 
-params <- list("organisation" = NULL,
-               "strata" = c("overall", 
+params_meta <- list("organisation" = "all", # set to "all" by default: overwritten for each
+               "strata" = c("Overall", 
                             "sex", "agegroup", "governorate", "role", "children_feeding"))
 
 ## Source plotting scripts
@@ -73,7 +73,7 @@ We are actively seeking participants to support the project, and welcome humanit
 ## **All participants**
 
 ```{r}
-params$organisation <- "all"
+params_meta$organisation <- "all"
 ```
 
 {{< include _organisation.qmd >}}
@@ -82,18 +82,20 @@ params$organisation <- "all"
 ## **UNRW**
 
 ```{r}
-params$organisation <- "UNRW"
+#params_meta$organisation <- "UNRW"
 ```
-
+<!---
 {{< include _organisation.qmd >}}
+-->
 
 ## **Save the Children International**
 
 ```{r}
-params$organisation <- "Save the Children International"
+#params_meta$organisation <- "Save the Children International"
 ```
-
+<!---
 {{< include _organisation.qmd >}}
+-->
 
 :::
 

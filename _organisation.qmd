@@ -1,98 +1,132 @@
 <!-- Organisation-level data -->
 
+
 ```{r, include=FALSE}
-## Load Data
-data_filtered <- data |> 
-  filter(organisation == params$organisation)
-# split data into summary by recent 72h, or by daily cross-section
-data_filtered_current <- data_filtered |> 
-  filter(is.na(date))
-data_filtered_timeseries <- data_filtered |> 
-  filter(!is.na(date))
+data_filtered <- data[[params$organisation]]
+# split data into current 72h summary, or full timeseries
+# Hi I am commenting this out because it doesn't match the data structure
+# This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
+# 72 hour summary and puts it into the spreadsheet as date = NA
+data_filtered_current <- map(data_filtered,
+                             ~ filter(.x, date == max(date, na.rm=TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
+data_filtered_timeseries <- map(data_filtered,
+                             ~ filter(.x, !is.na(date)))
 
-insights <- generate_key_insights(data_filtered_current, 
-                                  strata = "overall")
+params <- generate_key_insights(data_filtered_current, strata = "Overall") # TODO iterate over strata to match other chunks
 ```
 
-::: {.callout-tip collapse="false" title="Key insights"}
-- Data updated as of **`r insights$latest_date`**
-- Recent data from **`r insights$cohort_size` participants** (**`r insights$cohort_percent_currently_participating`%** of all enrolled participants)
-- Median change of **`r insights$median_change`%** compared to pre-war weight (with a typical range of `r insights$lower_change`% to `r insights$upper_change`%)
+## Row
+
+::: {.card fill="false" title="Key insights"}
+- Data updated as of **`r params$latest_date`**
+<!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
+commenting out, because there's a bug here somewhere at least -->
+- Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 
-:::: {.columns}
+## Row
 
-::: {.column width="50%"}
-
-::: {.callout-note title="Weight"}
-
-::: {.panel-tabset} 
-
-#### Current status
-
-```{r}
-weight_variable <- "weight_percent_change_prewar"
-data_filtered_current_weight <- data_filtered_current |> 
-  filter(variable == weight_variable) |> 
-  pivot_wider(names_from = stat, values_from = value) 
-
-w_kg <- data_filtered_current_weight |> 
-  filter(group %in% c("sex", "agegroup", "governorate", "children_feeding")) |> 
-  mutate(group = as.character(group)) |> 
-  highlight_key(~ group) 
-
-w_kg_plot <- w_kg |> 
-  ggplot(aes(y = group, group = group)) +
-  geom_point(aes(x = median, shape = group, col = label),
-             position = position_dodge(width = 0.5), 
-             show.legend = F, size = 3) +
-    geom_linerange(aes(xmin = q1, xmax = q3,
-                       col = label),
-             position = position_dodge(width = 0.5), 
-             show.legend = F, linewidth = 3, alpha = 0.8)
-
-w_kg_plot <- ggplotly(w_kg_plot) |> 
-   highlight(on = "plotly_selected", dynamic = TRUE, selectize = TRUE)
-
-w_kg_plot
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="current_summary">
+```{r, results="asis"}
+#| fig-width: 8
+#| fig-asp: 0.4
+#| fig-align: center
+for(i in params$strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
+  
+  print(
+    plot_current_summary_stats(
+      data = data_filtered_current,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
 ```
-
-Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and BMI (body mass index), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. ‘-20%’ indicates an average loss of 20% of weight or BMI.
-
-#### Trends over time
-
-TBD
-
+</div>
+Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
-:::
-
-:::
-
-<!--- end weight column --->
-
-::: {.column width="50%"}
-
-::: {.callout-note title="BMI"}
-
-::: {.panel-tabset} 
-
-#### Overall
-
-```{r}
-print("plot overall BMI")
+## Row
+<!-- Create div for trend over time -->
+::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="trend_over_time">
+```{r, results="asis"}
+#| fig-width: 8
+#| fig-asp: 1.3
+#| fig-align: center
+for(i in params$strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
+  
+  print(
+   plot_time_series_statistics(
+      data = data_filtered_timeseries,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
 ```
-
-#### By demographic
-
-a plot here
-
-::: 
-
+</div>
+Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
 :::
 
+## Row
+<!-- Create div for trend over time -->
+::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
+<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
+<div class="lshtm_widget_identifier" id="trends_bmi">
+```{r, results="asis"}
+#| fig-width: 8
+#| fig-asp: 1
+#| fig-align: center
+for(i in params$strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
+  
+  print(
+     plot_bmicategory_proportions_time_series(
+     data = data_filtered_timeseries,
+     strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
+Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
 :::
 
+## Row
+
+::: {.card fill="false" .lshtm_widget title="Study participation"}
+<div class="lshtm_widget_identifier" id="participants_over_time">
+```{r, results="asis"}
+#| fig-width: 7
+#| fig-asp: 0.5
+#| fig-align: center
+for(i in params$strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))
+  
+  print(
+    plot_participants_over_time(
+      data = data_filtered_timeseries,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
 :::
 
-::::

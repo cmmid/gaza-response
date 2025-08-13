@@ -20,7 +20,7 @@ generate_key_insights <- function(data, strata) {
   data <- filter(data, variable == "weight_percent_change_prewar")
   params <- list(
     # Most recent date
-    latest_date = data$current_summary_date[1],
+    latest_date = max(data$date, na.rm=TRUE), # TODO clarify latest date
     # N
     cohort_size = max(data$cohort_id_enrolled, na.rm=TRUE),
     cohort_percent_participating = (data$cohort_obs_recorded /

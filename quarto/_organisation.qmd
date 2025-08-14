@@ -1,38 +1,29 @@
-<!-- Organisation-level container -->
+<!-- Organisation-level page -->
 
-::: {.card}
-
-```{r, include=FALSE}
+```{r}
+data_filtered <- filter(data, organisation == params_meta$organisation)
+data_filtered_current <- filter(data_filtered, date == max(date, na.rm=TRUE))
 ```
 
-<!--- open: key insights container -------------------------------------------->
-::: {.callout-tip collapse="false" title="Key insights"}
+::: {.callout-tip title="Key insights" collapse="false"}
 Some text
 :::
-<!--- close: key insights container ------------------------------------------->
 
-
-<!--- open: status indicators container ------------------------------------->
-
-::: {.card title="Status indicators"}
+::: {.card title="Status indicators" collapse="false"}
 
 ::: {.panel-tabset}
 
-## Weight
+### Weight
 
 {{< include /quarto/_weight.qmd >}}
 
-## BMI
+### BMI
 
 {{< include /quarto/_bmi.qmd >}}
 
-## Participants
+### Participants
 
 {{< include /quarto/_participants.qmd >}}
-
-:::
-
-<!--- close: status indicators container ------------------------------------>
 
 :::
 

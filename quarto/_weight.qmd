@@ -1,23 +1,18 @@
 <!--- open: weight tabs ------------------------------->
 
-::: {.panel-tabset} 
+::: {.panel-tabset}
 
 #### Current status
 
 ```{r echo=FALSE}
-weight_variable <- "weight_percent_change_prewar"
 for(i in params_meta$strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  
+  print(paste0("##### ", i))
   print(
     plot_current_summary_stats(
       data = data_filtered_current,
       strata = i
     )
   )
-  cat('</div>')
 }
 ```
 

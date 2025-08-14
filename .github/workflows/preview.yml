@@ -7,6 +7,8 @@ on:
       - reopened
       - synchronize
       - closed
+    paths-ignore:
+      - './R/data-pipeline/**'
 
 jobs:
   build-deploy:

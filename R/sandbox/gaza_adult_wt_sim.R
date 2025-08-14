@@ -142,6 +142,10 @@
   #...................................
   ## Save data
 
+    if (!dir.exists(here("data", "processed"))) {
+      dir.create(here("data", "processed"))
+    }
+
     # Baseline dataset
     saveRDS(df_base, here("data", "processed", "df_base.RDS"))
     saveRDS(df_fup, here("data", "processed", "df_fup.RDS"))

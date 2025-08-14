@@ -1,6 +1,6 @@
 ::: {.panel-tabset} 
 
-### Current status
+#### Current status
 
 #### Latest data
 
@@ -14,7 +14,7 @@ print("a plot in a card")
 
 a plot here
 
-### Recent trends
+#### Recent trends
 
 <!--- start column layout --->
 
@@ -33,5 +33,7 @@ third plot in a card
 :::
 
 <!--- end column layout --->
+
+:::
 
 ::: 

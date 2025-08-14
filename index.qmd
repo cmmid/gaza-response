@@ -1,21 +1,22 @@
 ---
 title: ""
 format: 
-  html:
+  dashboard:
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
     css: "styles.css"
     fig-format: svg
-    page-layout: custom
     anchor-sections: true
     smooth-scroll: true
-toc: false
+    page-layout: custom
+sidebar: false
+lightbox: true
 execute: 
   echo: false
 ---
 
-<!-- Setup, no output -->
+<!-- Setup -->
 
 ```{r setup, include=FALSE}
 ## Packages
@@ -29,7 +30,8 @@ datadict <- readRDS("data/data_dictionary.RDS")
 
 ## Load Data RDS
 data <- readRDS("data/public/summary-stats.RDS")
-
+data <- list_rbind(map(data, ~ list_rbind(.x))) |>
+  filter(!grepl("-", group))
 
 params_meta <- list("organisation" = "all", # set to "all" by default: overwritten for each
                "strata" = c("Overall", 
@@ -45,14 +47,13 @@ source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
 ```
 
-<!-- Global sidebar -->
+<!-- Global sidebar ---------------------------------------------------------->
+## {.sidebar}
 
-:::: {.columns}
-
-::: {.column width="25%"}
-
-::: {.callout-note collapse="false" title="Dashboard"}
-This project provides real-time information on the **nutritional status of humanitarian staff in Gaza**. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: **please interpret results with caution**.
+::: {.callout-note collapse="false" title="About"}
+This project provides real-time information on the **nutritional status of humanitarian staff in Gaza**. 
+Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
+We are developing this project during a rapidly changing situation: **please interpret results with caution**.
 
 [**Read more**](./about){.btn .btn-outline-primary .btn role="button"} 
 :::
@@ -63,71 +64,33 @@ We are actively seeking participants to support the project, and welcome humanit
 [**Join us**](./contact){.btn .btn-outline-success .btn role="button"} 
 :::
 
-<!-- Add data filter
- - todo: change to pandoc format
- - todo: fill options automatically or wrap in function
--->
-<div class="lshtm_widget_filter">
-  <p><strong>Stratify data by</strong></p>
-  <div class="filter_content">
-  <fieldset>
-    <!--<legend>Stratify data by</legend>-->
-    <label>
-      <input type="checkbox" name="data_filter" value="sex">
-      Sex
-    </label><br>
-    <label>
-      <input type="checkbox" name="data_filter" value="agegroup">
-      Age
-    </label><br>
-    <label>
-      <input type="checkbox" name="data_filter" value="governorate">
-      Location
-    </label><br>
-    <label>
-      <input type="checkbox" name="data_filter" value="role">
-      Role
-    </label>
-  </fieldset>
-</div>
-</div>
+<!-- Add data filter-->
 
-:::
+<!-- Main panel -------------------------------------------------------------->
 
-
-::: {.column width="75%"}
-
-::: {.panel-tabset}
-
-## **All participants**
+# **All participants**
 
 ```{r}
 params_meta$organisation <- "all"
 ```
 
-{{< include _organisation.qmd >}}
+{{< include quarto/_organisation.qmd >}}
 
 
-## **UNRWA**
+# **UNRWA**
 
 ```{r}
 params_meta$organisation <- "UNRWA"
 ```
 
-{{< include _organisation.qmd >}}
+{{< include quarto/_organisation.qmd >}}
 
 
-## **Save the Children International**
+# **Save the Children International**
 
 ```{r}
 params_meta$organisation <- "Save the Children International"
 ```
 
-{{< include _organisation.qmd >}}
+{{< include quarto/_organisation.qmd >}}
 
-
-:::
-
-:::
-
-::::

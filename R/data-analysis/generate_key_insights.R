@@ -16,7 +16,7 @@
 
 
 generate_key_insights <- function(data, strata) {
-  data <- data[[tolower(strata)]]
+  data <- filter(data, group == tolower(strata))
   data <- filter(data, variable == "weight_percent_change_prewar")
   params <- list(
     # Most recent date

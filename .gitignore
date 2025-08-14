@@ -63,3 +63,5 @@ site_libs
 site_libs/*
 /data/processed
 data/processed
+
+quarto/*_files/

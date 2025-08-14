@@ -1,15 +1,22 @@
-<!-- Organisation-level page -->
-
+<!-- Organisation-level data -->
 ```{r}
 data_filtered <- filter(data, organisation == params_meta$organisation)
 data_filtered_current <- filter(data_filtered, date == max(date, na.rm=TRUE))
 ```
 
-::: {.callout-tip title="Key insights" collapse="false"}
-Some text
+<!-- Key insights ------------------------------------------------------------>
+```{r}
+params <- generate_key_insights(data_filtered_current, strata = "Overall") 
+```
+
+::: {.card fill="false" title="Key insights"}
+- Data updated as of **`r params$latest_date`**
+<!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
+commenting out, because there's a bug here somewhere at least -->
+- Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 
-::: {.card title="Status indicators" collapse="false"}
+<!-- Tabs ------------------------------------------------------------------->
 
 ::: {.panel-tabset}
 
@@ -24,7 +31,5 @@ Some text
 ### Participants
 
 {{< include /quarto/_participants.qmd >}}
-
-:::
 
 :::

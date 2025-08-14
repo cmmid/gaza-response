@@ -1,8 +1,6 @@
 ::: {.panel-tabset} 
 
-### Current status
-
-#### Latest data
+#### Current status
 
 ::: {.card}
 ```{r}
@@ -10,28 +8,10 @@ print("a plot in a card")
 ```
 :::
 
-#### Pre-war comparison
-
-a plot here
-
-### Recent trends
-
-<!--- start column layout --->
-
-::: {layout="[ [1], [1,1] ]"}
+#### Data quality
 
 ::: {.card}
 a plot in a card
 :::
-
-::: {.card}
-second plot in a card
-:::
-
-::: {.card}
-third plot in a card
-:::
-
-<!--- end column layout --->
 
 ::: 

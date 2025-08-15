@@ -152,6 +152,14 @@ clean_data <- function(base_data, fup_data) {
   # BMI categories
   matched_data <- matched_data |>
     mutate(
+      bmi_enrol_category = case_when(
+        bmi_enrol <= 10 ~ NA_character_,
+        bmi_enrol < 18.5 ~ "underweight",
+        bmi_enrol >= 18.5 & bmi_enrol < 25 ~ "normal",
+        bmi_enrol >= 25 & bmi_enrol < 30 ~ "overweight",
+        bmi_enrol >= 30 ~ "obese",
+        bmi_enrol >= 60 ~ NA_character_,
+        TRUE ~ NA_character_),
       bmi_latest_category = case_when(
         bmi_latest <= 10 ~ NA_character_,
         bmi_latest < 18.5 ~ "underweight",

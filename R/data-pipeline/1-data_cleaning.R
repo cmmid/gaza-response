@@ -63,8 +63,8 @@ clean_data <- function(base_data, fup_data) {
 
   # use baseline weight reading as first day's weight
   fup_data_expanded <- fup_data_expanded |>
-    mutate(weight = ifelse(date == date_first_measurement,
-                           first_weight_measurement, weight)) |>
+    mutate(latest_weight = ifelse(date == date_first_measurement,
+                           first_weight_measurement, latest_weight)) |>
     # remove records from before enrolment
     filter(date >= date_first_measurement)
 
@@ -75,8 +75,8 @@ clean_data <- function(base_data, fup_data) {
     # time in cohort
     dplyr::mutate(participant_cumulative_days_enrolled = 1 + as.integer(
                     difftime(date, date_first_measurement, units = "days")),
-                  participant_cumulative_days_recorded = cumsum(!is.na(weight)),
-                  last_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(weight))
+                  participant_cumulative_days_recorded = cumsum(!is.na(latest_weight)),
+                  last_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(latest_weight))
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -86,20 +86,23 @@ clean_data <- function(base_data, fup_data) {
     group_by(id) |>
     dplyr::mutate(
       # BMI
-      bmi = weight / (height/100)^2,
-      bmi_prewar = weight_prewar / (height/100)^2,
-      first_bmi_measurement = bmi[date == date_first_measurement],
+      latest_bmi = latest_weight / (height/100)^2,
+      prewar_bmi = prewar_weight / (height/100)^2,
+      first_bmi_measurement = latest_bmi[date == date_first_measurement],
+      bmi_abs_change_firstmeasurement = latest_bmi - first_bmi_measurement,
+      bmi_percent_change_firstmeasurement = ((latest_bmi - first_bmi_measurement)/
+                                               first_bmi_measurement)*100,
+      bmi_abs_change_prewar = bmi - bmi_prewar,
+      bmi_percent_change_prewar = ((bmi - bmi_prewar)/
+                                     bmi_prewar)*100,
         # TODO add bmi categories here for tidiness
       # calculate change since enrolment
       weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/
                                                   first_weight_measurement)*100,
-      bmi_percent_change_firstmeasurement = ((bmi - first_bmi_measurement)/
-                                               first_bmi_measurement)*100,
       # change since prewar
       weight_percent_change_prewar = ((weight - weight_prewar)/
-                                        weight_prewar)*100,
-      bmi_percent_change_prewar = ((bmi - bmi_prewar)/
-                                     bmi_prewar)*100) |>
+                                        weight_prewar)*100
+      ) |>
     ungroup() |>
     # drop 0 percent change on date of first measurement
     mutate(across(contains("_percent_change_firstmeasurement"),

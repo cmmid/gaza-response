@@ -54,8 +54,8 @@ clean_data <- function(base_data, fup_data) {
   # add baseline characteristics and weight reading to complete grid
   # - relabel baseline weight measurement
   base_weight <- base_data |>
-    rename("date_first_measurement" = date,
-           "first_weight_measurement" = weight)
+    rename("date_enrol" = date,
+           "weight_enrol" = weight)
   # - add to grid as new variables
   fup_data_expanded <- left_join(id_date_grid,
                             base_weight,
@@ -63,10 +63,10 @@ clean_data <- function(base_data, fup_data) {
 
   # use baseline weight reading as first day's weight
   fup_data_expanded <- fup_data_expanded |>
-    mutate(latest_weight = ifelse(date == date_first_measurement,
-                           first_weight_measurement, latest_weight)) |>
+    mutate(weight_latest = ifelse(date == enrol_date,
+                           weight_enrol, weight_latest)) |>
     # remove records from before enrolment
-    filter(date >= date_first_measurement)
+    filter(date >= enrol_date)
 
 
 # Dates & cohort time -----------------------------------------------------
@@ -74,9 +74,11 @@ clean_data <- function(base_data, fup_data) {
     dplyr::group_by(id) |>
     # time in cohort
     dplyr::mutate(participant_cumulative_days_enrolled = 1 + as.integer(
-                    difftime(date, date_first_measurement, units = "days")),
-                  participant_cumulative_days_recorded = cumsum(!is.na(latest_weight)),
-                  last_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(latest_weight))
+                    difftime(date, date_enrol, units = "days")),
+                  participant_cumulative_days_recorded = cumsum(!is.na(weight_latest)),
+                  is_last_measurement = participant_cumulative_days_recorded ==
+                    max(participant_cumulative_days_recorded, na.rm = TRUE) &
+                    !is.na(weight_latest))
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -85,41 +87,43 @@ clean_data <- function(base_data, fup_data) {
   matched_data <- matched_data |>
     group_by(id) |>
     dplyr::mutate(
-      # BMI
-      latest_bmi = latest_weight / (height/100)^2,
-      prewar_bmi = prewar_weight / (height/100)^2,
-      first_bmi_measurement = latest_bmi[date == date_first_measurement],
-      bmi_abs_change_firstmeasurement = latest_bmi - first_bmi_measurement,
-      bmi_percent_change_firstmeasurement = ((latest_bmi - first_bmi_measurement)/
-                                               first_bmi_measurement)*100,
-      bmi_abs_change_prewar = bmi - bmi_prewar,
-      bmi_percent_change_prewar = ((bmi - bmi_prewar)/
-                                     bmi_prewar)*100,
-        # TODO add bmi categories here for tidiness
-      # calculate change since enrolment
-      weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/
-                                                  first_weight_measurement)*100,
-      # change since prewar
-      weight_percent_change_prewar = ((weight - weight_prewar)/
-                                        weight_prewar)*100
+      # calculate BMI
+      bmi_latest = weight_latest / (height/100)^2,
+      bmi_prewar = weight_prewar / (height/100)^2,
+      bmi_enrol = bmi_latest[date == date_enrol],
+      # TODO add bmi categories here for tidiness
+      # calculate change over time
+      bmi_latest_enrol_change_abs = bmi_latest - bmi_enrol,
+      bmi_latest_enrol_change_percent = ((bmi_latest - bmi_enrol) /
+                                               bmi_enrol)*100,
+      bmi_latest_prewar_change_abs = bmi_latest - bmi_prewar,
+      bmi_latest_prewar_change_percent = ((bmi_latest - bmi_prewar) /
+                                            bmi_prewar)*100,
+      weight_latest_enrol_change_abs = weight_latest - weight_enrol_measurement,
+      weight_latest_enrol_change_percent = ((weight_latest - weight_enrol) /
+                                              weight_enrol)*100,
+      weight_latest_prewar_change_abs = weight_latest - weight_prewar,
+      weight_latest_prewar_change_percent = ((weight_latest - weight_prewar) /
+                                               weight_prewar)*100
       ) |>
     ungroup() |>
     # drop 0 percent change on date of first measurement
-    mutate(across(contains("_percent_change_firstmeasurement"),
-           ~ ifelse(date == date_first_measurement, NA, .x)))
+    mutate(across(contains("_change_"),
+           ~ ifelse(date == date_enrol, NA, .x)))
 
  change_from_previous <- matched_data %>%
     dplyr::arrange(id, date) %>%
     dplyr::group_by(id) %>%
-    dplyr::filter(!is.na(weight)) %>%
-    dplyr::mutate(previous_weight = lag(weight),
-                  previous_bmi = lag(bmi),
-                  weight_percent_change_previousmeasurement = ((weight - previous_weight) /
-                                                                 previous_weight)*100,
-                  bmi_percent_change_previousmeasurement = ((bmi - previous_bmi) / previous_bmi)*100) %>%
+    dplyr::filter(!is.na(weight_latest)) %>%
+    dplyr::mutate(weight_previous = lag(weight_latest),
+                  bmi_previous = lag(bmi_latest),
+                  weight_latest_previous_change_percent = ((weight_latest - weight_previous) /
+                                                                 weight_previous)*100,
+                  bmi_latest_previous_change_percent = ((bmi_latest - bmi_previous) /
+                                                          bmi_previous)*100) %>%
     dplyr::select(id, date,
-                  weight_percent_change_previousmeasurement,
-                  bmi_percent_change_previousmeasurement) |>
+                  weight_latest_previous_change_percent,
+                  bmi_latest_previous_change_percent) |>
     ungroup()
 
   matched_data <- left_join(matched_data,
@@ -130,13 +134,13 @@ clean_data <- function(base_data, fup_data) {
   matched_data <- matched_data |>
     mutate(
       weight_anomaly = case_when(
-        !between(bmi, 10, 60) ~ TRUE,
-        weight_percent_change_previousmeasurement >= 10 ~ TRUE,
+        !between(bmi_latest, 10, 60) ~ TRUE,
+        abs(weight_latest_previous_change_percent) >= 10 ~ TRUE,
         TRUE ~ FALSE)
     )
   # Set anomalous data to NA
   matched_data <- matched_data |>
-    mutate(across(contains(c("weight", "bmi")),
+    mutate(across(contains(c("weight_latest", "bmi_latest")),
                   ~ ifelse(weight_anomaly, NA, .x)))
 
 
@@ -148,15 +152,15 @@ clean_data <- function(base_data, fup_data) {
   # BMI categories
   matched_data <- matched_data |>
     mutate(
-      bmi_category = case_when(
-        bmi <= 10 ~ NA_character_,
-        bmi < 18.5 ~ "underweight",
-        bmi >= 18.5 & bmi < 25 ~ "normal",
-        bmi >= 25 & bmi < 30 ~ "overweight",
-        bmi >= 30 ~ "obese",
-        bmi >= 60 ~ NA_character_,
+      bmi_latest_category = case_when(
+        bmi_latest <= 10 ~ NA_character_,
+        bmi_latest < 18.5 ~ "underweight",
+        bmi_latest >= 18.5 & bmi_latest < 25 ~ "normal",
+        bmi_latest >= 25 & bmi_latest < 30 ~ "overweight",
+        bmi_latest >= 30 ~ "obese",
+        bmi_latest >= 60 ~ NA_character_,
         TRUE ~ NA_character_),
-      bmi_category_prewar = case_when(
+      bmi_prewar_category = case_when(
         bmi_prewar <= 10 ~ NA_character_,
         bmi_prewar < 18.5 ~ "underweight",
         bmi_prewar >= 18.5 & bmi_prewar < 25 ~ "normal",

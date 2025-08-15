@@ -108,7 +108,7 @@ clean_data <- function(base_data, fup_data) {
       ) |>
     ungroup() |>
     # drop 0 percent change on date of first measurement
-    mutate(across(contains("_change_"),
+    mutate(across(matches("_change_"),
            ~ ifelse(date == date_enrol, NA, .x)))
 
  change_from_previous <- matched_data %>%
@@ -140,7 +140,7 @@ clean_data <- function(base_data, fup_data) {
     )
   # Set anomalous data to NA
   matched_data <- matched_data |>
-    mutate(across(contains(c("weight_latest", "bmi_latest")),
+    mutate(across(matches("weight_latest|bmi_latest"),
                   ~ ifelse(weight_anomaly, NA, .x)))
 
 

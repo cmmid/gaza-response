@@ -128,7 +128,7 @@ clean_data <- function(base_data, fup_data) {
     mutate(
       weight_anomaly = case_when(
         !between(bmi, 10, 60) ~ TRUE,
-        weight_percent_change_previousmeasurement >= 10 ~ TRUE,
+        abs(weight_percent_change_previousmeasurement) >= 10 ~ TRUE,
         TRUE ~ FALSE)
     )
   # Set anomalous data to NA

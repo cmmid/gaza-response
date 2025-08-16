@@ -55,19 +55,20 @@ summarise_ids <- function(data, group_cols) {
 
   # proportions
   df_bmi_props <- data |>
+    filter(!is.na(bmi)) |>
     group_by(across(all_of(c(group_cols)))) |>
     pivot_longer(cols = contains("bmi_category"),
                  names_to = "bmi_period", values_to = "bmi_category") |>
     group_by(across(all_of(c(group_cols, "bmi_period", "bmi_category")))) |>
-    count(name = "value") |>
+    count(name = "bmi_category_count") |>
     # get % per category compared to all those measured in that group
     left_join(dplyr::select(df_participants,
                             all_of(c(group_cols, "cohort_obs_recorded")))) |>
-    mutate(value = value / cohort_obs_recorded * 100,
+    mutate(value = bmi_category_count / cohort_obs_recorded * 100,
            stat = "percent",
            variable = paste0(bmi_period, "_", bmi_category)) |>
     ungroup() |>
-    dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
+    dplyr::select(all_of(c(group_cols, "bmi_category_count", "value", "stat", "variable"))) |>
     # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
     complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))
 

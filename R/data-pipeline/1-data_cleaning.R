@@ -57,20 +57,20 @@ clean_data <- function(base_data, fup_data) {
     rename("date_first_measurement" = date,
            "first_weight_measurement" = weight)
   # - add to grid as new variables
-  fup_data_expanded <- left_join(id_date_grid,
+  id_date_grid <- left_join(id_date_grid,
                             base_weight,
                             by = c("id"))
 
   # use baseline weight reading as first day's weight
-  fup_data_expanded <- fup_data_expanded |>
-    mutate(weight = ifelse(date == date_first_measurement,
+  id_date_grid <- id_date_grid |>
+    mutate(weight = if_else(date == date_first_measurement,
                            first_weight_measurement, weight)) |>
     # remove records from before enrolment
     filter(date >= date_first_measurement)
 
 
 # Dates & cohort time -----------------------------------------------------
-  matched_data <- fup_data_expanded |>
+  id_date_grid <- id_date_grid |>
     dplyr::group_by(id) |>
     # time in cohort
     dplyr::mutate(participant_cumulative_days_enrolled = 1 + as.integer(
@@ -82,7 +82,7 @@ clean_data <- function(base_data, fup_data) {
   ### Add BMI and % wt change
   #...............................................................................
 
-  matched_data <- matched_data |>
+  observed_data <- observed_data |>
     group_by(id) |>
     dplyr::mutate(
       # BMI
@@ -105,7 +105,7 @@ clean_data <- function(base_data, fup_data) {
     mutate(across(contains("_percent_change_firstmeasurement"),
            ~ ifelse(date == date_first_measurement, NA, .x)))
 
- change_from_previous <- matched_data %>%
+ change_from_previous <- observed_data %>%
     dplyr::arrange(id, date) %>%
     dplyr::group_by(id) %>%
     dplyr::filter(!is.na(weight)) %>%
@@ -124,7 +124,7 @@ clean_data <- function(base_data, fup_data) {
 
   # Data quality checks -----------------------------------------------------
   # Flag anomalous data
-  matched_data <- matched_data |>
+  observed_data <- observed_data |>
     mutate(
       weight_anomaly = case_when(
         !between(bmi, 10, 60) ~ TRUE,
@@ -132,18 +132,18 @@ clean_data <- function(base_data, fup_data) {
         TRUE ~ FALSE)
     )
   # Set anomalous data to NA
-  matched_data <- matched_data |>
+  observed_data <- observed_data |>
     mutate(across(contains(c("weight", "bmi")),
                   ~ ifelse(weight_anomaly, NA, .x)))
 
 
   # Specify factor variables ------------------------------------------------
   # TODO use data dictionary here
-  matched_data <- matched_data |>
+  observed_data <- observed_data |>
     mutate(agegroup = ifelse(age < 30, "Under 30 years",
                              ifelse(age < 45, "30-44 years", "Over 45 years")))
   # BMI categories
-  matched_data <- matched_data |>
+  observed_data <- observed_data |>
     mutate(
       bmi_category = case_when(
         bmi <= 10 ~ NA_character_,
@@ -164,12 +164,12 @@ clean_data <- function(base_data, fup_data) {
       )
 
   # add "overall" variable for total-cohort summaries
-  matched_data <- matched_data |>
+  observed_data <- observed_data |>
     mutate(overall = "overall")
 
-  matched_data <- ungroup(matched_data)
+  observed_data <- ungroup(observed_data)
 
-  return(matched_data)
+  return(observed_data)
 }
 
 #...............................................................................

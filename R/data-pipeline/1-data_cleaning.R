@@ -75,8 +75,14 @@ clean_data <- function(base_data, fup_data) {
     # time in cohort
     dplyr::mutate(participant_cumulative_days_enrolled = 1 + as.integer(
                     difftime(date, date_first_measurement, units = "days")),
-                  participant_cumulative_days_recorded = cumsum(!is.na(weight)),
-                  last_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(weight))
+                  participant_cumulative_days_recorded = cumsum(!is.na(weight))
+                  ) |>
+    # exclude participants with no weight measurement
+    filter(participant_cumulative_days_recorded > 0) |>
+    # add latest measure as separate variable
+    mutate(latest_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(weight),
+           date_latest_measurement = date[which(latest_measurement)],
+           weight_latest_mesurement = weight[which(latest_measurement)])
 
   #...............................................................................
   ### Add BMI and % wt change

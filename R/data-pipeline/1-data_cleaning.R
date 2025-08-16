@@ -56,6 +56,7 @@ clean_data <- function(base_data, fup_data) {
 
   # add follow up weight measurements to complete grid
   id_date_grid <- id_date_grid |>
+    left_join(base_data, by = c("id", "date")) |>
     left_join(fup_data, by = c("id", "date"))
 
   # add baseline characteristics and weight reading to complete grid
@@ -147,7 +148,7 @@ clean_data <- function(base_data, fup_data) {
   # Specify factor variables ------------------------------------------------
   # TODO use data dictionary here
   matched_data <- matched_data |>
-    mutate(agegroup = ifelse(age < 30, "Under 30 years",
+    mutate(agegroup = if_else(age < 30, "Under 30 years",
                              ifelse(age < 45, "30-44 years", "Over 45 years")))
   # BMI categories
   matched_data <- matched_data |>

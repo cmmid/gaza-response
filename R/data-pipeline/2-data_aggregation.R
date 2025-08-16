@@ -55,24 +55,31 @@ summarise_ids <- function(data, group_cols) {
     pivot_longer(cols = -group_cols) %>%
     separate(name, into = c("variable", "stat"), sep = "\\.")
 
-  # proportions
-  df_bmi_props <- data |>
+  # BMI by category
+  df_bmi_count <- data |>
     filter(!is.na(bmi)) |>
     group_by(across(all_of(c(group_cols)))) |>
     pivot_longer(cols = contains("bmi_category"),
                  names_to = "bmi_period", values_to = "bmi_category") |>
     group_by(across(all_of(c(group_cols, "bmi_period", "bmi_category")))) |>
-    count(name = "bmi_category_count") |>
+    count(name = "value") |>
+    mutate(stat = "count",
+           variable = paste0(bmi_period, "_", bmi_category))
+
     # get % per category compared to all those measured in that group
+  df_bmi_props <- df_bmi_count |>
     left_join(dplyr::select(df_participants,
                             all_of(c(group_cols, "cohort_obs_recorded")))) |>
-    mutate(value = bmi_category_count / cohort_obs_recorded * 100,
+    mutate(value = value / cohort_obs_recorded * 100,
            stat = "percent",
            variable = paste0(bmi_period, "_", bmi_category)) |>
     ungroup() |>
-    dplyr::select(all_of(c(group_cols, "bmi_category_count", "value", "stat", "variable"))) |>
+    bind_rows(df_bmi_count) |>
+    dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
     # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
-    complete(nesting(!!!syms(group_cols)), stat, variable, fill = list(value = 0))
+    complete(nesting(!!!syms(group_cols)),
+             stat, variable,
+             fill = list(value = 0))
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,

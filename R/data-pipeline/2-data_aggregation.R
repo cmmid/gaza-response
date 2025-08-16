@@ -15,15 +15,12 @@ summarise_ids <- function(data, group_cols) {
   df_participants <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
-      # cumulative participants enrolled ---
+      # participants enrolled ---
       cohort_id_enrolled = length(unique(id)),
-      # cohort new joiners ---
-      cohort_id_new = sum(date == date_first_measurement),
-      # cohort attrition (loss to follow up)
-      cohort_id_attrition = cohort_id_enrolled - cohort_id_new,
-      # number of recorded weights, denominator: cohort_id_enrolled
+      # daily observations ---
+      # number of recorded weights, denominator: cohort_n
       cohort_obs_recorded = sum(!is.na(weight)),
-      # missing weight among all enrolled, denominator: cohort_id_enrolled
+      # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
       # anomalous weight among recorded weights, denominator: cohort_obs_recorded
       cohort_obs_anomalous = sum(weight_anomaly),

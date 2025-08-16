@@ -48,6 +48,8 @@ summarise_ids <- function(data, group_cols) {
                q1 = ~ quantile(., probs = 0.25, na.rm = TRUE),
                q3 = ~ quantile(., probs = 0.75, na.rm = TRUE)),
              .names = "{.col}.{.fn}"),
+      count.n_calc = n(),
+      count.missing_calc = sum(is.na(weight)),
       .groups = "drop"
     ) |>
     pivot_longer(cols = -group_cols) %>%
@@ -62,7 +64,9 @@ summarise_ids <- function(data, group_cols) {
     count(name = "value") |>
     # get % per category compared to all those measured in that group
     left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_obs_recorded")))) |>
+                            all_of(c(group_cols,
+                                     "cohort_id_enrolled",
+                                     "cohort_obs_recorded")))) |>
     mutate(value = value / cohort_obs_recorded * 100,
            stat = "percent",
            variable = paste0(bmi_period, "_", bmi_category)) |>
@@ -93,8 +97,8 @@ clean_aggregated_data <- function(summary_list, latest_date) {
   #   setting "date" to NA (as this is a summary of multiple dates),
   #   and marking these records with "current_summary_date" = latest date in the data
   summary_df <- summary_df |>
-    mutate(current_summary_date = as.Date(ifelse(date > Sys.Date(),
-                                         latest_date, date)),
+    mutate(current_summary_date = if_else(date > Sys.Date(),
+                                         latest_date, date),
            date = replace(date, date > Sys.Date(), NA))
 
 

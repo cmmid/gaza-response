@@ -59,6 +59,30 @@ clean_data <- function(base_data, fup_data) {
     left_join(base_data, by = c("id", "date")) |>
     left_join(fup_data, by = c("id", "date"))
 
+  # identify where both forms completed on day of enrolment
+  duplicate_entry <- id_date_grid |>
+    filter(!is.na(weight_enrol) & !is.na(weight_followup)) |>
+    mutate(weight_duplicate = weight_followup == weight_enrol)
+  # reset weights to appropriate values
+  duplicate_entry <- duplicate_entry |>
+    # if latest weight == enrol weight, leave as is
+    # else if latest weight == prewar weight, set latest weight to = enrol weight
+    mutate(weight_latest = if_else(weight_duplicate,
+                                   weight_followup,
+                                   weight_prewar),
+           weight_enrol = ifelse(weight_enrol == weight_prewar &
+                                   weight_enrol != weight_followup,
+                                 weight_followup,
+                                 weight_enrol),
+           weight_enrol = if_else(weight_duplicate,
+                                  weight_enrol,
+                                  weight_prewar))
+    # if enrol weight == latest weight, leave as is
+    # else if enrol weight == prewar weight, set enrol weight to = latest weight
+
+  # then merge back to main dataframe
+  # then set where is.na weight_latest to weight_enrol
+
   # add baseline characteristics and weight reading to complete grid
   # - relabel baseline weight measurement
   base_weight <- base_data |>
@@ -76,6 +100,22 @@ clean_data <- function(base_data, fup_data) {
     # remove records from before enrolment
     filter(date >= date_first_measurement)
 
+  # get latest reading only
+  latest_weight <- fup_data |>
+    group_by(id) |>
+    filter(date == max(date, na.rm = TRUE)) |>
+    rename("date_latest_measurement" = date,
+           "weight_latest_measurement" = weight)
+  # - add to grid as new variables
+  fup_data_expanded <- left_join(fup_data_expanded,
+                                 latest_weight,
+                                 by = c("id")) |>
+    mutate(date_latest_measurement = if_else(is.na(date_latest_measurement),
+                                            date_first_measurement,
+                                            date_latest_measurement),
+           date_latest_measurement = if_else(is.na(weight_latest_measurement),
+                                             weight_latest_measurement,
+                                             weight_latest_measurement))
 
 # Dates & cohort time -----------------------------------------------------
   matched_data <- fup_data_expanded |>

@@ -79,9 +79,9 @@ clean_data <- function(base_data, fup_data) {
     # exclude participants with no weight measurement
     filter(participant_cumulative_days_recorded > 0) |>
     # add latest measure as separate variable
-    mutate(latest_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(weight),
-           date_latest_measurement = date[which(latest_measurement)],
-           weight_latest_mesurement = weight[which(latest_measurement)])
+    mutate(last_measurement = participant_cumulative_days_recorded == max(participant_cumulative_days_recorded, na.rm = TRUE) & !is.na(weight),
+           date_last_measurement = date[which(last_measurement)],
+           weight_latest_mesurement = weight[which(last_measurement)])
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -96,7 +96,7 @@ clean_data <- function(base_data, fup_data) {
                            weight_prewar / (height/100)^2,
                            NA),
       first_bmi_measurement = bmi[date == date_first_measurement],
-      latest_bmi_measurement = bmi[date == date_latest_measurement],
+      last_bmi_measurement = bmi[date == date_last_measurement],
         # TODO add bmi categories here for tidiness
       # calculate change since enrolment
       weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/
@@ -153,7 +153,7 @@ clean_data <- function(base_data, fup_data) {
   # BMI categories
   observed_data <- observed_data |>
     mutate(
-      bmi_category = case_when(
+      bmi_category_daily = case_when(
         bmi <= 10 ~ NA_character_,
         bmi < 18.5 ~ "underweight",
         bmi >= 18.5 & bmi < 25 ~ "normal",

@@ -33,6 +33,7 @@ log$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
 
 # add basic stats to log for checking
 log$n_participants_baseline <- length(unique(base_data$id))
+log$n_participants_followup <- length(unique(fup_data$id))
 log$max_date <- max(fup_data$date)
 log$orgs <- unique(base_data$organisation)
 
@@ -40,26 +41,26 @@ log$orgs <- unique(base_data$organisation)
 data_id_daily <- clean_data(base_data, fup_data)
 
 # Current summary: use most recent observation from participants reporting in most recent x day window -----
-# filter to most recent observation for all participants
-# TODO consider adding a summary of this (ie. full cohort) in addition to 72h
-data_id_latest <- data_id_daily |>
-  filter(last_measurement)
-
-# current summary: only observations within most recent 72h window
+# set time window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
 recent_days <- seq.Date(from = latest_date - 3,
-                        length.out = 4, by = "day")
-data_id_current <- data_id_latest |>
+                        to = latest_date, by = "day")
+
+# filter observations
+data_id_latest_recent <- data_id_daily |>
+  # filter to latest measurement for each participant
+  filter(last_measurement) |>
+  # filter to only recent time window
   filter(date %in% recent_days)
-log$recent_days <- count(data_id_current, date)
 
 # set date to the future to use as a flag that this is the most recent record
 #   (noting all group calculations include date so will not be double-counted)
-data_id_current <- data_id_current |>
+data_id_latest_recent <- data_id_latest_recent |>
   mutate(date = Sys.Date() + 3650)
+log$n_participants_recent <- count(data_id_latest_recent, date)
 
 # bind latest data with full time series
-data_id <- bind_rows(data_id_daily, data_id_current)
+data_id_combined <- bind_rows(data_id_daily, data_id_latest_recent)
 
 # summarise by date, organisation, and group -----
 # Create 2 levels of stratification
@@ -74,7 +75,7 @@ group_cols <- append(map(group_cols,
 #' Do not print all messages
 suppressMessages({
     summary <- imap(group_cols,
-                    ~ data_id |>
+                    ~ data_id_combined |>
                       summarise_ids(group_cols = .x)) |>
       clean_aggregated_data(latest_date = latest_date)
   })

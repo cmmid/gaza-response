@@ -70,7 +70,7 @@ clean_data <- function(base_data, fup_data) {
 
 
 # Dates & cohort time -----------------------------------------------------
-  id_date_grid <- id_date_grid |>
+  observed_data <- id_date_grid |>
     dplyr::group_by(id) |>
     # time in cohort
     dplyr::mutate(participant_cumulative_days_enrolled = 1 + as.integer(
@@ -119,7 +119,7 @@ clean_data <- function(base_data, fup_data) {
                   bmi_percent_change_previousmeasurement) |>
     ungroup()
 
-  matched_data <- left_join(matched_data,
+ observed_data <- left_join(observed_data,
                             change_from_previous, by = c("id", "date"))
 
   # Data quality checks -----------------------------------------------------

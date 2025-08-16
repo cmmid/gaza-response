@@ -36,16 +36,23 @@ clean_data <- function(base_data, fup_data) {
 
   # parse dates in raw data
   base_data <- base_data |>
-    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
+    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")),
+                  date_enrol = date) |>
+    rename("weight_enrol" = weight)
   fup_data <- fup_data |>
-    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy")))
+    dplyr::mutate(date = parse_date_time(date, orders = c("ymd", "dmy"))) |>
+    rename("weight_followup" = weight)
+
+  # get latest date recorded
+  date_max <- max(max(base_data$date, na.rm = TRUE),
+                  max(fup_data$date, na.rm = TRUE))
 
   # Create complete grid of all possible participant dates
   id_date_grid <- expand_grid(
     date = seq.Date(min(as.Date(base_data$date), na.rm = TRUE),
-                    max(as.Date(fup_data$date), na.rm = TRUE),
+                    as.Date(date_max),
                     by = "day"),
-    id = unique(base_data$id))
+    id = union(base_data$id, fup_data$id))
 
   # add follow up weight measurements to complete grid
   id_date_grid <- id_date_grid |>

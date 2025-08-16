@@ -68,7 +68,6 @@ clean_data <- function(base_data, fup_data) {
     # remove records from before enrolment
     filter(date >= date_first_measurement)
 
-
 # Dates & cohort time -----------------------------------------------------
   observed_data <- id_date_grid |>
     dplyr::group_by(id) |>
@@ -93,8 +92,11 @@ clean_data <- function(base_data, fup_data) {
     dplyr::mutate(
       # BMI
       bmi = weight / (height/100)^2,
-      bmi_prewar = weight_prewar / (height/100)^2,
+      bmi_prewar = if_else(!is.na(weight),
+                           weight_prewar / (height/100)^2,
+                           NA),
       first_bmi_measurement = bmi[date == date_first_measurement],
+      latest_bmi_measurement = bmi[date == date_latest_measurement],
         # TODO add bmi categories here for tidiness
       # calculate change since enrolment
       weight_percent_change_firstmeasurement = ((weight - first_weight_measurement)/

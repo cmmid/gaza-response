@@ -17,6 +17,8 @@ summarise_ids <- function(data, group_cols) {
     summarise(
       # participants enrolled ---
       cohort_id_enrolled = length(unique(id)),
+      # cohort new joiners ---
+      cohort_id_new = sum(date == date_first_measurement),
       # daily observations ---
       # number of recorded weights, denominator: cohort_n
       cohort_obs_recorded = sum(!is.na(weight)),
@@ -94,7 +96,7 @@ clean_aggregated_data <- function(summary_list, latest_date) {
   #   setting "date" to NA (as this is a summary of multiple dates),
   #   and marking these records with "current_summary_date" = latest date in the data
   summary_df <- summary_df |>
-    mutate(current_summary_date = as.Date(ifelse(date > Sys.Date(),
+    mutate(current_summary_date = as.Date(if_else(date > Sys.Date(),
                                          latest_date, date)),
            date = replace(date, date > Sys.Date(), NA))
 

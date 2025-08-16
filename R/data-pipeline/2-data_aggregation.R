@@ -36,12 +36,7 @@ summarise_ids <- function(data, group_cols) {
   df_centraltendency <- data |>
     group_by(across(all_of(group_cols))) |>
     summarise(
-      across(c("weight",
-               "weight_percent_change_firstmeasurement",
-               "weight_percent_change_prewar",
-               "bmi",
-               "bmi_percent_change_firstmeasurement",
-               "bmi_percent_change_prewar"),
+      across(contains(c("weight", "bmi")) & where(is.numeric),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),

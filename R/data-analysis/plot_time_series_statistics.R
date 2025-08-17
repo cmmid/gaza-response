@@ -40,7 +40,7 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
 
   data_filter <- recode_data_table(data_filter)
 
-  if (strata == "Overall") {
+  if (strata == "overall") {
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(x = date)) +

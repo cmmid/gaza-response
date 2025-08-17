@@ -25,7 +25,7 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_participants_over_time <- function(data, strata = "Overall"){
+plot_participants_over_time <- function(data, strata = "overall"){
 
   # Filter data for the selected option
   data_filter <- filter(data, group == tolower(strata)) |>
@@ -36,13 +36,13 @@ plot_participants_over_time <- function(data, strata = "Overall"){
                                cohort_n = 0,
                                label = unique(filter(data, group == tolower(strata))$label))))
 
-  if (strata == "Overall") {
+  if (strata == "overall") {
     # Generate plot
     fig <- data_filter %>%
       ggplot() +
       geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
                 position = "stack", alpha = 0.8, show.legend = F) +
-      labs(x = "Date",
+      labs(x = NULL,
            y = "Participants",
            fill = "Demographics") +
       #theme_bw() +

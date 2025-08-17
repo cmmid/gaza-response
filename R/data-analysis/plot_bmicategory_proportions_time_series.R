@@ -28,7 +28,7 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
+plot_bmicategory_proportions_time_series <- function(data, strata = "overall"){
 
   # Filter data for the selected option
   data_filter <- filter(data, group == tolower(strata)) |>
@@ -42,7 +42,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
 
   data_filter <- recode_data_table(data_filter)
 
-  if (strata == "Overall") {
+  if (strata == "overall") {
     fig <- data_filter %>%
       ggplot() +
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),

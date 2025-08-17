@@ -28,12 +28,12 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions <- function(data, strata = "Overall"){
+plot_bmicategory_proportions <- function(data, strata = "overall"){
 
   # Filter data for the selected option
   data <- data %>%
     filter(!Group == "other/prefer not to share") %>% #Manually filtering this out per Francescos advice
-    filter(Stratification == strata, Date == max(Date)) %>%
+    filter(Stratification == strata, Date == max(sate)) %>%
     mutate(category = factor(category, levels = c("Underweight", "Normal", "Overweight", "Obese")))
 
   # Generate plot
@@ -42,12 +42,13 @@ plot_bmicategory_proportions <- function(data, strata = "Overall"){
     geom_bar(aes(x = category, y = perc, fill = category), stat = "identity") +
     geom_text(aes(x = category, y = perc, label = round(perc)), vjust = -0.5) +
     scale_fill_viridis_d(option = "D") +
-    labs(x = "WHO BMI Category",
-         y = "Percentage of Survey Participants (%)") +
+    labs(x = "BMI",
+         y = "Participants (%)") +
     theme_bw() +
     theme(legend.position = "none",
           plot.caption = element_text(hjust = 0, face = "italic")) +
-    facet_grid(cols = vars(Group), row = vars(Stratification), switch = "y", labeller = label_wrap_gen(width = 25), scales = "free")
+    facet_grid(cols = vars(Group), rows = vars(Stratification), switch = "y",
+               labeller = label_wrap_gen(width = 25), scales = "free")
 
   return(fig)
 

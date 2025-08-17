@@ -39,17 +39,16 @@ log$orgs <- unique(base_data$organisation)
 # Clean data -----
 data_id_daily <- clean_data(base_data, fup_data)
 
-# Current summary: use most recent observation from participants reporting in most recent x day window -----
-# filter to most recent observation for all participants
-# TODO consider adding a summary of this (ie. full cohort) in addition to 72h
-data_id_latest <- data_id_daily |>
+# Summaries ------------------------------------------------------------
+# filter to last recorded observation for all participants
+data_id_last <- data_id_daily |>
   filter(last_measurement)
 
-# current summary: only observations within most recent 72h window
+# set up dates: only observations within most recent 72h window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
 recent_days <- seq.Date(from = latest_date - 3,
                         length.out = 4, by = "day")
-data_id_current <- data_id_latest |>
+data_id_current <- data_id_last |>
   filter(date %in% recent_days)
 log$recent_days <- count(data_id_current, date)
 

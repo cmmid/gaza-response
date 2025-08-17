@@ -125,6 +125,7 @@ clean_data <- function(base_data, fup_data) {
                                                                  previous_weight)*100,
                   bmi_percent_change_previousmeasurement = ((bmi - previous_bmi) / previous_bmi)*100) %>%
     dplyr::select(id, date,
+                  days_since_previousmeasurement,
                   weight_percent_change_previousmeasurement,
                   bmi_percent_change_previousmeasurement) |>
     ungroup()

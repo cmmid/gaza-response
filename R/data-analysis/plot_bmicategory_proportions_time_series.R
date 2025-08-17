@@ -41,6 +41,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
     filter(!grepl("NA", variable))
 
   data_filter <- recode_data_table(data_filter)
+  #data_filter <- recode_data_table(data_filter)
 
   if (strata == "Overall") {
     fig <- data_filter %>%
@@ -48,10 +49,9 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),
                 position = "stack", alpha = 0.8) +
       scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+      labs(x = NULL,
+           y = "Participants (%)",
            fill = "Category") +
-      #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             strip.text.y = element_blank())
   } else if (length(unlist(str_split(strata, "-"))) == 1) {
@@ -62,10 +62,9 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),
                 position = "stack", alpha = 0.8) +
       scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+      labs(x = NULL,
+           y = "Participants (%)",
            fill = "Category") +
-      #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             strip.text.y = element_blank()) +
       facet_wrap(~facet1, labeller = label_wrap_gen(width = 25), scales = "free")
@@ -79,15 +78,11 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
                 position = "stack", alpha = 0.8) +
       scale_fill_viridis_d(option = "D") +
       labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+           y = "Participants (%)",
            fill = "Category") +
-      #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
       facet_grid(facet1~facet2, labeller = label_wrap_gen(width = 25), scales = "free")
   }
-
-
-
 
   return(fig)
 

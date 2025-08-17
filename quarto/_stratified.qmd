@@ -1,0 +1,83 @@
+
+
+```{r include=FALSE}
+data_filtered <- filter(data, organisation == params_meta$organisation)
+data_filtered_current <- filter(data_filtered, date == max(date, na.rm = TRUE))
+params <- generate_key_insights(data_filtered_current, strata = "Overall")
+
+# data_filtered <- recode_data_table(data_filtered)
+```
+
+```{r include=FALSE}
+library(crosstalk)
+library(tidyr)
+
+bmi_category <- data_filtered_current |> 
+   group_by(group, label) |> 
+   filter(grepl("bmi_category", variable)) |> 
+   mutate(bmi_period = if_else(grepl("prewar", variable), 
+                               "BMI_2023", "BMI_2025"),
+          bmi_category = gsub("(bmi_category_)|(prewar_)", 
+                              "", variable),
+          bmi_category = na_if(bmi_category, "NA")) |> 
+   dplyr::select(date, group, label, 
+                 cohort_id_enrolled, cohort_obs_recorded,
+                 bmi_period, bmi_category, value) |> 
+  # values for each time period in separate columns
+  pivot_wider(names_from = bmi_period, values_from = value)
+
+# set up crosstalk shared data object and filter dropdown
+plotdat <- highlight_key(bmi_category)
+group_filter <- crosstalk::filter_select(
+   "filter", "Demographic",
+   plotdat, ~group, multiple = F
+)
+
+# Plotting
+plot_bmi <-  plot_ly(plotdat,
+                  x = ~bmi_category, y = ~BMI_2023,
+                  color = ~label, type = 'bar',
+                  text = ~group,
+    textposition = "top", hoverinfo = "group+label") |>
+  layout(barmode = 'group')
+
+shiny::tags$div(class = 'flexbox',
+                group_filter,
+                shiny::tags$br(), 
+                plot_bmi)
+```
+
+
+```{r}
+# set up crosstalk shared data object and filter dropdown
+plotdat <- highlight_key(bmi_category)
+group_filter <- crosstalk::filter_select(
+   "filter", "Demographic",
+   plotdat, ~group, multiple = F
+)
+
+bmi_comparison <- data_filtered_current %>%
+  filter(grepl("bmi_category_", variable), stat == "percent") %>%
+  mutate(
+    category = case_when(
+      grepl("underweight", variable) ~ "Underweight",
+      grepl("normal", variable) ~ "Normal", 
+      grepl("overweight", variable) ~ "Overweight",
+      grepl("obese", variable) ~ "Obese"
+    ),
+    period = ifelse(grepl("prewar", variable), "Pre-war", "Current")
+  ) %>%
+  filter(!is.na(category))
+
+p2 <- plot_ly(bmi_comparison, 
+              x = ~category, 
+              y = ~value, 
+              color = ~period,
+              type = 'bar') %>%
+  layout(title = "BMI Categories: Current vs Pre-war",
+         barmode = 'group',
+         xaxis = list(title = "BMI Category"),
+         yaxis = list(title = "Percentage (%)"))
+```
+
+

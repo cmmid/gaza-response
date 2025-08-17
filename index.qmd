@@ -2,11 +2,9 @@
 title: ""
 format: 
   dashboard:
-    orientation: columns
     css: "styles.css"
     fig-format: svg
     anchor-sections: true
-    scrolling: false
 lightbox: true
 execute: 
   echo: false
@@ -20,7 +18,7 @@ execute:
 pacman::p_load(here, 
                purrr, readr, dplyr,
                bslib, bsicons, 
-               ggplot2, plotly, shiny)
+               ggplot2, plotly, shiny, forcats)
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))
 source(here("R", "data-analysis/recode_data_table.R"))
@@ -38,12 +36,8 @@ data <- list_rbind(map(data, ~ list_rbind(.x))) |>
   filter(!grepl("other", sex))
 ## Set parameters -----------------------------
 params_meta <- list("organisation" = "all", # set to "all" by default
-               "strata" = c("Overall", 
-                            "sex", "agegroup", "governorate", "role",
-                            "children_feeding"))
-# remove!
-overall <- data |> 
-  filter(group == "overall" & organisation == "all")
+               "strata" = c("overall", 
+                            "sex", "agegroup", "governorate", "role"))
 ```
 
 <!-- Global sidebar ---------------------------------------------------------->
@@ -52,7 +46,7 @@ overall <- data |>
 This project provides real-time information on the **nutritional status of humanitarian staff in Gaza**. 
 Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
 
-We invite all humanitarian staff to participate in the project - please consider [**joining us**](./contact).
+We invite all humanitarian staff to participate in the project - please [**join us**](./contact).
 
 We are developing this project during a rapidly changing situation: interpret results with caution.
 
@@ -75,12 +69,12 @@ params_meta$organisation <- "all"
 #params_meta$organisation <- "UNRWA"
 ```
 
-<!--{{< include quarto/_organisation.qmd >}}-->
+{{< include quarto/_organisation.qmd >}}
 
 # Save the Children International
 
 ```{r include=FALSE}
-params_meta$organisation <- "Save the Children International"
+#params_meta$organisation <- "Save the Children International"
 ```
 
 {{< include quarto/_organisation.qmd >}}

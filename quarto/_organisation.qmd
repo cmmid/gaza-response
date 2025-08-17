@@ -1,98 +1,80 @@
-
+---
+format: 
+  dashboard:
+    orientation: rows
+    scrolling: false
+    css: "./styles.css"
+    fig-format: svg
+    anchor-sections: true
+lightbox: true
+execute: 
+  echo: false
+  cache: true
+---
 <!-- Organisation-level data -->
 ```{r include=FALSE}
 data_filtered <- filter(data, organisation == params_meta$organisation)
-data_filtered_current <- filter(data_filtered, date == max(date, na.rm = TRUE))
-params <- generate_key_insights(data_filtered_current, strata = "Overall")
 
+data_filtered_current <- filter(data_filtered, 
+                                !is.na(current_summary_date)) |> 
+   mutate(date = current_summary_date)
 # data_filtered <- recode_data_table(data_filtered)
 ```
 
-<!-- Tabs ------------------------------------------------------------------->
-## SECTION BREAK {.tabset width="80%"}
+<!-- Content ----------------------------------------------------------------->
+
+## ROW 1
+
+<!----------------------------->
 
 ### Current status {.tabset}
 
+#### Key insights
 ```{r}
-#| title: "BMI status"
-bmi_category <- data_filtered_current |> 
-   group_by(group, label) |> 
-   filter(grepl("bmi_category", variable)) |> 
-   mutate(bmi_period = if_else(grepl("prewar", variable), 
-                               "BMI_2023", "BMI_2025"),
-          bmi_category = gsub("(bmi_category_)|(prewar_)", 
-                              "", variable),
-          bmi_category = na_if(bmi_category, "NA")) |> 
-   dplyr::select(date, group, label, 
-                 cohort_id_enrolled, cohort_obs_recorded,
-                 bmi_period, bmi_category, value) 
- 
- bmi_category |> 
-   filter(group == "overall") |> 
-   group_by(bmi_period) |> 
-   ggplot() +
-   geom_col(aes(x = bmi_category, y = value, fill = bmi_period),
-            position = position_dodge())
+#params <- generate_key_insights(data_filtered_current, strata = "overall")
+markdown("children_feeding")
 ```
 
-```{r}
-#| title: "Change since October 2023"
- plot_current_summary_stats(
-       data = data_filtered_current |> 
-         filter(grepl("change", variable)),
-       strata = "Overall"
-     ) 
-```
-::: {.card-sidebar}
-Summary of most recent data provided by participants reporting over the last 3 days.
-Current weight in kilograms (kg) and BMI (body mass index), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. 
-Negative values of percent change indicate weight loss, i.e. ‘-20%’ indicates an average loss of 20% of weight or BMI.
-:::
+#### BMI
 
-### Demographic {.tabset}
+{{< include quarto/_bmi.qmd >}}
 
-#### Sex
-```{r}
-# strata <- "sex"
-print("d")
-```
+#### Weight
 
-<!--{{< include quarto/_stratified.qmd >}}-->
+{{< include quarto/_weight.qmd >}}
 
-#### Age
-```{r}
-# strata <- "agegroup"
-print("e")
-```
+<!----------------------------->
 
-<!--{{< include quarto/_stratified.qmd >}}-->
+### Participation {.tabset}
 
-### Trends {.tabset}
-
-#### Sex
-```{r}
-# strata <- "sex"
-print("d")
-```
-
-<!--{{< include quarto/_stratified.qmd >}}-->
-
-#### Age
-```{r}
-# strata <- "agegroup"
-print("e")
-```
-
-<!--{{< include quarto/_stratified.qmd >}}-->
-
+{{< include quarto/_participants.qmd >}}
 
 <!-------------------------------------------------------------------->
 
-## SECTION BREAK: DATA QUALITY
+## ROW 2 {.tabset}
 
 ```{r}
-#| title: "Participation"
-# strata <- "agegroup"
-print("f")
+#| content: card-sidebar
+group_filter <- crosstalk::filter_select(
+   "filter", "Demographic",
+   bmi_category_shared, ~group, multiple = F)
+group_filter
 ```
-<!--{{< include quarto/_participants.qmd >}}-->
+
+#### BMI over time
+```{r}
+print("d")
+```
+
+#### Weight over time
+```{r}
+print("e")
+```
+
+<!------------------------- javascript to set the default plot to Overall -->
+```{js}
+$(document).ready(function() {
+    document.getElementById("filter").getElementsByClassName("selectized")[0].selectize.setValue("overall", false);
+    document.getElementById("checkbox").getElementsByClassName("selectized")[0].selectize.setValue("Summer_2025", false);
+});
+```

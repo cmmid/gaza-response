@@ -1,92 +1,63 @@
 ---
-title: ""
-format: html
+format: 
+  dashboard:
+    orientation: rows
+    scrolling: false
+    css: "./styles.css"
+    fig-format: svg
+    anchor-sections: true
 lightbox: true
 execute: 
   echo: false
+  cache: true
 ---
-
-```{r}
-library(bslib)
-library(crosstalk)
-library(tidyr)
-library(purrr)
-library(dplyr)
-library(ggplot2)
-library(plotly)
-
-data <- readRDS(here::here("data", "public", "summary-stats.RDS"))
-data_long <- list_rbind(map(data, ~ list_rbind(.x))) |>
-  filter(!grepl("-", group)) |> 
-  filter(organisation == "all") |> 
-  filter(date == max(date, na.rm = TRUE))
-
-data_wide <- data_long |> 
-  pivot_wider(names_from = stat, 
-              values_from = value)
-
-# filter to variable
-# data_variable <- filter(data_wide, variable == "weight")
-           
-data_shared <- SharedData$new(data_wide)
-data_filters <- list(
-    filter_select("group", "Demographic", 
-                             data_shared, ~group, 
-                             allLevels = FALSE),
-  filter_checkbox("variable", "Indicator", 
-                             data_shared, ~variable, 
-                             allLevels = FALSE, inline = TRUE)
-)
+```{r include=FALSE} 
+# Set up BMI data
+bmi_category <- data_filtered_current |> 
+   group_by(group, label) |> 
+   filter(grepl("bmi_category", variable)) |> 
+   mutate(variable = str_remove_all(variable, "bmi_category_")) |> 
+   separate(variable, into = c("timepoint", "bmi_category")) |> 
+   mutate(bmi_category = na_if(bmi_category, "NA"),
+          timepoint = if_else(timepoint == "prewar", 
+                              "Autumn_2023", "Summer_2025")) 
+# set up crosstalk for BMI categories -------------------
+bmi_category_shared <- bmi_category |> 
+   filter(stat == "percent") |> 
+   highlight_key(group = "group")
+# change in % "underweight" -----------------------------
+# the change in % of each strata classified as underweight compared to prewar, eg +10% of males
+ underweight_change <- pull(
+   bmi_category |> 
+      pivot_wider(names_from = "timepoint", values_from = "value") |> 
+      filter(bmi_category == "underweight" & stat == "percent") |> 
+      mutate(bmi_category_change = Summer_2025 - Autumn_2023),
+   bmi_category_change, name = label)
 ```
 
 ```{r}
-plot_ranges <- data_shared |> 
-  ggplot(aes(y = label, col = group)) +
-  geom_point(aes(x = median)) +
-  geom_linerange(aes(xmin = q1, xmax = q3), linewidth = 1) 
-
-plot_ranges_interactive <- ggplotly(plot_ranges)
+#| content: "card-sidebar"
+markdown("Summary of most recent data provided by participants reporting over the last 3 days.
+Current weight in kilograms (kg) and BMI (body mass index), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023). 
+Negative values of percent change indicate weight loss, i.e. ‘-20%’ indicates an average loss of 20% of weight or BMI.")
+group_filter <- crosstalk::filter_select(
+   "filter", "Demographic",
+   bmi_category_shared, ~group, multiple = F)
+group_filter
 ```
 
 ```{r}
-# sidebar_quakes <- layout_sidebar(
-#   sidebar = map_filter,
-#   map_quakes
-# )
-navset_card_tab(
-  sidebar = sidebar(data_filters),
-  nav_panel("Current status", plot_ranges_interactive),
-  nav_panel("Recent trends", "Tab 2 content")
-)
-```
-
-
-
-```{r}
-page_sidebar(
-  sidebar = group_filter,
-  # Can also put other bslib components here
-  plot_interactive
-)
-```
-
-```{r}
-plot_group <- data_wide |> 
-  filter(variable == "weight") |> 
-  group_by(group) |> 
-  plot_ly(x = ~median, y = ~label) |> 
-    add_markers(
-    name = "Grouped"
-  ) |> 
-  ungroup()
-plot_group
-```
-
-```{r}
-fig <- plot_ly(data = data_wide |> 
-                 filter(variable == "weight"), 
-  x = ~median, y = ~label,
-  color = ~group, size = ~cohort_id_enrolled
-)
-fig
+#| title: "BMI status"
+plot_bmi <- plot_ly(data = bmi_category_shared,
+        x = ~timepoint,
+        y = ~value,
+        color = ~bmi_category,
+        stroke = ~timepoint,
+        type = "bar",
+        text = ~bmi_category,
+        textposition = "none") |> 
+   layout(barmode = "label")
+shiny::tags$div(class = 'flexbox',
+                shiny::tags$br(), 
+                plot_bmi)
 ```

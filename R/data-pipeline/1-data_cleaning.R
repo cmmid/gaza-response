@@ -119,6 +119,8 @@ clean_data <- function(base_data, fup_data) {
     dplyr::filter(!is.na(weight)) %>%
     dplyr::mutate(previous_weight = lag(weight),
                   previous_bmi = lag(bmi),
+                  days_since_previousmeasurement = as.integer(
+                    difftime(date, lag(date), units = "days")),
                   weight_percent_change_previousmeasurement = ((weight - previous_weight) /
                                                                  previous_weight)*100,
                   bmi_percent_change_previousmeasurement = ((bmi - previous_bmi) / previous_bmi)*100) %>%
@@ -136,7 +138,7 @@ clean_data <- function(base_data, fup_data) {
     mutate(
       weight_anomaly = case_when(
         !between(bmi, 10, 60) ~ TRUE,
-        abs(weight_percent_change_previousmeasurement) >= 10 ~ TRUE,
+        abs(weight_percent_change_previousmeasurement) >= 10 & days_since_previousmeasurement <= 5 ~ TRUE,
         TRUE ~ FALSE)
     )
   # Set anomalous data to NA

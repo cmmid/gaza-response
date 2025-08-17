@@ -13,6 +13,7 @@
 #...................................
 ## Install or load required R packages
 pacman::p_load(
+  lubridate,
   ggplot2,       # Visualise data
   tidyverse,     # Tidyverse suite of packages
   viridis)       # Colour-blind palette
@@ -28,19 +29,24 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
+plot_bmicategory_proportions_time_series <- function(data,
+                                                     strata = "Overall"){
+
+  bmi_categories <- c("underweight", "normal", "overweight", "obese")
+  names(bmi_categories) <- stringr::str_to_title(bmi_categories)
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
     # filter out the duplicate "current" records
     dplyr::filter(date <= Sys.Date()) %>%
-    #dplyr::filter(!sex == "other/prefer not to share") %>%
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(is.na(mean)) |>
     filter(!grepl("_prewar_", variable)) |>
-    filter(!grepl("NA", variable))
+    filter(!grepl("NA", variable)) |>
+    filter(!grepl("other*|prefer*", label)) |>
+    mutate(variable = gsub("bmi_category_daily_", "", variable),
+           variable = fct_recode(variable, !!!bmi_categories))
 
-  data_filter <- recode_data_table(data_filter)
   #data_filter <- recode_data_table(data_filter)
 
   if (strata == "Overall") {

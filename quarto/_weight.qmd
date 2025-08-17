@@ -1,0 +1,22 @@
+---
+format: 
+  dashboard:
+    orientation: rows
+    scrolling: false
+    css: "./styles.css"
+    fig-format: svg
+    anchor-sections: true
+lightbox: true
+execute: 
+  echo: false
+  cache: true
+---
+```{r}
+#| title: "Weight, kg"
+ # plot_current_summary_stats(
+ #       data = data_filtered_current |> 
+ #         filter(grepl("change", variable)),
+ #       strata = "Overall"
+ #     ) 
+print("a")
+```

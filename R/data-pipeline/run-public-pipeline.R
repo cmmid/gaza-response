@@ -33,6 +33,7 @@ log$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
 
 # add basic stats to log for checking
 log$n_participants_baseline <- length(unique(base_data$id))
+log$n_participants_followup <- length(unique(fup_data$id))
 log$max_date <- max(fup_data$date)
 log$orgs <- unique(base_data$organisation)
 

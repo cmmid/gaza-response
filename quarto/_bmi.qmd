@@ -1,39 +1,92 @@
-::: {.panel-tabset} 
+---
+title: ""
+format: html
+lightbox: true
+execute: 
+  echo: false
+---
 
-#### Current status
-
-#### Latest data
-
-::: {.card}
 ```{r}
-print("a plot in a card")
+library(bslib)
+library(crosstalk)
+library(tidyr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+
+data <- readRDS(here::here("data", "public", "summary-stats.RDS"))
+data_long <- list_rbind(map(data, ~ list_rbind(.x))) |>
+  filter(!grepl("-", group)) |> 
+  filter(organisation == "all") |> 
+  filter(date == max(date, na.rm = TRUE))
+
+data_wide <- data_long |> 
+  pivot_wider(names_from = stat, 
+              values_from = value)
+
+# filter to variable
+# data_variable <- filter(data_wide, variable == "weight")
+           
+data_shared <- SharedData$new(data_wide)
+data_filters <- list(
+    filter_select("group", "Demographic", 
+                             data_shared, ~group, 
+                             allLevels = FALSE),
+  filter_checkbox("variable", "Indicator", 
+                             data_shared, ~variable, 
+                             allLevels = FALSE, inline = TRUE)
+)
 ```
-:::
 
-#### Pre-war comparison
+```{r}
+plot_ranges <- data_shared |> 
+  ggplot(aes(y = label, col = group)) +
+  geom_point(aes(x = median)) +
+  geom_linerange(aes(xmin = q1, xmax = q3), linewidth = 1) 
 
-a plot here
+plot_ranges_interactive <- ggplotly(plot_ranges)
+```
 
-#### Recent trends
+```{r}
+# sidebar_quakes <- layout_sidebar(
+#   sidebar = map_filter,
+#   map_quakes
+# )
+navset_card_tab(
+  sidebar = sidebar(data_filters),
+  nav_panel("Current status", plot_ranges_interactive),
+  nav_panel("Recent trends", "Tab 2 content")
+)
+```
 
-<!--- start column layout --->
 
-::: {layout="[ [1], [1,1] ]"}
 
-::: {.card}
-a plot in a card
-:::
+```{r}
+page_sidebar(
+  sidebar = group_filter,
+  # Can also put other bslib components here
+  plot_interactive
+)
+```
 
-::: {.card}
-second plot in a card
-:::
+```{r}
+plot_group <- data_wide |> 
+  filter(variable == "weight") |> 
+  group_by(group) |> 
+  plot_ly(x = ~median, y = ~label) |> 
+    add_markers(
+    name = "Grouped"
+  ) |> 
+  ungroup()
+plot_group
+```
 
-::: {.card}
-third plot in a card
-:::
-
-<!--- end column layout --->
-
-:::
-
-::: 
+```{r}
+fig <- plot_ly(data = data_wide |> 
+                 filter(variable == "weight"), 
+  x = ~median, y = ~label,
+  color = ~group, size = ~cohort_id_enrolled
+)
+fig
+```

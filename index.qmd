@@ -2,18 +2,15 @@
 title: ""
 format: 
   dashboard:
-    include-in-header:
-      text: |
-            <script src="lshtm.js"></script>
+    orientation: columns
     css: "styles.css"
     fig-format: svg
     anchor-sections: true
-    smooth-scroll: true
-    page-layout: custom
-sidebar: false
+    scrolling: false
 lightbox: true
 execute: 
   echo: false
+  cache: true
 ---
 
 <!-- Setup -->
@@ -23,20 +20,7 @@ execute:
 pacman::p_load(here, 
                purrr, readr, dplyr,
                bslib, bsicons, 
-               ggplot2, plotly)
-
-## Load data dictionary
-datadict <- readRDS("data/data_dictionary.RDS")
-
-## Load Data RDS
-data <- readRDS("data/public/summary-stats.RDS")
-data <- list_rbind(map(data, ~ list_rbind(.x))) |>
-  filter(!grepl("-", group))
-
-params_meta <- list("organisation" = "all", # set to "all" by default: overwritten for each
-               "strata" = c("Overall", 
-                            "sex", "agegroup", "governorate", "role", "children_feeding"))
-
+               ggplot2, plotly, shiny)
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))
 source(here("R", "data-analysis/recode_data_table.R"))
@@ -45,52 +29,68 @@ source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
+
+## Load data ----------------------------------
+datadict <- readRDS("data/data_dictionary.RDS")
+data <- readRDS("data/public/summary-stats.RDS")
+data <- list_rbind(map(data, ~ list_rbind(.x))) |>
+  filter(!grepl("-", group)) |> 
+  filter(!grepl("other", sex))
+## Set parameters -----------------------------
+params_meta <- list("organisation" = "all", # set to "all" by default
+               "strata" = c("Overall", 
+                            "sex", "agegroup", "governorate", "role",
+                            "children_feeding"))
+# remove!
+overall <- data |> 
+  filter(group == "overall" & organisation == "all")
 ```
 
 <!-- Global sidebar ---------------------------------------------------------->
 ## {.sidebar}
 
-::: {.callout-note collapse="false" title="About"}
 This project provides real-time information on the **nutritional status of humanitarian staff in Gaza**. 
 Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
-We are developing this project during a rapidly changing situation: **please interpret results with caution**.
 
-[**Read more**](./about){.btn .btn-outline-primary .btn role="button"} 
-:::
+We invite all humanitarian staff to participate in the project - please consider [**joining us**](./contact).
 
-::: {.callout-caution collapse="false" title="Join us"}
-We are actively seeking participants to support the project, and welcome humanitarian staff to get in touch. 
+We are developing this project during a rapidly changing situation: interpret results with caution.
 
-[**Join us**](./contact){.btn .btn-outline-success .btn role="button"} 
-:::
+[**About the project**](./about){.btn .btn-info .btn role="button"} 
 
-<!-- Add data filter-->
 
-<!-- Main panel -------------------------------------------------------------->
+<!-- Top level pages --------------------------------------------------------->
 
-# **All participants**
+# All participants
 
-```{r}
+```{r include=FALSE}
 params_meta$organisation <- "all"
 ```
 
 {{< include quarto/_organisation.qmd >}}
 
+# UNRWA
 
-# **UNRWA**
-
-```{r}
-params_meta$organisation <- "UNRWA"
+```{r include=FALSE}
+#params_meta$organisation <- "UNRWA"
 ```
 
-{{< include quarto/_organisation.qmd >}}
+<!--{{< include quarto/_organisation.qmd >}}-->
 
+# Save the Children International
 
-# **Save the Children International**
-
-```{r}
+```{r include=FALSE}
 params_meta$organisation <- "Save the Children International"
 ```
 
 {{< include quarto/_organisation.qmd >}}
 
+
+
+
+<!-- javascript to set the default plot to Overall -->
+```{js}
+$(document).ready(function() {
+    document.getElementById("filter").getElementsByClassName("selectized")[0].selectize.setValue("overall", false);
+});
+```

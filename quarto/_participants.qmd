@@ -1,17 +1,33 @@
-::: {.panel-tabset} 
 
-#### Current status
 
-::: {.card}
 ```{r}
-print("a plot in a card")
+#| title: "Cumulative number of participants"
+#| 
+fig <- data_filtered %>%
+      ggplot() +
+      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
+                position = "stack", alpha = 0.8, show.legend = F) +
+      labs(x = "Date",
+           y = "Participants",
+           fill = "Demographics") +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+            strip.text.y = element_blank())
+fig
 ```
-:::
 
-#### Data quality
+```{r}
+#| title: "Participants contributing to follow up"
 
-::: {.card}
-a plot in a card
-:::
+```
 
-::: 
+```{r}
+#| title: "Data quality"
+data_filtered |> 
+  filter(variable == "weight" & group == "overall" & stat == "median") |> 
+  ggplot(aes(x = date)) +
+  geom_area(aes(y = cohort_id_enrolled), alpha = 0.5) +
+  geom_ribbon(aes(ymin = cohort_obs_recorded, ymax = cohort_id_enrolled), alpha = 0.5) +
+  labs(x = NULL, y = "Participants",
+       caption = "Total enrolled and contributing measurements")
+
+```

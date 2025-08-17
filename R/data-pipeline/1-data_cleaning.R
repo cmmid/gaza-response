@@ -140,7 +140,7 @@ clean_data <- function(base_data, fup_data) {
       weight_anomaly = case_when(
         !between(bmi, 10, 60) ~ TRUE,
         abs(weight_percent_change_previousmeasurement) >= 10 & days_since_previousmeasurement <= 5 ~ TRUE,
-        TRUE ~ FALSE)
+        .default = FALSE)
     )
   # Set anomalous data to NA
   observed_data <- observed_data |>

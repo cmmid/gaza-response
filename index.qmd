@@ -20,7 +20,7 @@ execute:
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
-               purrr, readr, dplyr,
+               purrr, readr, dplyr, forcats,
                bslib, bsicons, 
                ggplot2, plotly)
 
@@ -123,7 +123,7 @@ commenting out, because there's a bug here somewhere at least -->
 
 ## Row
 
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary, results="asis"}
@@ -150,7 +150,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
+::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight, results="asis"}
@@ -176,8 +176,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 :::
 
 ## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="Participants by BMI category" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi, results="asis"}
@@ -258,7 +257,7 @@ commenting out, because there's a bug here somewhere at least -->
 
 ## Row
 
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary-stc, results="asis"}
@@ -285,7 +284,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
+::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight-stc, results="asis"}
@@ -312,7 +311,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="Participants by BMI category" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi-stc, results="asis"}
@@ -393,7 +392,7 @@ commenting out, because there's a bug here somewhere at least -->
 
 ## Row
 
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r plot-current-summary-unrwa, results="asis"}
@@ -420,7 +419,7 @@ Summary of most recent data provided by participants reporting over the last 3 d
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
+::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trend_over_time">
 ```{r plot-trends-weight-unrwa, results="asis"}
@@ -447,7 +446,7 @@ Trends over time in absolute values of weight in kilograms (kg) and [BMI (body m
 
 ## Row
 <!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
+::: {.card .trend_bmi_card .lshtm_widget title="Participants by BMI category" fill="false"}
 <!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
 <div class="lshtm_widget_identifier" id="trends_bmi">
 ```{r plot-trends-bmi-unrwa, results="asis"}

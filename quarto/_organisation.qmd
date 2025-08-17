@@ -1,35 +1,97 @@
 <!-- Organisation-level data -->
-```{r}
+```{r include=FALSE}
 data_filtered <- filter(data, organisation == params_meta$organisation)
-data_filtered_current <- filter(data_filtered, date == max(date, na.rm=TRUE))
-```
+data_filtered_current <- filter(data_filtered, date == max(date, na.rm = TRUE))
+params <- generate_key_insights(data_filtered_current, strata = "Overall")
 
-<!-- Key insights ------------------------------------------------------------>
-```{r}
-params <- generate_key_insights(data_filtered_current, strata = "Overall") 
+# data_filtered <- recode_data_table(data_filtered)
 ```
-
-::: {.card fill="false" title="Key insights"}
-- Data updated as of **`r params$latest_date`**
-<!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
-commenting out, because there's a bug here somewhere at least -->
-- Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
-:::
 
 <!-- Tabs ------------------------------------------------------------------->
+## SECTION BREAK {.tabset width="80%"}
 
-::: {.panel-tabset}
+### Current status {.tabset}
 
-### Weight
+```{r}
+#| title: "BMI status"
+bmi_category <- data_filtered_current |> 
+   group_by(group, label) |> 
+   filter(grepl("bmi_category", variable)) |> 
+   mutate(bmi_period = if_else(grepl("prewar", variable), 
+                               "BMI_2023", "BMI_2025"),
+          bmi_category = gsub("(bmi_category_)|(prewar_)", 
+                              "", variable),
+          bmi_category = na_if(bmi_category, "NA")) |> 
+   dplyr::select(date, group, label, 
+                 cohort_id_enrolled, cohort_obs_recorded,
+                 bmi_period, bmi_category, value) 
+ 
+ bmi_category |> 
+   filter(group == "overall") |> 
+   group_by(bmi_period) |> 
+   ggplot() +
+   geom_col(aes(x = bmi_category, y = value, fill = bmi_period),
+            position = position_dodge())
+```
 
-{{< include /quarto/_weight.qmd >}}
-
-### BMI
-
-{{< include /quarto/_bmi.qmd >}}
-
-### Participants
-
-{{< include /quarto/_participants.qmd >}}
-
+```{r}
+#| title: "Change since October 2023"
+ plot_current_summary_stats(
+       data = data_filtered_current |> 
+         filter(grepl("change", variable)),
+       strata = "Overall"
+     ) 
+```
+::: {.card-sidebar}
+Summary of most recent data provided by participants reporting over the last 3 days.
+Current weight in kilograms (kg) and BMI (body mass index), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. 
+Negative values of percent change indicate weight loss, i.e. ‘-20%’ indicates an average loss of 20% of weight or BMI.
 :::
+
+### Demographic {.tabset}
+
+#### Sex
+```{r}
+# strata <- "sex"
+print("d")
+```
+
+<!--{{< include quarto/_stratified.qmd >}}-->
+
+#### Age
+```{r}
+# strata <- "agegroup"
+print("e")
+```
+
+<!--{{< include quarto/_stratified.qmd >}}-->
+
+### Trends {.tabset}
+
+#### Sex
+```{r}
+# strata <- "sex"
+print("d")
+```
+
+<!--{{< include quarto/_stratified.qmd >}}-->
+
+#### Age
+```{r}
+# strata <- "agegroup"
+print("e")
+```
+
+<!--{{< include quarto/_stratified.qmd >}}-->
+
+
+<!-------------------------------------------------------------------->
+
+## SECTION BREAK: DATA QUALITY
+
+```{r}
+#| title: "Participation"
+# strata <- "agegroup"
+print("f")
+```
+<!--{{< include quarto/_participants.qmd >}}-->

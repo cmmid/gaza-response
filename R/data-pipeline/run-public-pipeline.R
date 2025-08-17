@@ -6,7 +6,7 @@ pacman::p_load(here, purrr, dplyr)
 options(dplyr.summarise.inform = FALSE)
 
 # error logging
-log <- list()
+log <- list(log_time = Sys.time())
 
 # Get wd from passed argument if ran on server
 .args = if(interactive()) here() else commandArgs(trailingOnly = TRUE)

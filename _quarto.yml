@@ -34,7 +34,7 @@ website:
     icon: cone-striped
     dismissable: true
     position: below-navbar
-    content: "**Active development:** We are actively collecting data and developing this resource. [Find out more](./about) and [get involved](./contact)"
+    content: '**Active development:** We are seeking participants and rapidly developing this resource.     [Join us](./contact){.btn .btn-success .btn role="button"}'
     type: warning
   site-url: "https://cmmid.github.io/gaza-response/"
   open-graph: true

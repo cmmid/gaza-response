@@ -1,33 +1,43 @@
-
-
+---
+format: 
+  dashboard:
+    orientation: rows
+    scrolling: false
+    css: "./styles.css"
+    fig-format: svg
+    anchor-sections: true
+lightbox: true
+execute: 
+  echo: false
+  cache: true
+---
+#### Participation
 ```{r}
-#| title: "Cumulative number of participants"
-#| 
-fig <- data_filtered %>%
-      ggplot() +
-      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
-                position = "stack", alpha = 0.8, show.legend = F) +
-      labs(x = "Date",
-           y = "Participants",
-           fill = "Demographics") +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank())
-fig
+#| content: "card-sidebar"
+markdown("Daily data availability: showing 
+         - measurements contributed by newly recruited participants (green)
+         - measurements from previously enrolled participants (blue)
+         - previously enrolled participants without new data (grey, 'lost to follow up').")
 ```
 
 ```{r}
-#| title: "Participants contributing to follow up"
-
-```
-
-```{r}
-#| title: "Data quality"
-data_filtered |> 
+plot_participants <- data_filtered |> 
+  filter(!is.na(date)) |> 
   filter(variable == "weight" & group == "overall" & stat == "median") |> 
+  dplyr::select(-value) |> 
+  mutate(cohort_id_followup = cohort_obs_recorded - cohort_id_new) |> 
+  group_by(date, organisation, group, label) |> 
+  pivot_longer(cols = c("cohort_obs_missing",
+                        "cohort_id_new",
+                        "cohort_id_followup")) |> 
+  mutate(Participant = fct_rev(fct_recode(name,
+                                    "Lost to follow up"="cohort_obs_missing",
+                                          "New"="cohort_id_new", 
+                                          "Repeated"="cohort_id_followup"))) |> 
   ggplot(aes(x = date)) +
-  geom_area(aes(y = cohort_id_enrolled), alpha = 0.5) +
-  geom_ribbon(aes(ymin = cohort_obs_recorded, ymax = cohort_id_enrolled), alpha = 0.5) +
-  labs(x = NULL, y = "Participants",
-       caption = "Total enrolled and contributing measurements")
-
+  geom_col(aes(y = value, 
+               fill = Participant, alpha = Participant)) +
+  labs(x = NULL, y = "Participant data")
+ggplotly(plot_participants)
 ```
+

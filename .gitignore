@@ -65,3 +65,4 @@ site_libs/*
 data/processed
 quarto/*_files/
 _freeze/*
+*/sandbox/*

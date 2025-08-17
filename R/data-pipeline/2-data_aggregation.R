@@ -104,7 +104,7 @@ clean_aggregated_data <- function(summary_list, latest_date) {
   #   and marking these records with "current_summary_date" = latest date in the data
   summary_df <- summary_df |>
     mutate(current_summary_date = as.Date(if_else(date > Sys.Date(),
-                                         latest_date, date)),
+                                         latest_date, NA)),
            date = replace(date, date > Sys.Date(), NA))
 
 

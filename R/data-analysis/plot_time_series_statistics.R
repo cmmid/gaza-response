@@ -41,44 +41,35 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
   data_filter <- recode_data_table(data_filter)
 
   if (tolower(strata) == "overall") {
-    fig <- data_filter %>%
+
+    fig <- data_filter |>
       ggplot(aes(x = date)) +
-      geom_line(aes(y = median),
-                colour = "#01454f",
-                linetype = "solid",
-                lwd = 1,
-                alpha = 0.7) +
-      geom_ribbon(aes(ymin = q1, ymax = q3),
-                  fill = "#01454f",
-                  alpha = 0.3,
-                  linetype = 0) +
-      facet_wrap(~variable,
-                 ncol = 2,
-                 scales = "free_y") +
+      geom_linerange(aes(ymin = q1, ymax = q3),
+                     color = "#01454f",
+                     alpha = 0.3,
+                     linewidth = 2) +
+      geom_point(aes(y = median),
+                 color = "#01454f",
+                 alpha = 0.7,
+                 size = 2) +
+      facet_wrap(~label, scales = "free_y") +
       labs(x = NULL, y = NULL) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            legend.title     = element_blank(),
             legend.spacing.y = unit(2, "pt"),
-            legend.margin    = margin(2, 2, 2, 2))
+            legend.margin = margin(2, 2, 2, 2))
 
-  }
-
-  else {
-    fig <- data_filter %>%
+  } else {
+    fig <- data_filter |>
       ggplot(aes(x = date)) +
-      geom_line(aes(y = median,  colour = label),
-                linetype = "solid",
-                lwd = 1,
-                alpha = 0.7,
-                show.legend = F) +
-      geom_ribbon(aes(ymin = q1, ymax = q3, fill = label),
-                  alpha = 0.3,
-                  linetype = 0) +
-      facet_wrap(~variable,
-                 ncol = 2,
+      geom_linerange(aes(ymin = q1, ymax = q3, color = label),
+                     alpha = 0.3,
+                     linewidth = 2) +
+      geom_point(aes(y = median, color = label),
+                 alpha = 0.7,
+                 size = 2) +
+      facet_wrap(~label,
                  scales = "free_y") +
-      labs(x = NULL, y = NULL,
-           fill = strata) +
+      labs(x = NULL, y = NULL) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             legend.spacing.y = unit(2, "pt"),
             legend.margin    = margin(2, 2, 2, 2))

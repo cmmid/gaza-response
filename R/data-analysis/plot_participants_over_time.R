@@ -43,8 +43,10 @@ plot_participants_over_time <- function(data, strata = "Overall"){
     ggplot(aes(x = date)) +
     geom_col(aes(y = value,
                  fill = Participant, alpha = Participant)) +
-    labs(x = NULL, y = "Participant data")
-  ggplotly(plot_participants)
-
+    labs(x = NULL, y = "Participant data",
+         caption = "Daily data availability: showing
+         - measurements contributed by newly recruited participants (green)
+         - measurements from previously enrolled participants (blue)
+         - previously enrolled participants without new data (grey, 'lost to follow up').")
   return(plot_participants)
 }

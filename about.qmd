@@ -60,7 +60,7 @@ Participants may be experiencing other changes in nutrition, such as the availab
 
 ### Project team
 
-The project is implemented by Save the Children (SCI) with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
+The project is implemented by humanitarian organisations providing services in Gaza, with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
 There is no specific funding source for this study. 
 
 LSHTM project team led by: 
@@ -68,12 +68,12 @@ LSHTM project team led by:
 - Francesco Checchi 
 - Zeina Jamaluddine
 
-With support from:
+With support from the [Centre for Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) (alphabetical):
 
-- Kevin van Zandvoort
+- Clara Brigitta
 - Ciara Judge
 - Kath Sherratt
-- Clara Brigitta
+- Kevin van Zandvoort
 
 Additional contributions from:
 

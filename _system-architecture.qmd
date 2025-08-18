@@ -1,0 +1,65 @@
+---
+title: "Reference"
+---
+
+# Data description
+
+Data generation involves: 
+
+- a survey at enrollment for each participant, including: creating a unique participant ID; values for baseline characteristics at study entry (e.g. sex, age, organisation, pre-war weight); and that day's weight measurement. 
+- a daily survey, optional for each participant, including: the participant's unique ID; the date; the day's weight measurement.
+
+Data are collected using ODK: see study protocol. Data are held on a secure local server.
+
+This produces two datasets, each updating daily:
+
+- base_data : Participants are identified by a unique `id`. 
+   - Expect: a single row for each unique participant ID; no duplicated participant IDs; any date from the start of the study to present. 
+- fup_data : follow up data for subseqent weight measurements, for participants who opt in to this each day. In this dataframe, the first date for each participant is therefore the first observation after enrollment, i.e. the participant's second measurement. Participant ID is a primary key with base_data.
+   - Expect: one or more rows for each unique participant ID.
+
+# System architecture
+
+## Data processing
+
+### Context
+
+1. Raw data are held on a local server. 
+2. Light initial cleaning is performed locally with some private code.
+3. 
+
+### Process
+
+Raw data are read from locally in `data/processed` that simulate the confidential data files
+
+2. Run the data processing pipeline, cleaning and aggregating the data and replicating the code run on the local server
+  - `source(here::here("R", "data-pipeline", "run-public-pipeline.R"))`
+    - This creates two new RDS files, the pipeline log and the summary data that is published openly
+3. Create the dashboard in `index.qmd`.
+  - `quarto::quarto_render("index.qmd")`
+
+#### Sidenote: How to test the pipeline
+
+1. Generate simulated data for baseline and follow up datasets using a script in `gaza_adult_wt_sim.R`:
+  - `source(here::here("R", "sandbox", "gaza_adult_wt_sim.R"))`
+    - This generates two files saved in `data/processed` that simulate the confidential data files
+2. Run the data processing pipeline, cleaning and aggregating the data and replicating the code run on the local server
+  - `source(here::here("R", "data-pipeline", "run-public-pipeline.R"))`
+    - This creates two new RDS files, the pipeline log and the summary data that is published openly
+3. Create the dashboard in `index.qmd`.
+  - `quarto::quarto_render("index.qmd")`
+
+
+## Data analysis
+
+### Context
+
+### Process
+
+## Publishing
+
+### Context
+
+### Process
+
+

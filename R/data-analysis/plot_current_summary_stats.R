@@ -31,7 +31,6 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
-    filter(date == max(date, na.rm = TRUE)) %>%
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean)) |>
     filter(!grepl("_firstmeasurement", variable))

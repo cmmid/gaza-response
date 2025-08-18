@@ -15,18 +15,22 @@
 #...............................................................................
 
 
-generate_key_insights <- function(data) {
+generate_key_insights <- function(data, strata) {
+  data <- data[[tolower(strata)]]
+  data <- filter(data, variable == "weight_percent_change_prewar")
   params <- list(
     # Most recent date
-    latest_date = max(data$overall$date),
+    latest_date = max(data$date, na.rm=TRUE), # TODO clarify latest date
     # N
-    cohort_size = max(data$overall$cohort_n),
+    cohort_size = max(data$cohort_id_enrolled, na.rm=TRUE),
+    cohort_percent_participating = (data$cohort_obs_recorded /
+      data$cohort_id_enrolled * 100)[1],
     # Observations
-    observations = sum(distinct(filter(data$overall, variable == "weight" & stat == "mean"))$cohort_recorded),
-
-    median_change = round(filter(data$overall, date == max(date) & variable == "weight_percent_change_prewar" & stat == "median")$value, 2)
-
+    observations = sum(distinct(filter(data, stat == "mean"))$cohort_obs_recorded),
+    median_change = round(filter(data, stat == "median")$value, 1),
+    upper_change = round(filter(data, stat == "q3")$value, 1),
+    lower_change = round(filter(data, stat == "q1")$value, 1)
   )
+
   return(params)
 }
-

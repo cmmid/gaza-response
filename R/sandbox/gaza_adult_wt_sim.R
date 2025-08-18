@@ -69,7 +69,7 @@
     # Fill in baseline characteristics randomly
     df_base$date <- sample(dates, n_staff, replace = T,
       prob = c(0.46, 0.2, 0.1, rep(0.04, 6)))
-    df_base$organisation <- "Save the Children International"
+    df_base$organisation <- c("Save the Children International", "UNRWA")
     df_base$age <- round(runif(n_staff, min = 18, max = 60), 0)
     df_base$sex <- sample(c("male", "female", "other/prefer not to share"),
       n_staff, replace = T, prob = c(0.6, 0.35, 0.05))
@@ -141,6 +141,10 @@
 
   #...................................
   ## Save data
+
+    if (!dir.exists(here("data", "processed"))) {
+      dir.create(here("data", "processed"))
+    }
 
     # Baseline dataset
     saveRDS(df_base, here("data", "processed", "df_base.RDS"))

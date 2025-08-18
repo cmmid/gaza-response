@@ -45,13 +45,14 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(x = date)) +
-      geom_line(aes(y = mean, colour = "Mean"), linetype = "solid") +
-      geom_line(aes(y = median,  colour = "Median"), linetype = "dashed") +
-      geom_ribbon(aes(ymin = q1, ymax = q3,  fill = "IQR"), alpha = 0.2, linetype = 0) +
-      scale_colour_manual(values = c("Mean" = "darkred", "Median" = "darkblue")) +
-      scale_fill_manual(values = c("IQR" = "darkblue")) +
+      geom_line(aes(y = mean, colour = "Median"),
+                linetype = "solid", alpha = 0.8) +
+      geom_ribbon(aes(ymin = q1, ymax = q3,  fill = "IQR"),
+                  alpha = 0.2, linetype = 0) +
+      scale_colour_manual(values = c("Median" = "#01454f")) +
+      scale_fill_manual(values = c("IQR" = "#01454f")) +
       facet_wrap(~variable, ncol = 1, scales = "free_y") +
-      labs(x = "Date", y = "Value") +
+      labs(x = NULL, y = NULL) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             legend.title     = element_blank(),
             legend.spacing.y = unit(2, "pt"),
@@ -62,11 +63,12 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
   else {
     fig <- data_filter %>%
       ggplot(aes(x = date)) +
-      geom_line(aes(y = mean,  colour = label), linetype = "solid", show.legend = F) +
-      #geom_line(aes(y = median,  colour = label), linetype = "dashed", show.legend = F) +
-      geom_ribbon(aes(ymin = q1, ymax = q3, fill = label), alpha = 0.2, linetype = 0) +
+      geom_line(aes(y = median,  colour = label),
+                linetype = "solid", alpha = 0.8, show.legend = F) +
+      geom_ribbon(aes(ymin = q1, ymax = q3, fill = label),
+                  alpha = 0.2, linetype = 0) +
       facet_wrap(~variable, ncol = 1, scales = "free_y") +
-      labs(x = "Date", y = "Value") +
+      labs(x = NULL, y = NULL) +
       labs(fill = strata) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             legend.spacing.y = unit(2, "pt"),

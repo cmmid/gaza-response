@@ -27,10 +27,12 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_time_series_statistics <- function(data, strata = "Overall"){
+plot_time_series_statistics <- function(data, summary_variable,
+                                        strata = "Overall"){
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
+    filter(variable == summary_variable) |>
     # filter out the duplicate "current" records
     dplyr::filter(date <= Sys.Date()) %>%
     pivot_wider(names_from = stat, values_from = value) %>%

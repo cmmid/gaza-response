@@ -46,8 +46,8 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
                      color = "#01454f", alpha = 0.3,
                      linewidth = 2) +
       geom_point(aes(x = median),
-                 color = "#01454f", alpha = 0.7,
-                 size = 2) +
+                 color = "#01454f", alpha = 0.8,
+                 size = 3) +
       facet_wrap(~variable,
                  nrow = 2,
                  scales = "free",
@@ -64,13 +64,13 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
       ggplot(aes(y = label)) +
       geom_linerange(aes(xmin = q1, xmax = q3,
                          color = label),
-                     alpha = 0.7,
+                     alpha = 0.3,
                      height = 0,
                      linewidth = 2,
                      show.legend = F) +
       geom_point(aes(x = median, col = label),
-                 alpha = 0.3,
-                 size = 2,
+                 alpha = 0.8,
+                 size = 3,
                  show.legend = F) +
       facet_wrap(~variable,
                  nrow = 2,

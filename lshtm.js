@@ -20,7 +20,7 @@ window.onload = function() {
       checkedStrata.sort();
 
       // Join with underscore
-      let stratum = checkedStrata.length > 0 ? checkedStrata.join("-") : "Overall";
+      let stratum = checkedStrata.length > 0 ? checkedStrata.join("-") : "overall";
       console.log("Combined stratum string:", stratum);
 
       widgets.forEach(widget => {

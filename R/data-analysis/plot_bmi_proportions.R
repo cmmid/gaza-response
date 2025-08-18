@@ -28,7 +28,7 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
+plot_bmicategory_proportions_time_series <- function(data, strata = "overall"){
 
   # Filter data for the selected option
   data <- data %>%
@@ -52,7 +52,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
     facet_grid(cols = vars(Group), row = vars(Stratification), switch = "y", labeller = label_wrap_gen(width = 25), scales = "free")
 
 
-  if (strata == "Overall") {
+  if (strata == "overall") {
     fig <- fig + theme(strip.text.x = element_blank())
   }
   return(fig)

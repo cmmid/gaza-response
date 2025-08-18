@@ -27,7 +27,7 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_current_summary_stats <- function(data, strata = "Overall"){
+plot_current_summary_stats <- function(data, strata = "overall"){
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>
@@ -38,7 +38,7 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
 
   data_filter <- recode_data_table(data_filter)
 
-  if (strata == "Overall") {
+  if (strata == "overall") {
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(y = 0)) +

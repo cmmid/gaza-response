@@ -25,7 +25,7 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_participants_over_time <- function(data, strata = "Overall"){
+plot_participants_over_time <- function(data, strata = "overall"){
 
   plot_participants <- data[[tolower(strata)]] |>
     filter(!is.na(date)) |>
@@ -43,11 +43,7 @@ plot_participants_over_time <- function(data, strata = "Overall"){
     ggplot(aes(x = date)) +
     geom_col(aes(y = value,
                  fill = Participant, alpha = Participant)) +
-    labs(x = NULL, y = "Participant data",
-         caption = "Daily data availability: showing
-         - measurements contributed by newly recruited participants (green)
-         - measurements from previously enrolled participants (blue)
-         - previously enrolled participants without new data (grey, 'lost to follow up').") +
+    labs(x = NULL, y = "Participant data") +
     facet_wrap(~label, scales="free_y")
   return(plot_participants)
 }

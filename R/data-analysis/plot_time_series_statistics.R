@@ -28,7 +28,7 @@ pacman::p_load(
 #...............................................................................
 
 plot_time_series_statistics <- function(data, summary_variable,
-                                        strata = "Overall"){
+                                        strata = "overall"){
 
   # Filter data for the selected option
   data_filter <- data[[tolower(strata)]] |>

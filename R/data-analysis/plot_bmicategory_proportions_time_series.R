@@ -30,7 +30,7 @@ pacman::p_load(
 #...............................................................................
 
 plot_bmicategory_proportions_time_series <- function(data,
-                                                     strata = "Overall"){
+                                                     strata = "overall"){
 
   bmi_categories <- c("underweight", "normal", "overweight", "obese")
   names(bmi_categories) <- stringr::str_to_title(bmi_categories)

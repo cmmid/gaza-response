@@ -24,8 +24,6 @@ summarise_ids <- function(data, group_cols) {
       cohort_obs_recorded = sum(!is.na(weight)),
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
-      # anomalous weight among recorded weights, denominator: cohort_obs_recorded
-      cohort_obs_anomalous = sum(weight_anomaly),
       .groups = "drop"
       )
 
@@ -41,9 +39,11 @@ summarise_ids <- function(data, group_cols) {
       across(c("weight",
                "weight_percent_change_firstmeasurement",
                "weight_percent_change_prewar",
+               "weight_percent_change_daily_rate",
                "bmi",
                "bmi_percent_change_firstmeasurement",
-               "bmi_percent_change_prewar"),
+               "bmi_percent_change_prewar",
+               "bmi_rate_change_daily"),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),
@@ -79,7 +79,10 @@ summarise_ids <- function(data, group_cols) {
     ungroup() |>
     # create single grouping id
     mutate(group = paste(group_cols, collapse = "-"),
-            label = pmap_chr(across(all_of(setdiff(group_cols, c("date", "organisation")))), ~ paste(..., sep = ", ")))
+            label = pmap_chr(across(all_of(setdiff(group_cols,
+                                                   c("date",
+                                                     "organisation")))),
+                             ~ paste(..., sep = ", ")))
 
   return(df_summary)
 }

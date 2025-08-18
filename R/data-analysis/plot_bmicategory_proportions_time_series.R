@@ -35,12 +35,8 @@ plot_bmicategory_proportions_time_series <- function(data,
   bmi_categories <- c("underweight", "normal", "overweight", "obese")
   names(bmi_categories) <- stringr::str_to_title(bmi_categories)
 
-  bmi_palette <- ordered(lshtm_palette$bmi_categories,
-          levels = lshtm_palette$bmi_categories,
-          labels = names(lshtm_palette$bmi_categories))
-
   # Filter data for the selected option
-  data_bmi <- test_data[[tolower(strata)]] |>
+  data_bmi <- data[[tolower(strata)]] |>
     # check to exclude dummy date ("latest")
     filter(date <= Sys.Date() &
              !is.na(date)) |>

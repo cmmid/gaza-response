@@ -14,6 +14,9 @@ if(interactive()) {
   
   #do not show summarise message unless in interactive session
   options(dplyr.summarise.inform = FALSE)
+  
+  #do not show tidyverse lifecycle warnings
+  options(lifecycle_verbosity = "quiet")
 }
 
 pipeline_functions <- paste0(base,

@@ -36,8 +36,6 @@ plot_time_series_statistics <- function(data, summary_variable,
     # filter out the duplicate "current" records
     dplyr::filter(date <= Sys.Date()) %>%
     pivot_wider(names_from = stat, values_from = value) %>%
-    dplyr::filter(!is.na(mean)) |>
-    filter(!grepl("_firstmeasurement", variable)) |>
     filter(!grepl("other|prefer no", label))
 
   data_filter <- recode_data_table(data_filter)
@@ -52,10 +50,11 @@ plot_time_series_statistics <- function(data, summary_variable,
                      linewidth = 2) +
       geom_point(aes(y = median),
                  color = "#01454f",
-                 alpha = 0.7,
-                 size = 2) +
+                 alpha = 0.8,
+                 size = 3) +
       facet_wrap(~label, scales = "free_y") +
-      labs(x = NULL, y = NULL) +
+      labs(x = NULL, y = NULL,
+           subtitle = data_filter$variable[1]) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
             legend.spacing.y = unit(2, "pt"),
             legend.margin = margin(2, 2, 2, 2))
@@ -67,13 +66,13 @@ plot_time_series_statistics <- function(data, summary_variable,
                      alpha = 0.3,
                      linewidth = 2) +
       geom_point(aes(y = median, color = label),
-                 alpha = 0.7,
+                 alpha = 0.8,
                  size = 2) +
       facet_wrap(~label,
                  scales = "free_y") +
-      labs(x = NULL, y = NULL) +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            legend.spacing.y = unit(2, "pt"),
+      labs(x = NULL, y = NULL,
+           subtitle = data_filter$variable[1]) +
+      theme(legend.spacing.y = unit(2, "pt"),
             legend.margin    = margin(2, 2, 2, 2))
 
   }

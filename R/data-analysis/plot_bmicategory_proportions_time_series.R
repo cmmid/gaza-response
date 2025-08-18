@@ -38,7 +38,8 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(is.na(mean)) |>
     filter(!grepl("_prewar_", variable)) |>
-    filter(!grepl("NA", variable))
+    filter(!grepl("NA", variable)) |>
+    filter(!grepl("other|prefer no", label))
 
   data_filter <- recode_data_table(data_filter)
 

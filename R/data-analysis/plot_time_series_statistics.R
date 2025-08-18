@@ -36,7 +36,8 @@ plot_time_series_statistics <- function(data, strata = "Overall"){
     #dplyr::filter(!sex == "other/prefer not to share") %>%
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(mean)) |>
-    filter(!grepl("_firstmeasurement", variable))
+    filter(!grepl("_firstmeasurement", variable)) |>
+    filter(!grepl("other|prefer no", label))
 
   data_filter <- recode_data_table(data_filter)
 

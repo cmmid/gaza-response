@@ -36,3 +36,11 @@ lshtm_theme <- function() {
   )
 }
 theme_set(lshtm_theme())
+
+lshtm_palette <- list(
+  bmi_categories = c(
+    "Obese" = "#01454f",
+    "Overweight" = "#007457",
+    "Normal" = "#709b28",
+    "Underweight" = "#ffa600")
+)

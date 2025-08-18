@@ -61,20 +61,24 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 This project provides real-time information on the nutritional status of humanitarian staff in Gaza. 
 Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
 
-- Data contributed by participating staff at `r str_flatten_comma(log$orgs, last = " and ")`
-- Results are preliminary: please interpret with caution. 
+::: {.callout-note collapse="true" title="About the project"}
+- In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
+- This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
+- All participation from those providing data, resources, support, and analysis, is entirely voluntary. 
+Many thanks to participating staff at: `r str_flatten_comma(log$orgs, last = " and ")`.
+- **Results are preliminary: please interpret with caution.**
+
 - Find out more [about the study](./about)
+
+:::
 
 ::: {.callout-caution collapse="true" title="Join us"}
 We invite all humanitarian staff to participate.
-[**Get involved**](./contact)
+- [**Get involved**](./contact)
 :::
 
 ::: {.callout-tip collapse="true" title="Stratify data"}
-<!-- Add data filter
- - todo: change to pandoc format
- - todo: fill options automatically or wrap in function
--->
+<!-- Add data filter-->
 <div class="lshtm_widget_filter">
   <div class="filter_content">
   <fieldset>

@@ -29,7 +29,7 @@ plot_participants_over_time <- function(data, strata = "Overall"){
 
   plot_participants <- data[[tolower(strata)]] |>
     filter(!is.na(date)) |>
-    filter(variable == "weight" & group == "overall" & stat == "median") |>
+    filter(variable == "weight" & stat == "median") |>
     dplyr::select(-value) |>
     mutate(cohort_id_followup = cohort_obs_recorded - cohort_id_new) |>
     group_by(date, organisation, group, label) |>
@@ -47,6 +47,7 @@ plot_participants_over_time <- function(data, strata = "Overall"){
          caption = "Daily data availability: showing
          - measurements contributed by newly recruited participants (green)
          - measurements from previously enrolled participants (blue)
-         - previously enrolled participants without new data (grey, 'lost to follow up').")
+         - previously enrolled participants without new data (grey, 'lost to follow up').") +
+    facet_wrap(~label, scales="free_y")
   return(plot_participants)
 }

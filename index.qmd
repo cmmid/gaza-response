@@ -25,10 +25,11 @@ pacman::p_load(here,
                ggplot2, plotly)
 
 ## Load data dictionary
-datadict <- readRDS("data/data_dictionary.RDS")
-
+datadict <- readRDS(here("data/data_dictionary.RDS"))
+## Load log
+log <- readRDS(here("data/public/log.RDS"))
 ## Load Data RDS
-data <- readRDS("data/public/summary-stats.RDS")
+data <- readRDS(here("data/public/summary-stats.RDS"))
 
 options <- c("sex", "agegroup", "governorate", "role")
 # Generate all non-empty combinations
@@ -51,25 +52,30 @@ source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
-
 ```
 
 <!-- Global sidebar -->
 
 # {.sidebar}
 
-This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. 
+Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
 
-::: {.callout-caution title="Join us"}
-We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+- Data contributed by participating staff at `r str_flatten_comma(log$orgs, last = " and ")`
+- Results are preliminary: please interpret with caution. 
+- Find out more [about the study](./about)
+
+::: {.callout-caution collapse="true" title="Join us"}
+We invite all humanitarian staff to participate.
+[**Get involved**](./contact)
 :::
 
+::: {.callout-tip collapse="true" title="Stratify data"}
 <!-- Add data filter
  - todo: change to pandoc format
  - todo: fill options automatically or wrap in function
 -->
 <div class="lshtm_widget_filter">
-  <p><strong>Stratify data by</strong></p>
   <div class="filter_content">
   <fieldset>
     <!--<legend>Stratify data by</legend>-->
@@ -92,6 +98,7 @@ We are actively seeking participants to support the project, and welcome new col
   </fieldset>
 </div>
 </div>
+:::
 
 <!-- Dashboard page 1 -->
 

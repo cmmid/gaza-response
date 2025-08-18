@@ -2,8 +2,8 @@
 title: Dashboard
 format: 
   dashboard:
-    orientation: columns
-    scrolling: false
+    orientation: rows
+    scrolling: true
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
@@ -15,8 +15,11 @@ execute:
   cache: true
 ---
 
-
 ```{r, include=FALSE}
+pacman::p_load(here, 
+               purrr, readr, dplyr, forcats, stringr,
+               bslib, bsicons, 
+               ggplot2, plotly, shiny, patchwork)
 data_filtered <- data[[meta_params$organisation]]
 # split data into current 72h summary, or full timeseries
 data_filtered_current <- map(data_filtered,
@@ -28,23 +31,13 @@ data_filtered_timeseries <- map(data_filtered,
 params <- generate_key_insights(data_filtered_current, strata = "overall")
 params$cohort_ever_enrolled <- max(data_filtered$overall$cohort_id_enrolled,
                                    na.rm = TRUE)
-# Data notes to accompany plots
-data_notes <- list(
-  current_summary = c('Median and 25-75% range of participant weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), with % change from pre-October 2023. Negative % indicate weight loss.'),
-  participation = c('Daily data availability: showing
-- Measurements contributed by newly recruited participants ("New")
-- Measurements from previously enrolled participants ("Repeated")
-- Previously enrolled participants without new data ("lost to follow up")'),
-  note_change = c('Trends over time in participant current measurements, with comparison to pre-war levels (% change since October 2023), since the beginning of the project.'),
-  note_bmi_category = c('Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per week that fall in each category, divided by the total number of measurements that week ("N").')
-)
 ```
 
-## COL {.tabset width=30%}
+## ROW
 
-### Current summary {{< bi info-fill label="About the data">}}
+###
 
-::: {.card .current_summary_card .lshtm_widget fill="false"}
+::: {.card .current_summary_card .lshtm_widget title="Key insights" fill="false"}
 - Data updated as of **`r params$latest_date`**
 - Recent data from **`r params$cohort_size` participants** (latest 72 hours), with `r params$cohort_ever_enrolled` ever enrolled in the study
 - From **October 2023 to now**, recent participants experienced **`r params$median_change`% (`r params$lower_change`% to `r params$upper_change`%) weight change** (median, 25-75% range)
@@ -63,15 +56,19 @@ for(i in strata) {
     )
   )
   cat('</div>')
-  markdown('_About the data_')
 }
 ```
 </div>
+
+::: {.callout-note collapse="true" title="Data" appearance="simple"}
+Median and 25-75% range of participant weight in kilograms (kg) and [Body Mass Index](https://www.cdc.gov/bmi/adult-calculator/index.html?), with % change from pre-October 2023. Negative % indicate weight loss.
+:::
 :::
 
-### Participation^[]
 
-::: {.card .participants_card .lshtm_widget fill="true"}
+### Participation
+
+::: {.card .participants_card .lshtm_widget title="Participation" fill="false"}
 <div class="lshtm_widget_identifier" id="participants">
 ```{r, results="asis"}
 #| fig-align: center
@@ -89,6 +86,12 @@ for(i in strata) {
 }
 ```
 </div>
+::: {.callout-note collapse="true" title="Data" appearance="simple"}
+Daily data availability, showing:
+- Measurements contributed by newly recruited participants ("New")
+- Measurements from previously enrolled participants ("Repeated")
+- Previously enrolled participants without new data ("lost to follow up")
+:::
 :::
 
 
@@ -120,6 +123,9 @@ for(i in strata) {
 }
 ```
 </div>
+::: {.callout-note collapse="true" title="Data" appearance="simple"}
+Trends over time in participant current measurements, with comparison to pre-war levels (% change since October 2023), since the beginning of the project.
+:::
 :::
 
 ### BMI change
@@ -148,6 +154,9 @@ for(i in strata) {
 }
 ```
 </div>
+::: {.callout-note collapse="true" title="Data" appearance="simple"}
+Trends over time in participant current measurements, with comparison to pre-war levels (% change since October 2023), since the beginning of the project.
+:::
 :::
 
 ### BMI category
@@ -170,5 +179,7 @@ for(i in strata) {
 }
 ```
 </div>
-
+::: {.callout-note collapse="true" title="Data" appearance="simple"}
+Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per week that fall in each category, divided by the total number of measurements that week ("N").
+:::
 :::

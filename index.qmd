@@ -2,8 +2,8 @@
 title: Dashboard
 format: 
   dashboard:
-    orientation: columns
-    scrolling: false
+    orientation: rows
+    scrolling: true
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
@@ -12,7 +12,8 @@ format:
 toc: false
 execute: 
   echo: false
-  cache: true
+  freeze: auto
+  cache: false
 ---
 
 <!-- Setup, no output -->

@@ -13,6 +13,7 @@
 #...................................
 ## Install or load required R packages
 pacman::p_load(
+  lubridate,
   ggplot2,       # Visualise data
   tidyverse,     # Tidyverse suite of packages
   viridis)       # Colour-blind palette
@@ -28,68 +29,55 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
+plot_bmicategory_proportions_time_series <- function(data,
+                                                     strata = "Overall"){
+
+  bmi_categories <- c("underweight", "normal", "overweight", "obese")
+  names(bmi_categories) <- stringr::str_to_title(bmi_categories)
 
   # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
-    # filter out the duplicate "current" records
-    dplyr::filter(date <= Sys.Date()) %>%
-    #dplyr::filter(!sex == "other/prefer not to share") %>%
-    pivot_wider(names_from = stat, values_from = value) %>%
-    dplyr::filter(is.na(mean)) |>
-    filter(!grepl("_prewar_", variable)) |>
-    filter(!grepl("NA", variable)) |>
-    filter(!grepl("other|prefer no", label))
+  data_bmi <- data[[tolower(strata)]] |>
+    # check to exclude dummy date ("latest")
+    filter(date <= Sys.Date() &
+             !is.na(date)) |>
+    # daily data (ie drop prewar)
+    filter(grepl("bmi_category_daily", variable)) |>
+    mutate(bmi_category = str_remove_all(variable,
+                                         "bmi_category_daily_"),
+           bmi_category = na_if(bmi_category, "NA"),
+           bmi_category = ordered(bmi_category,
+                                  levels = bmi_categories,
+                                  labels = names(bmi_categories)),
+           # add week
+           week = lubridate::floor_date(date, "week")
+           ) |>
+    # only keep counts
+    filter(stat == "count") |>
+    group_by(organisation, week, group, label, bmi_category) |>
+    summarise(
+      category_count = sum(value, na.rm = TRUE),
+      .groups = "drop") |>
+    group_by(organisation, week, group, label) |>
+    mutate(category_total = sum(category_count),
+           category_proportion = category_count / category_total) |>
+    ungroup()
 
-  data_filter <- recode_data_table(data_filter)
+  # ggplot - stacked bar % by week
+  plot <- ggplot(data_bmi,
+                 aes(x = as.Date(week),
+                     fill = bmi_category, col = bmi_category)) +
+    geom_col(aes(y = category_proportion),
+             position = "stack") +
+    geom_text(aes(y = 1,
+                  label = paste0("N=",category_total),
+                  colour = "black", vjust = -0.5)) +
+    scale_y_continuous(limits = c(NA, 1.05), breaks = c(0,0.25,0.5,0.75,1),
+                       labels = scales::label_percent(accuracy = 1)) +
+    scale_fill_manual(name = "BMI category",
+                      values = lshtm_palette$bmi_categories,
+                      aesthetics = c("col", "fill")) +
+    labs(x = NULL, y = "Weekly participant measurements") +
+    facet_wrap(~ label, scales = "free_y")
 
-  if (strata == "Overall") {
-    fig <- data_filter %>%
-      ggplot() +
-      geom_area(aes(x = date, y = percent, fill = variable, group = variable),
-                position = "stack", alpha = 0.8) +
-      scale_fill_viridis_d(option = "D") +
-      labs(x = NULL,
-           y = "Percentage of Survey Participants (%)",
-           fill = "Category") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank())
-  } else if (length(unlist(str_split(strata, "-"))) == 1) {
-    # Generate plot
-    fig <- data_filter %>%
-      dplyr::rename(facet1 = all_of(strata)) %>%
-      ggplot() +
-      geom_area(aes(x = date, y = percent, fill = variable, group = variable),
-                position = "stack", alpha = 0.8) +
-      scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
-           fill = "Category") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank()) +
-      facet_wrap(~facet1, labeller = label_wrap_gen(width = 25), scales = "free")
-
-  } else {
-    fig <- data_filter %>%
-      dplyr::rename(facet1 = all_of(unlist(str_split(strata, "-"))[1]),
-                    facet2 = all_of(unlist(str_split(strata, "-"))[2])) %>%
-      ggplot() +
-      geom_area(aes(x = date, y = percent, fill = variable, group = variable),
-                position = "stack", alpha = 0.8) +
-      scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
-           y = "Percent survey participants (%)",
-           fill = "Category") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
-      facet_grid(facet1~facet2, labeller = label_wrap_gen(width = 25), scales = "free")
-  }
-
-
-
-
-  return(fig)
-
+  return(plot)
 }

@@ -42,30 +42,42 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
     # Generate plot
     fig <- data_filter %>%
       ggplot(aes(y = 0)) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3), height = 0, color = "darkblue", linewidth = 0.5) +
-      geom_point(aes(x = median), color = "darkblue", size = 3) +
-      geom_point(aes(x = mean), color = "darkred", size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~variable, nrow = 1, scales = "free", labeller = label_wrap_gen(width = 25)) +
-      labs(x = "Value",
-           caption = "Blue point = median; X = mean; blue line = IQR") +
-      #theme_bw() +
-      theme(#strip.background = element_blank(),
-        #strip.text  = "outside",
-        axis.text.y  = element_blank(),
+      geom_linerange(aes(xmin = q1, xmax = q3),
+                     color = "#01454f", alpha = 0.3,
+                     linewidth = 2) +
+      geom_point(aes(x = median),
+                 color = "#01454f", alpha = 0.7,
+                 size = 2) +
+      facet_wrap(~variable,
+                 nrow = 2,
+                 scales = "free",
+                 labeller = label_wrap_gen(width = 25)) +
+      labs(x = NULL,
+           caption = "Median and 25-75% range") +
+      theme(axis.text.y  = element_blank(),
         axis.ticks.y = element_blank(),
         axis.title.y = element_blank())
   }
 
   else {
     fig <- data_filter %>%
-      ggplot(aes(y = factor(label))) +
-      geom_errorbarh(aes(xmin = q1, xmax = q3, color = label), show.legend = F, height = 0, linewidth = 0.5) +
-      geom_point(aes(x = median, col = label), show.legend = F, size = 3) +
-      geom_point(aes(x = mean, col = label), show.legend = F, size = 3, shape = 4, stroke = 1) +
-      facet_wrap(~variable, nrow = 1, scales = "free_x", labeller = label_wrap_gen(width = 25)) +
-      labs(x = "Value",
-           caption = "O = median; X = mean; - = IQR") +
-      #theme_bw() +
+      ggplot(aes(y = label)) +
+      geom_linerange(aes(xmin = q1, xmax = q3,
+                         color = label),
+                     alpha = 0.7,
+                     height = 0,
+                     linewidth = 2,
+                     show.legend = F) +
+      geom_point(aes(x = median, col = label),
+                 alpha = 0.3,
+                 size = 2,
+                 show.legend = F) +
+      facet_wrap(~variable,
+                 nrow = 2,
+                 scales = "free_x",
+                 labeller = label_wrap_gen(width = 25)) +
+      labs(x = NULL,
+           caption = "Median and 25-75% range") +
       theme(#strip.background = element_blank(),
         #strip.placement  = "outside",
         #axis.text.y  = element_blank(),

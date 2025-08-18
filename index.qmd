@@ -2,17 +2,17 @@
 title: Dashboard
 format: 
   dashboard:
-    scrolling: true
+    orientation: columns
+    scrolling: false
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
     css: "styles.css"
     fig-format: svg
-  #html:
-  #  page-layout: custom
-toc: true
+toc: false
 execute: 
   echo: false
+  cache: true
 ---
 
 <!-- Setup, no output -->
@@ -20,9 +20,9 @@ execute:
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
-               purrr, readr, dplyr, forcats,
+               purrr, readr, dplyr, forcats, stringr,
                bslib, bsicons, 
-               ggplot2, plotly)
+               ggplot2, plotly, shiny, patchwork)
 
 ## Load data dictionary
 datadict <- readRDS(here("data/data_dictionary.RDS"))
@@ -31,7 +31,7 @@ log <- readRDS(here("data/public/log.RDS"))
 ## Load Data RDS
 data <- readRDS(here("data/public/summary-stats.RDS"))
 
-options <- c("sex", "agegroup", "governorate", "role")
+options <- c("sex", "agegroup", "governorate", "role", "children_feeding")
 # Generate all non-empty combinations
 strata <- unlist(
   #lapply(1:length(options), function(k) {
@@ -40,7 +40,7 @@ strata <- unlist(
   })
 )
 # Add 'Overall' as default/fallback
-strata <- c("Overall", strata)
+strata <- c("overall", strata)
 
 organisations <- names(data)[2:length(data)]
 meta_params <- list(c(organisation = c("all", organisations)))
@@ -66,7 +66,7 @@ Our aim is to inform humanitarian decision-making, advocacy, and diplomatic acti
 - In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
 - This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
 - All participation from those providing data, resources, support, and analysis, is entirely voluntary. 
-Many thanks to participating staff at: `r str_flatten_comma(log$orgs, last = " and ")`.
+Many thanks to participating staff at: `r stringr::str_flatten_comma(log$orgs, last = " and ")`.
 - **Results are preliminary: please interpret with caution.**
 
 - Find out more [about the study](./about)
@@ -74,11 +74,12 @@ Many thanks to participating staff at: `r str_flatten_comma(log$orgs, last = " a
 :::
 
 ::: {.callout-caution collapse="true" title="Join us"}
-We invite all humanitarian staff to participate.
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. We invite all humanitarian staff to participate.
+
 - [**Get involved**](./contact)
 :::
 
-::: {.callout-tip collapse="true" title="Stratify data"}
+::: {.callout-tip collapse="false" title="Stratify data"}
 <!-- Add data filter-->
 <div class="lshtm_widget_filter">
   <div class="filter_content">
@@ -98,8 +99,12 @@ We invite all humanitarian staff to participate.
     </label><br>
     <label>
       <input type="checkbox" name="data_filter" value="role">
-      Role
+      Staff role
     </label>
+    <label>
+      <input type="checkbox" name="data_filter" value="children_feeding">
+      Dependent children
+    </label><br>
   </fieldset>
 </div>
 </div>
@@ -116,20 +121,20 @@ meta_params$organisation <- "all"
 {{< include _template-org.qmd >}}
 
 
-# UN Relief and Works Agency
+<!-- # UN Relief and Works Agency -->
 
-```{r}
-meta_params$organisation <- "UNRWA"
-```
+<!-- ```{r} -->
+<!-- meta_params$organisation <- "UNRWA" -->
+<!-- ``` -->
 
-{{< include _template-org.qmd >}}
+<!-- {{< include _template-org.qmd >}} -->
 
 
-# Save the Children International
+<!-- # Save the Children International -->
 
-```{r}
-meta_params$organisation <- "Save the Children International"
-```
+<!-- ```{r} -->
+<!-- meta_params$organisation <- "Save the Children International" -->
+<!-- ``` -->
 
-{{< include _template-org.qmd >}}
+<!-- {{< include _template-org.qmd >}} -->
 

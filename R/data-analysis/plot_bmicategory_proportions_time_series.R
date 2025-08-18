@@ -49,7 +49,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
       geom_area(aes(x = date, y = percent, fill = variable, group = variable),
                 position = "stack", alpha = 0.8) +
       scale_fill_viridis_d(option = "D") +
-      labs(x = "Date",
+      labs(x = NULL,
            y = "Percentage of Survey Participants (%)",
            fill = "Category") +
       #theme_bw() +
@@ -80,7 +80,7 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "Overall"){
                 position = "stack", alpha = 0.8) +
       scale_fill_viridis_d(option = "D") +
       labs(x = "Date",
-           y = "Percentage of Survey Participants (%)",
+           y = "Percent survey participants (%)",
            fill = "Category") +
       #theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +

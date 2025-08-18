@@ -71,7 +71,7 @@ plot_bmicategory_proportions_time_series <- function(data,
     geom_text(aes(y = 1,
                   label = paste0("N=",category_total),
                   colour = "black", vjust = -0.5)) +
-    scale_y_continuous(limits = c(NA, 1.1), breaks = c(0,0.25,0.5,0.75,1),
+    scale_y_continuous(limits = c(NA, 1.05), breaks = c(0,0.25,0.5,0.75,1),
                        labels = scales::label_percent(accuracy = 1)) +
     scale_fill_manual(name = "BMI category",
                       values = lshtm_palette$bmi_categories,

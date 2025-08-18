@@ -78,11 +78,7 @@ plot_current_summary_stats <- function(data, strata = "Overall"){
                  labeller = label_wrap_gen(width = 25)) +
       labs(x = NULL,
            caption = "Median and 25-75% range") +
-      theme(#strip.background = element_blank(),
-        #strip.placement  = "outside",
-        #axis.text.y  = element_blank(),
-        #åaxis.ticks.y = element_blank(),
-        axis.title.y = element_blank(),
+      theme(axis.title.y = element_blank(),
         legend.position = "bottom")
   }
 

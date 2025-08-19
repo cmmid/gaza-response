@@ -94,14 +94,14 @@ summarise_ids <- function(data, group_cols) {
   return(df_summary)
 }
 
-clean_aggregated_data <- function(summary_list, latest_date) {
+clean_aggregated_data <- function(summary_list) {
 
   summary_df <- list_rbind(summary_list) |>
     ungroup()
 
-  # label summary stats based on the 72h window as the "current_summary_date",
-  #   setting "date" to NA (as this is a summary of multiple dates),
+  # label current summary stats - setting "date" to NA (as this is a summary of multiple dates),
   #   and marking these records with "current_summary_date" = latest date in the data
+  latest_date <- max(summary_df |> filter(date <= Sys.Date()) |> pull(date), na.rm=TRUE)
   summary_df <- summary_df |>
     mutate(current_summary_date = as.Date(if_else(date > Sys.Date(),
                                          latest_date, NA)),

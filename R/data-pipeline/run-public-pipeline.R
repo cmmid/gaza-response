@@ -74,46 +74,47 @@ data_id_daily <- data_id_daily |>
 data_id_daily <- data_id_daily |>
   mutate(organisation = fct_drop(organisation))
 
-# Summaries ------------------------------------------------------------
+# Pre-processing for summaries ---------------------------------------------
 # create a df with only last recorded observation by ID
 data_id_last <- data_id_daily |>
   filter(last_measurement)
 
-# tabulate
-log$tab_baseline <- tabulate_baseline(data_id_last,
-                                      by_group = "organisation",
-                                      col_labels = !grepl(
-                                        "bmi_category"))
-log$tab_bmi <- bmi_crosstab(data_id_last, col_labels)
-log$tab_followup <- tabulate_baseine()
+# Summaries ------------------------------------------------------------
+# tabulate all participants by organisation
+log$tab_baseline <- data_id_last |>
+  tabulate_baseline(by_group = "organisation",
+                    col_labels = col_labels)
+# tab by follow up
+log$tab_followup <- data_id_last |>
+  mutate(record_is_followup = if_else(record_is_followup,
+                                      "In follow up",
+                                      "Baseline only")) |>
+  tabulate_baseline(by_group = "record_is_followup",
+                    col_labels = col_labels)
 
-
-# strata summaries ----------------------------------------------------
 # add "Overall" organisation
 data_id_daily <- data_id_daily |>
   mutate(organisation = "Overall") |>
   bind_rows(data_id_daily)
 
-# add "overall" variable as a buffer
+log$tab_bmi_categories <- bmi_crosstab(data_id_last, col_labels)
+
+# check dates by organisation
+latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
+log$date_id_last <- count(data_id_last, organisation, date)
+
+# strata summaries ----------------------------------------------------
+# add "overall" variable as a buffer for stratification --
 data_id_daily <- data_id_daily |>
   mutate(overall = "overall")
 
-# set up dates: only observations within most recent 72h window
-latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
-recent_days <- seq.Date(from = latest_date - 3,
-                        length.out = 4, by = "day")
-data_id_current <- data_id_last |>
-  filter(date %in% recent_days)
-log$recent_days <- count(data_id_current, date)
-
+# bind latest data with full time series --
 # set date to the future to use as a flag that this is the most recent record
 #   (noting all group calculations include date so will not be double-counted)
-data_id_current <- data_id_current |>
+data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
 
-# bind latest data with full time series
-data_id_aggregate <- bind_rows(data_id_daily, data_id_current)
-# TODO just bind rows again to create organisation = "All".
+data_id_aggregate <- bind_rows(data_id_daily, data_id_last)
 # TODO create the "group" and "label" column (at end of data_agg script) here.
 
 # summarise by date, organisation, and group -----
@@ -133,7 +134,7 @@ suppressMessages({
     summary <- imap(group_cols,
                     ~ data_id_aggregate |>
                       summarise_strata(group_cols = .x)) |>
-      clean_aggregated_data(latest_date = latest_date)
+      clean_aggregated_data()
   })
 
 # save ----------------------

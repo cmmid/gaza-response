@@ -9,23 +9,21 @@ pacman::p_load(dplyr, tidyr, purrr, gtsummary)
 
 # tabulate summary statistics across cohort ----------------------------
 # Big Table 1 summary
-tabulate_baseline <- function(df, by_group="UNRWA", col_labels) {
-  df[[by_group]] <- fct_drop(df[[by_group]])
+tabulate_baseline <- function(df, by_group="organisation",col_labels) {
+  df$organisation <- fct_drop(df$organisation)
+  col_characteristics <- col_labels[!grepl("(bmi*)|(weight*)", names(col_labels))]
   characteristics <- df |>
     tbl_summary(
-      by = !!by_group,
-      include = names(col_labels),
-      label = col_labels
+      by = by_group,
+      include = names(col_characteristics),
+      label = col_characteristics
     ) |>
     add_overall()
   return(characteristics)
 }
 
-# BMI category crosstab per organisation and overall
+# BMI category crosstab per organisation
 bmi_crosstab <- function(df, col_labels) {
-  overall <- df |>
-    mutate(organisation = "Overall")
-  df <- bind_rows(df, overall)
   org_df <- split(df, df$organisation, drop = TRUE)
   bmi_tab <- org_df |>
     map(~tbl_cross(.x,
@@ -119,7 +117,6 @@ summarise_strata <- function(data, group_cols) {
 }
 
 clean_aggregated_data <- function(summary_list) {
-
   summary_df <- list_rbind(summary_list) |>
     ungroup()
 

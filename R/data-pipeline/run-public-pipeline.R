@@ -44,20 +44,15 @@ data_id_daily <- clean_data(base_data, fup_data)
 data_id_last <- data_id_daily |>
   filter(last_measurement)
 
-# set up dates: only observations within most recent 30d window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
-recent_days <- seq.Date(from = latest_date - 30,
-                        length.out = 31, by = "day")
-data_id_current <- data_id_last |>
-  filter(date %in% recent_days)
-log$recent_days <- count(data_id_current, date)
+log$latest_date <- latest_date
 
 # set date to the future to use as a flag that this is the most recent record
 #   (noting all group calculations include date so will not be double-counted)
-data_id_current <- data_id_current |>
+data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
 
-# bind latest data with full time series
+# bind latest observation with full time series
 data_id <- bind_rows(data_id_daily, data_id_current)
 
 # summarise by date, organisation, and group -----

@@ -100,12 +100,9 @@ We are actively seeking participants to support the project, and welcome new col
 
 ```{r filter_all, include=FALSE}
 data_filtered <- data$all
-# split data into current 72h summary, or full timeseries
-# Hi I am commenting this out because it doesn't match the data structure
-# This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
-# 72 hour summary and puts it into the spreadsheet as date = NA
+# split data into current summary, or full timeseries
 data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, date == max(date, na.rm=TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
+                             ~ filter(.x, is.na(date))) 
 data_filtered_timeseries <- map(data_filtered,
                              ~ filter(.x, !is.na(date)))
 
@@ -116,8 +113,7 @@ params <- generate_key_insights(data_filtered_current, strata = "Overall") # TOD
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-<!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
-commenting out, because there's a bug here somewhere at least -->
+- Data from **`r params$cohort_size` participants**
 - Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 
@@ -145,7 +141,7 @@ for(i in strata) {
 }
 ```
 </div>
-Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
+Summary of most recent data provided by participants. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
 ## Row
@@ -235,12 +231,9 @@ for(i in strata) {
 
 ```{r filter_stc, include=FALSE}
 data_filtered <- data$`Save the Children International`
-# split data into current 72h summary, or full timeseries
-# Hi I am commenting this out because it doesn't match the data structure
-# This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
-# 72 hour summary and puts it into the spreadsheet as date = NA
+# split data into current summary, or full timeseries
 data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, date == max(date, na.rm = TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
+                             ~ filter(.x, is.na(date))) 
 data_filtered_timeseries <- map(data_filtered,
                              ~ filter(.x, !is.na(date)))
 
@@ -251,8 +244,7 @@ params <- generate_key_insights(data_filtered_current, strata = "Overall") # TOD
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-<!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
-commenting out, because there's a bug here somewhere at least -->
+- Data from **`r params$cohort_size` participants**
 - Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 
@@ -280,7 +272,7 @@ for(i in strata) {
 }
 ```
 </div>
-Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
+Summary of most recent data provided by participants. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
 ## Row
@@ -370,12 +362,9 @@ for(i in strata) {
 
 ```{r filter_unrwa, include=FALSE}
 data_filtered <- data$UNRWA
-# split data into current 72h summary, or full timeseries
-# Hi I am commenting this out because it doesn't match the data structure
-# This code is written with the indication that a change was introduced to the data analysis pipeline that gets the
-# 72 hour summary and puts it into the spreadsheet as date = NA
+# split data into current summary, or full timeseries
 data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, date == max(date, na.rm=TRUE))) # Temporary fix bc the data from the pipeline isnt' matching atm
+                             ~ filter(.x, is.na(date))) 
 data_filtered_timeseries <- map(data_filtered,
                              ~ filter(.x, !is.na(date)))
 
@@ -386,8 +375,7 @@ params <- generate_key_insights(data_filtered_current, strata = "Overall") # TOD
 
 ::: {.card fill="false" title="Key insights"}
 - Data updated as of **`r params$latest_date`**
-<!--- Data from **`r params$cohort_size` participants** reporting over the last 72 hours
-commenting out, because there's a bug here somewhere at least -->
+- Data from **`r params$cohort_size` participants**
 - Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
 :::
 
@@ -415,7 +403,7 @@ for(i in strata) {
 }
 ```
 </div>
-Summary of most recent data provided by participants reporting over the last 3 days. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
+Summary of most recent data provided by participants. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
 :::
 
 ## Row

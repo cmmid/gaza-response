@@ -1,14 +1,43 @@
-# Functions to aggregate data at each intersection of stratifying variables
+# Functions to aggregate data : overall characteristics, and at each intersection of stratifying variables
 #
 # Example
 # base_data <- readRDS(here("data", "processed", "df_base.RDS"))
 # fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 # data_id <- clean_data(base_data, fup_data)
 
-pacman::p_load(dplyr, tidyr, purrr)
+pacman::p_load(dplyr, tidyr, purrr, gtsummary)
+
+# tabulate summary statistics across cohort ----------------------------
+# Big Table 1 summary
+tabulate_baseline <- function(df, by_group="organisation",col_labels) {
+  df$organisation <- fct_drop(df$organisation)
+  col_characteristics <- col_labels[!grepl("(bmi*)|(weight*)", names(col_labels))]
+  characteristics <- df |>
+    tbl_summary(
+      by = by_group,
+      include = names(col_characteristics),
+      label = col_characteristics
+    ) |>
+    add_overall()
+  return(characteristics)
+}
+
+# BMI category crosstab per organisation
+bmi_crosstab <- function(df, col_labels) {
+  org_df <- split(df, df$organisation, drop = TRUE)
+  bmi_tab <- org_df |>
+    map(~tbl_cross(.x,
+                   row = bmi_category_prewar,
+                   col = bmi_category_daily,
+                   percent = "row",
+                   missing = "no",
+                   digits = 0,
+                   label = col_labels))
+  return(bmi_tab)
+}
 
 # summarise by any given strata ------------------------------------
-summarise_ids <- function(data, group_cols) {
+summarise_strata <- function(data, group_cols) {
   #if(interactive()) print(group_cols)
 
   # summarise participants per group -----
@@ -24,8 +53,6 @@ summarise_ids <- function(data, group_cols) {
       cohort_obs_recorded = sum(!is.na(weight)),
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
-      # anomalous weight among recorded weights, denominator: cohort_obs_recorded
-      cohort_obs_anomalous = sum(weight_anomaly),
       .groups = "drop"
       )
 
@@ -41,9 +68,11 @@ summarise_ids <- function(data, group_cols) {
       across(c("weight",
                "weight_percent_change_firstmeasurement",
                "weight_percent_change_prewar",
+               "weight_percent_change_daily_rate",
                "bmi",
                "bmi_percent_change_firstmeasurement",
-               "bmi_percent_change_prewar"),
+               "bmi_percent_change_prewar",
+               "bmi_rate_change_daily"),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),
@@ -65,37 +94,29 @@ summarise_ids <- function(data, group_cols) {
     count(name = "value") |>
     mutate(stat = "count",
            variable = paste0(bmi_period, "_", bmi_category))
-
-    # get % per category compared to all those measured in that group
-  df_bmi_props <- df_bmi_count |>
-    left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_obs_recorded")))) |>
-    mutate(value = value / cohort_obs_recorded * 100,
-           stat = "percent",
-           variable = paste0(bmi_period, "_", bmi_category)) |>
-    ungroup() |>
-    bind_rows(df_bmi_count) |>
-    dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
-    # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
-    complete(nesting(!!!syms(group_cols)),
-             stat, variable,
-             fill = list(value = 0))
+  # |>
+  #   # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
+  #   complete(nesting(!!!syms(group_cols)),
+  #            stat, variable,
+  #            fill = list(value = 0))
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,
-                          df_bmi_props) |>
+                          df_bmi_count) |>
     left_join(df_participants,
               by = group_cols) |>
     ungroup() |>
     # create single grouping id
     mutate(group = paste(group_cols, collapse = "-"),
-            label = pmap_chr(across(all_of(setdiff(group_cols, c("date", "organisation")))), ~ paste(..., sep = ", ")))
+            label = pmap_chr(across(all_of(setdiff(group_cols,
+                                                   c("date",
+                                                     "organisation")))),
+                             ~ paste(..., sep = ", ")))
 
   return(df_summary)
 }
 
 clean_aggregated_data <- function(summary_list) {
-
   summary_df <- list_rbind(summary_list) |>
     ungroup()
 
@@ -107,14 +128,8 @@ clean_aggregated_data <- function(summary_list) {
                                          latest_date, NA)),
            date = replace(date, date > Sys.Date(), NA))
 
-
-  # drop "other" sex category
-  summary_df <- summary_df |>
-    filter(!grepl("other/prefer not to share", sex))
-
   # split into a list indexed by organisation
   org_split <- summary_df |>
-    mutate(organisation = if_else(is.na(organisation), "all", organisation)) |>
     mutate(group = str_replace_all(group, "date-organisation-", "")) |>
     mutate(group = str_replace_all(group, "date-", "")) |>
     dplyr::select(-overall)

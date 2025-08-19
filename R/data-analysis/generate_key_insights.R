@@ -27,9 +27,9 @@ generate_key_insights <- function(data, strata) {
       data$cohort_id_enrolled * 100)[1],
     # Observations
     observations = sum(distinct(filter(data, stat == "mean"))$cohort_obs_recorded),
-    median_change = round(filter(data, stat == "median")$value, 1),
-    upper_change = round(filter(data, stat == "q3")$value, 1),
-    lower_change = round(filter(data, stat == "q1")$value, 1)
+    median_change = round(filter(data, stat == "median")$value, 0),
+    upper_change = round(filter(data, stat == "q3")$value, 0),
+    lower_change = round(filter(data, stat == "q1")$value, 0)
   )
 
   return(params)

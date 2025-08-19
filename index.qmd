@@ -2,17 +2,18 @@
 title: Dashboard
 format: 
   dashboard:
+    orientation: rows
     scrolling: true
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
     css: "styles.css"
     fig-format: svg
-  #html:
-  #  page-layout: custom
-toc: true
+toc: false
 execute: 
   echo: false
+  freeze: auto
+  cache: false
 ---
 
 <!-- Setup, no output -->
@@ -20,17 +21,18 @@ execute:
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
-               purrr, readr, dplyr,
+               purrr, readr, dplyr, forcats, stringr,
                bslib, bsicons, 
-               ggplot2, plotly)
+               ggplot2, plotly, shiny, patchwork)
 
 ## Load data dictionary
-datadict <- readRDS("data/data_dictionary.RDS")
-
+datadict <- readRDS(here("data/data_dictionary.RDS"))
+## Load log
+log <- readRDS(here("data/public/log.RDS"))
 ## Load Data RDS
-data <- readRDS("data/public/summary-stats.RDS")
+data <- readRDS(here("data/public/summary-stats.RDS"))
 
-options <- c("sex", "agegroup", "governorate", "role")
+options <- c("sex", "agegroup", "governorate", "role", "children_feeding")
 # Generate all non-empty combinations
 strata <- unlist(
   #lapply(1:length(options), function(k) {
@@ -39,9 +41,10 @@ strata <- unlist(
   })
 )
 # Add 'Overall' as default/fallback
-strata <- c("Overall", strata)
+strata <- c("overall", strata)
 
 organisations <- names(data)[2:length(data)]
+meta_params <- list(c(organisation = c("all", organisations)))
 
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))
@@ -51,25 +54,35 @@ source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
-
 ```
 
 <!-- Global sidebar -->
 
 # {.sidebar}
 
-This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. 
+Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
 
-::: {.callout-caution title="Join us"}
-We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+::: {.callout-note collapse="true" title="About the project"}
+- In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
+- This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
+- All participation from those providing data, resources, support, and analysis, is entirely voluntary. 
+Many thanks to participating staff at: `r stringr::str_flatten_comma(log$orgs, last = " and ")`.
+- **Results are preliminary: please interpret with caution.**
+
+- Find out more [about the study](./about)
+
 :::
 
-<!-- Add data filter
- - todo: change to pandoc format
- - todo: fill options automatically or wrap in function
--->
+::: {.callout-caution collapse="true" title="Join us"}
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. We invite all humanitarian staff to participate.
+
+- [**Get involved**](./contact)
+:::
+
+::: {.callout-tip collapse="false" title="Stratify data"}
+<!-- Add data filter-->
 <div class="lshtm_widget_filter">
-  <p><strong>Stratify data by</strong></p>
   <div class="filter_content">
   <fieldset>
     <!--<legend>Stratify data by</legend>-->
@@ -87,404 +100,42 @@ We are actively seeking participants to support the project, and welcome new col
     </label><br>
     <label>
       <input type="checkbox" name="data_filter" value="role">
-      Role
+      Staff role
     </label>
+    <label>
+      <input type="checkbox" name="data_filter" value="children_feeding">
+      Dependent children
+    </label><br>
   </fieldset>
 </div>
 </div>
+:::
 
-<!-- Dashboard page 1 -->
-
+<!-- Dashboard pages -->
 
 # All Participants
 
-```{r filter_all, include=FALSE}
-data_filtered <- data$all
-# split data into current summary, or full timeseries
-data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, is.na(date))) 
-data_filtered_timeseries <- map(data_filtered,
-                             ~ filter(.x, !is.na(date)))
-
-params <- generate_key_insights(data_filtered_current, strata = "Overall") # TODO iterate over strata to match other chunks
+```{r}
+meta_params$organisation <- "all"
 ```
 
-## Row
-
-::: {.card fill="false" title="Key insights"}
-- Data updated as of **`r params$latest_date`**
-- Data from **`r params$cohort_size` participants**
-- Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
-:::
-
-## Row
-
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="current_summary">
-```{r plot-current-summary, results="asis"}
-#| fig-width: 8
-#| fig-asp: 0.4
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  
-  print(
-    plot_current_summary_stats(
-      data = data_filtered_current,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Summary of most recent data provided by participants. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
-:::
-
-## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trend_over_time">
-```{r plot-trends-weight, results="asis"}
-#| fig-width: 8
-#| fig-asp: 1.3
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
-  
-  print(
-   plot_time_series_statistics(
-      data = data_filtered_timeseries,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
-:::
-
-## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trends_bmi">
-```{r plot-trends-bmi, results="asis"}
-#| fig-width: 8
-#| fig-asp: 1
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
-  
-  print(
-     plot_bmicategory_proportions_time_series(
-     data = data_filtered_timeseries,
-     strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
-:::
-
-## Row
-
-::: {.card fill="false" .lshtm_widget title="Study participation"}
-<div class="lshtm_widget_identifier" id="participants_over_time">
-```{r plot-participants-over-time, results="asis"}
-#| fig-width: 7
-#| fig-asp: 0.5
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))
-  
-  print(
-    plot_participants_over_time(
-      data = data_filtered_timeseries,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
+{{< include _template-org.qmd >}}
 
 
+<!-- # UN Relief and Works Agency -->
 
-<!-- ------------------------ Organisation tabs --------------------------- -->
+<!-- ```{r} -->
+<!-- meta_params$organisation <- "UNRWA" -->
+<!-- ``` -->
 
-# Save the Children International
-
-```{r filter_stc, include=FALSE}
-data_filtered <- data$`Save the Children International`
-# split data into current summary, or full timeseries
-data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, is.na(date))) 
-data_filtered_timeseries <- map(data_filtered,
-                             ~ filter(.x, !is.na(date)))
-
-params <- generate_key_insights(data_filtered_current, strata = "Overall") # TODO iterate over strata to match other chunks
-```
-
-## Row
-
-::: {.card fill="false" title="Key insights"}
-- Data updated as of **`r params$latest_date`**
-- Data from **`r params$cohort_size` participants**
-- Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
-:::
-
-## Row
-
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="current_summary">
-```{r plot-current-summary-stc, results="asis"}
-#| fig-width: 8
-#| fig-asp: 0.4
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  
-  print(
-    plot_current_summary_stats(
-      data = data_filtered_current,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Summary of most recent data provided by participants. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
-:::
-
-## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trend_over_time">
-```{r plot-trends-weight-stc, results="asis"}
-#| fig-width: 8
-#| fig-asp: 1.3
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
-  
-  print(
-   plot_time_series_statistics(
-      data = data_filtered_timeseries,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
-:::
-
-## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trends_bmi">
-```{r plot-trends-bmi-stc, results="asis"}
-#| fig-width: 8
-#| fig-asp: 1
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
-  
-  print(
-     plot_bmicategory_proportions_time_series(
-     data = data_filtered_timeseries,
-     strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
-:::
-
-## Row
-
-::: {.card fill="false" .lshtm_widget title="Study participation"}
-<div class="lshtm_widget_identifier" id="participants_over_time">
-```{r plot-participants-over-time-stc, results="asis"}
-#| fig-width: 7
-#| fig-asp: 0.5
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))
-  
-  print(
-    plot_participants_over_time(
-      data = data_filtered_timeseries,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
+<!-- {{< include _template-org.qmd >}} -->
 
 
+<!-- # Save the Children International -->
 
+<!-- ```{r} -->
+<!-- meta_params$organisation <- "Save the Children International" -->
+<!-- ``` -->
 
-
-# UN Relief Workers Agency (UNRWA)
-
-```{r filter_unrwa, include=FALSE}
-data_filtered <- data$UNRWA
-# split data into current summary, or full timeseries
-data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, is.na(date))) 
-data_filtered_timeseries <- map(data_filtered,
-                             ~ filter(.x, !is.na(date)))
-
-params <- generate_key_insights(data_filtered_current, strata = "Overall") # TODO iterate over strata to match other chunks
-```
-
-## Row
-
-::: {.card fill="false" title="Key insights"}
-- Data updated as of **`r params$latest_date`**
-- Data from **`r params$cohort_size` participants**
-- Median change of **`r params$median_change`%** compared to pre-war weight (with a typical range of `r params$lower_change`% to `r params$upper_change`%)
-:::
-
-## Row
-
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="current_summary">
-```{r plot-current-summary-unrwa, results="asis"}
-#| fig-width: 8
-#| fig-asp: 0.4
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  
-  print(
-    plot_current_summary_stats(
-      data = data_filtered_current,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Summary of most recent data provided by participants. Current weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?), in addition to percent change in weight and BMI from pre-war levels (before October 8th 2023) are shown on the x-axes of the panels. Negative values of percent change indicate weight loss, i.e. '-20%' indicates an average loss of 20% of weight or BMI.
-:::
-
-## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_time_card .lshtm_widget title="Recent trends" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trend_over_time">
-```{r plot-trends-weight-unrwa, results="asis"}
-#| fig-width: 8
-#| fig-asp: 1.3
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trend_over_time_{i}'>"))
-  
-  print(
-   plot_time_series_statistics(
-      data = data_filtered_timeseries,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Trends over time in absolute values of weight in kilograms (kg) and [BMI (body mass index)](https://www.cdc.gov/bmi/adult-calculator/index.html?) and percent change in weight and BMI from pre-war levels (before October 8th 2023) since the beginning of the project. Solid and dashed lines indicate mean and median values respectively for each demographic stratification. The coloured shaded regions show the boundaries of the interquartile range.
-:::
-
-## Row
-<!-- Create div for trend over time -->
-::: {.card .trend_bmi_card .lshtm_widget title="% Participants by BMI category" fill = "false"}
-<!-- Can't set ID or data-widget value in this pandoc-card element, so need another nested div... -->
-<div class="lshtm_widget_identifier" id="trends_bmi">
-```{r plot-trends-bmi-unrwa, results="asis"}
-#| fig-width: 8
-#| fig-asp: 1
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='trends_bmi_{i}'>"))
-  
-  print(
-     plot_bmicategory_proportions_time_series(
-     data = data_filtered_timeseries,
-     strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-Trends over time of proportion of staff with BMI in different [WHO categories](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index): underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per day that fall in each category, divided by the total number of measurements that day.
-:::
-
-## Row
-
-::: {.card fill="false" .lshtm_widget title="Study participation"}
-<div class="lshtm_widget_identifier" id="participants_over_time">
-```{r plot-participants-over-time-unrwa, results="asis"}
-#| fig-width: 7
-#| fig-asp: 0.5
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_over_time_{i}'>"))
-  
-  print(
-    plot_participants_over_time(
-      data = data_filtered_timeseries,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-
-
+<!-- {{< include _template-org.qmd >}} -->
 

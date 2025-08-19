@@ -25,45 +25,25 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 
-plot_participants_over_time <- function(data, strata = "Overall"){
+plot_participants_over_time <- function(data, strata = "overall"){
 
-  # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
-    pivot_wider(names_from = stat, values_from = value) %>%
-    dplyr::filter(!is.na(mean)) |>
-    filter(variable == "weight") |>
-    full_join(expand.grid(list(date = as.Date(min(data[[tolower(strata)]]$date) - 1),
-                               cohort_n = 0,
-                               label = unique(data[[tolower(strata)]]$label))))
-
-  if (strata == "Overall") {
-    # Generate plot
-    fig <- data_filter %>%
-      ggplot() +
-      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
-                position = "stack", alpha = 0.8, show.legend = F) +
-      labs(x = "Date",
-           y = "Participants",
-           fill = "Demographics") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank())
-  }
-
-  else {
-    fig <- data_filter %>%
-      ggplot() +
-      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
-                position = "stack", alpha = 0.8) +
-      labs(x = "Date",
-           y = "Participants",
-           fill = "Demographics") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank())
-  }
-
-
-  return(fig)
-
+  plot_participants <- data[[tolower(strata)]] |>
+    filter(!is.na(date)) |>
+    filter(variable == "weight" & stat == "median") |>
+    dplyr::select(-value) |>
+    mutate(cohort_id_followup = cohort_obs_recorded - cohort_id_new) |>
+    group_by(date, organisation, group, label) |>
+    pivot_longer(cols = c("cohort_obs_missing",
+                          "cohort_id_new",
+                          "cohort_id_followup")) |>
+    mutate(Participant = fct_rev(fct_recode(name,
+                                            "Lost to follow up"="cohort_obs_missing",
+                                            "New"="cohort_id_new",
+                                            "Repeated"="cohort_id_followup"))) |>
+    ggplot(aes(x = date)) +
+    geom_col(aes(y = value,
+                 fill = Participant, alpha = Participant)) +
+    labs(x = NULL, y = "Participant data") +
+    facet_wrap(~label, scales="free_y")
+  return(plot_participants)
 }

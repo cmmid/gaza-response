@@ -1,14 +1,45 @@
-# Functions to aggregate data at each intersection of stratifying variables
+# Functions to aggregate data : overall characteristics, and at each intersection of stratifying variables
 #
 # Example
 # base_data <- readRDS(here("data", "processed", "df_base.RDS"))
 # fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 # data_id <- clean_data(base_data, fup_data)
 
-pacman::p_load(dplyr, tidyr, purrr)
+pacman::p_load(dplyr, tidyr, purrr, gtsummary)
+
+# tabulate summary statistics across cohort ----------------------------
+# Big Table 1 summary
+tabulate_baseline <- function(df, by_group="UNRWA", col_labels) {
+  df[[by_group]] <- fct_drop(df[[by_group]])
+  characteristics <- df |>
+    tbl_summary(
+      by = !!by_group,
+      include = names(col_labels),
+      label = col_labels
+    ) |>
+    add_overall()
+  return(characteristics)
+}
+
+# BMI category crosstab per organisation and overall
+bmi_crosstab <- function(df, col_labels) {
+  overall <- df |>
+    mutate(organisation = "Overall")
+  df <- bind_rows(df, overall)
+  org_df <- split(df, df$organisation, drop = TRUE)
+  bmi_tab <- org_df |>
+    map(~tbl_cross(.x,
+                   row = bmi_category_prewar,
+                   col = bmi_category_daily,
+                   percent = "row",
+                   missing = "no",
+                   digits = 0,
+                   label = col_labels))
+  return(bmi_tab)
+}
 
 # summarise by any given strata ------------------------------------
-summarise_ids <- function(data, group_cols) {
+summarise_strata <- function(data, group_cols) {
   #if(interactive()) print(group_cols)
 
   # summarise participants per group -----
@@ -24,8 +55,6 @@ summarise_ids <- function(data, group_cols) {
       cohort_obs_recorded = sum(!is.na(weight)),
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
-      # anomalous weight among recorded weights, denominator: cohort_obs_recorded
-      cohort_obs_anomalous = sum(weight_anomaly),
       .groups = "drop"
       )
 
@@ -41,9 +70,11 @@ summarise_ids <- function(data, group_cols) {
       across(c("weight",
                "weight_percent_change_firstmeasurement",
                "weight_percent_change_prewar",
+               "weight_percent_change_daily_rate",
                "bmi",
                "bmi_percent_change_firstmeasurement",
-               "bmi_percent_change_prewar"),
+               "bmi_percent_change_prewar",
+               "bmi_rate_change_daily"),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),
@@ -89,7 +120,10 @@ summarise_ids <- function(data, group_cols) {
     ungroup() |>
     # create single grouping id
     mutate(group = paste(group_cols, collapse = "-"),
-            label = pmap_chr(across(all_of(setdiff(group_cols, c("date", "organisation")))), ~ paste(..., sep = ", ")))
+            label = pmap_chr(across(all_of(setdiff(group_cols,
+                                                   c("date",
+                                                     "organisation")))),
+                             ~ paste(..., sep = ", ")))
 
   return(df_summary)
 }
@@ -107,14 +141,8 @@ clean_aggregated_data <- function(summary_list, latest_date) {
                                          latest_date, NA)),
            date = replace(date, date > Sys.Date(), NA))
 
-
-  # drop "other" sex category
-  summary_df <- summary_df |>
-    filter(!grepl("other/prefer not to share", sex))
-
   # split into a list indexed by organisation
   org_split <- summary_df |>
-    mutate(organisation = if_else(is.na(organisation), "all", organisation)) |>
     mutate(group = str_replace_all(group, "date-organisation-", "")) |>
     mutate(group = str_replace_all(group, "date-", "")) |>
     dplyr::select(-overall)

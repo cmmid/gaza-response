@@ -33,15 +33,17 @@ params$cohort_ever_enrolled <- max(data_filtered$overall$cohort_id_enrolled,
                                    na.rm = TRUE)
 ```
 
-## ROW
+## ROW {.tabset}
 
-###
+### Key insights
 
-::: {.card .current_summary_card .lshtm_widget title="Key insights" fill="false"}
+::: {.card}
 - Data updated as of **`r params$latest_date`**
 - Recent data from **`r params$cohort_size` participants** (latest 72 hours), with `r params$cohort_ever_enrolled` ever enrolled in the study
 - From **October 2023 to now**, recent participants experienced **`r params$median_change`% (`r params$lower_change`% to `r params$upper_change`%) weight change** (median, 25-75% range)
+:::
 
+::: {.card .current_summary_card .lshtm_widget title="Key insights" fill="false"}
 <div class="lshtm_widget_identifier" id="current_summary">
 ```{r, results="asis"}
 #| fig-align: center
@@ -59,21 +61,24 @@ for(i in strata) {
 }
 ```
 </div>
-
 ::: {.callout-note collapse="true" title="Data" appearance="simple"}
 Median and 25-75% range of participant weight in kilograms (kg) and [Body Mass Index](https://www.cdc.gov/bmi/adult-calculator/index.html?), with % change from pre-October 2023. Negative % indicate weight loss.
 :::
 :::
 
+```{r}
+#| title: "Participant BMI"
+log$tab_participants$bmi_crosstab
+```
+
 
 ### Participation
 
-::: {.card .participants_card .lshtm_widget title="Participation" fill="false"}
+::: {.card .participants_card .lshtm_widget title="Participants" fill="false"}
 <div class="lshtm_widget_identifier" id="participants">
 ```{r, results="asis"}
 #| fig-align: center
 for(i in strata) {
-  # show the first stratum (overall) by default
   visible_class = ifelse(i == strata[1], "visible", "")
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_{i}'>"))
   print(
@@ -90,10 +95,36 @@ for(i in strata) {
 Daily data availability, showing:
 - Measurements contributed by newly recruited participants ("New")
 - Measurements from previously enrolled participants ("Repeated")
-- Previously enrolled participants without new data ("lost to follow up")
+- Previously enrolled participants without recent^[Last 72 hours] data ("Lost to follow up")
 :::
 :::
 
+```{r}
+#| title: "Characteristics"
+knitr::knit_print(log$log_tab)
+```
+
+```{r}
+#| title: "Data quality"
+log$factor_count |> 
+  mutate(p = round(p*100, digits=0)) |> 
+  filter(f %in% c("Missing", "anomaly")) |> 
+  mutate(f = stringr::str_to_sentence(f),
+         variable = stringr::str_to_sentence(variable),
+         variable = case_when(variable == "Agegroup"~ "Age",
+                              variable == "Children_feeding"~"Dependent children",
+                              variable == "Bmi_category_daily"~"BMI category, current",
+                              variable == "Bmi_category_prewar"~
+                                "BMI category, autumn 2023",
+                              variable == "Weight_anomaly"~"Weight",
+                              TRUE~variable)) |> 
+  rename("Group" = variable, 
+         "Participant record status" = f, 
+         "Count" = n, 
+         "% all records" = p) |> 
+  kableExtra::kable() |> 
+  kableExtra::add_footnote("Valid ranges: weight, 30-180kg; BMI, 10-60; age, 16-99 years; dependent children, 0-20")
+```
 
 ## COL {.tabset}
 

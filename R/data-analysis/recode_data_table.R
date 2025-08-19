@@ -51,11 +51,16 @@ recode_data_table <- function(dataframe){
       variable == "bmi" ~ "BMI",
       variable == "bmi_percent_change_firstmeasurement" ~ "% change in BMI from first measurement",
       variable == "bmi_percent_change_prewar" ~ "% change in BMI since October 2023",
-      variable == "bmi_category_NA" ~ "NA",
-      variable == "bmi_category_normal" ~ "Normal",
-      variable == "bmi_category_obese" ~ "Obese",
-      variable == "bmi_category_underweight" ~ "Underweight",
-      variable == "bmi_category_overweight" ~ "Overweight"
+      #
+      grepl("_NA", variable) ~ NA,
+      grepl("normal", variable) ~ "Normal",
+      grepl("obese", variable) ~ "Obese",
+      grepl("underweight", variable) ~ "Underweight",
+      grepl("overweight", variable) ~ "Overweight",
+      #
+      variable == "bmi_rate_change_daily" ~ "Daily rate of change in BMI",
+      variable == "weight_percent_change_daily_rate" ~ "Daily rate of % weight change"
+      .default = variable
     ))
 
   factored_df <- datarecoded_df |>

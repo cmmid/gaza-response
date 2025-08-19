@@ -53,7 +53,7 @@ data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
 
 # bind latest observation with full time series
-data_id <- bind_rows(data_id_daily, data_id_current)
+data_id <- bind_rows(data_id_daily, data_id_last)
 
 # summarise by date, organisation, and group -----
 # Create 2 levels of stratification
@@ -70,7 +70,7 @@ suppressMessages({
     summary <- imap(group_cols,
                     ~ data_id |>
                       summarise_ids(group_cols = .x)) |>
-      clean_aggregated_data(latest_date = latest_date)
+      clean_aggregated_data()
   })
 
 # save ----------------------

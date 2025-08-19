@@ -52,7 +52,7 @@ summarise_strata <- function(data, group_cols) {
       # cohort new joiners ---
       cohort_id_new = sum(date == date_first_measurement),
       # cohort in follow up
-      cohort_in_followup = sum(record_is_followup),
+      cohort_in_followup = sum(participant_in_followup),
       # daily observations ---
       # number of recorded weights, denominator: cohort_n
       cohort_obs_recorded = sum(participant_recorded),

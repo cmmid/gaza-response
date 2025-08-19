@@ -77,8 +77,7 @@ clean_data <- function(base_data, fup_data) {
       participant_cumulative_days_enrolled = 1 + as.integer(
                     difftime(date, date_first_measurement, units = "days")),
       participant_cumulative_days_recorded = cumsum(!is.na(weight)),
-      record_is_followup = participant_cumulative_days_recorded > 1
-                  ) |>
+      participant_in_followup = sum(participant_recorded) > 1) |>
     # exclude participants with no weight measurement
     filter(participant_cumulative_days_recorded > 0) |>
     # add latest measure as separate variable

@@ -7,7 +7,7 @@ get_column_labels <- function() {
                      "role" = "Role",
                      "governorate" = "Governorate",
                      #
-                     "record_is_followup" = "Participants in follow-up",
+                     "participant_in_followup" = "Participant in follow-up",
                      #
                      "bmi_category_daily" = "Current BMI",
                      "bmi_category_prewar" = "Pre-war BMI",

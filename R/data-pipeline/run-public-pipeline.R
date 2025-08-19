@@ -37,6 +37,7 @@ log$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
 
 # add basic stats to log for checking
 log$n_participants_baseline <- length(unique(base_data$id))
+log$n_participants_followup <- length(unique(fup_data$id))
 log$max_date <- max(fup_data$date)
 log$orgs <- unique(base_data$organisation)
 
@@ -106,10 +107,10 @@ log$tab_baseline <- data_id_last |>
 # tab by follow up
 log$tab_followup <- data_id_last |>
   filter(!grepl("Overall", organisation)) |>
-  mutate(record_is_followup = if_else(record_is_followup,
+  mutate(participant_in_followup = if_else(participant_in_followup,
                                       "In follow up",
                                       "Baseline only")) |>
-  tabulate_baseline(by_group = "record_is_followup",
+  tabulate_baseline(by_group = "participant_in_followup",
                     col_labels = col_labels)
 
 # BMI categories
@@ -122,7 +123,7 @@ data_id_aggregate <- bind_rows(data_id_daily, data_id_last)
 
 # summarise by date, organisation, and group -----
 # Create 2 levels of stratification
-group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
+group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex", "participant_in_followup")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
 group_cols <- append(group_cols, as.list(c("overall", "agegroup",
                                            "children_feeding", "governorate",

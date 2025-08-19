@@ -1,7 +1,7 @@
 # Run the full data processing pipeline on a local server hosting raw data, ready to be pushed to public Github
 
 # Set up -------
-pacman::p_load(here, purrr, dplyr)
+pacman::p_load(here, purrr, dplyr, gtsummary)
 #do not show summarise message
 options(dplyr.summarise.inform = FALSE)
 
@@ -16,14 +16,17 @@ base <- sprintf("%s/", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/ga
 
 # Load functions -----
 pipeline_functions <- paste0(base,
-                             c("R/data-pipeline/1-data_cleaning.R",
-                               "R/data-pipeline/2-data_aggregation.R"))
+                             c("R/data-pipeline/0-data-dictionary.R",
+                               "R/data-pipeline/1-data_cleaning.R",
+                               "R/data-pipeline/2-data_aggregation.R",
+                               "R/data-pipeline/helpers.R"))
 walk(pipeline_functions, source)
 
 # Load data stored locally -----
 base_data <- readRDS(paste0(base, "data/processed/df_base.RDS"))
 fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
 data_dictionary <- readRDS(paste0(base, "data/data_dictionary.RDS"))
+col_labels <- get_column_labels()
 
 # log columns are correct
 expected_base <- c("id", "date", "organisation", "age", "sex", "governorate",
@@ -54,11 +57,8 @@ suppressWarnings(
   }
 )
 # Data quality ------------------------------------------------------------
-log$factor_count <- data_id_daily |>
-  dplyr::select(where(is.factor)) |>
-  map_dfr(~ fct_count(.x, prop = TRUE) |>
-            add_row(f = "Missing", n = sum(is.na(.x))),
-          .id = "variable")
+# count levels of each factor
+log$factor_count <- count_factors(data_id_daily)
 
 # Replace anomaly measurements as missing
 data_id_daily <- data_id_daily |>
@@ -68,16 +68,35 @@ data_id_daily <- data_id_daily |>
 # Replace all anomaly values as missing
 data_id_daily <- data_id_daily |>
   mutate(across(where(is.factor),
-                ~ if_else(.x == "anomaly", NA_character_, .x)))
+                ~ if_else(.x == "anomaly", NA, .x)))
+
+# Drop empty levels of organisation
+data_id_daily <- data_id_daily |>
+  mutate(organisation = fct_drop(organisation))
 
 # Summaries ------------------------------------------------------------
-# add "overall" variable for total-cohort summaries
-data_id_daily <- data_id_daily |>
-  mutate(overall = "overall")
-
-# filter to last recorded observation for all participants
+# create a df with only last recorded observation by ID
 data_id_last <- data_id_daily |>
   filter(last_measurement)
+
+# tabulate
+log$tab_baseline <- tabulate_baseline(data_id_last,
+                                      by_group = "organisation",
+                                      col_labels = !grepl(
+                                        "bmi_category"))
+log$tab_bmi <- bmi_crosstab(data_id_last, col_labels)
+log$tab_followup <- tabulate_baseine()
+
+
+# strata summaries ----------------------------------------------------
+# add "Overall" organisation
+data_id_daily <- data_id_daily |>
+  mutate(organisation = "Overall") |>
+  bind_rows(data_id_daily)
+
+# add "overall" variable as a buffer
+data_id_daily <- data_id_daily |>
+  mutate(overall = "overall")
 
 # set up dates: only observations within most recent 72h window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
@@ -113,7 +132,7 @@ group_cols <- append(map(group_cols,
 suppressMessages({
     summary <- imap(group_cols,
                     ~ data_id_aggregate |>
-                      summarise_ids(group_cols = .x)) |>
+                      summarise_strata(group_cols = .x)) |>
       clean_aggregated_data(latest_date = latest_date)
   })
 

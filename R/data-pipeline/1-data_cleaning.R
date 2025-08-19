@@ -131,12 +131,12 @@ clean_data <- function(base_data, fup_data) {
                   # daily rate of change among follow up
                   bmi_rate_change_daily = (bmi - previous_bmi) /
                     days_since_previousmeasurement,
-                  weight_percent_change_daily_rate = weight_percent_change_previousmeasurement /
+                  weight_rate_change_daily = (weight - previous_weight) /
                     days_since_previousmeasurement) |>
     dplyr::select(id, date,
                   days_since_previousmeasurement,
                   weight_percent_change_previousmeasurement,
-                  weight_percent_change_daily_rate,
+                  weight_rate_change_daily,
                   bmi_percent_change_previousmeasurement,
                   bmi_rate_change_daily) |>
     ungroup()
@@ -154,7 +154,7 @@ clean_data <- function(base_data, fup_data) {
          weight < 30 ~ "anomaly",
          weight > 180 ~ "anomaly",
          !between(bmi, 10, 60) ~ "anomaly",
-         weight_percent_change_daily_rate >= 10 ~ "anomaly",
+         weight_rate_change_daily >= 10 ~ "anomaly",
          TRUE ~ "valid")
      )
    )

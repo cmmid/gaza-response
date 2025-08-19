@@ -32,18 +32,24 @@ pacman::p_load(
 recode_data_table <- function(dataframe){
   bmi_levels <- c("Underweight","Normal","Overweight","Obese", "NA")
   variable_levels <- c( "Weight, kg",
-                        "Change in weight since October 2023, kg",
-                        "% change in weight from first measurement",
-                        "% change in weight since October 2023",
-                        "Daily rate of % weight change",
+                        "Weight change since start of war, kg",
+                        "% change in weight since enrollment",
+                        "% change in weight  start of war",
+                        "Weight daily rate of change while enrolled",
                         "BMI",
-                        "Change in BMI since October 2023",
-                        "% change in BMI from first measurement",
-                        "% change in BMI since October 2023",
-                        "Daily rate of change in BMI",
+                        "BMI change since start of war",
+                        "BMI % change since enrollment",
+                        "BMI % change since start of war",
+                        "BMI daily rate of change while enrolled",
                         #
                         paste0("bmi_category_daily_",bmi_levels),
-                        paste0("bmi_category_prewar_",bmi_levels)
+                        paste0("bmi_category_prewar_",bmi_levels),
+                        #
+                        "cohort_obs_missing" = "Missing records",
+                        "cohort_id_enrolled" = "Number of participants",
+                        "organisation" = "Organisation",
+                        "group" = "Demographic",
+                        "label" = "Stratum"
   )
 
   # Filter data for the selected option
@@ -51,15 +57,15 @@ recode_data_table <- function(dataframe){
     mutate(variable = case_when(
       variable == "weight" ~ "Weight, kg",
       variable == "weight_unit_change_prewar" ~ "Change in weight since October 2023, kg",
-      variable == "weight_percent_change_firstmeasurement" ~ "% change in weight from first measurement",
+      variable == "weight_percent_change_firstmeasurement" ~ "% change in weight since enrollment",
       variable == "weight_percent_change_prewar" ~ "% change in weight since October 2023",
       variable == "bmi" ~ "BMI",
       variable == "bmi_unit_change_prewar" ~ "Change in BMI since October 2023",
-      variable == "bmi_percent_change_firstmeasurement" ~ "% change in BMI from first measurement",
+      variable == "bmi_percent_change_firstmeasurement" ~ "% change in BMI since enrollment",
       variable == "bmi_percent_change_prewar" ~ "% change in BMI since October 2023",
       #
-      variable == "bmi_rate_change_daily" ~ "Daily rate of change in BMI",
-      variable == "weight_percent_change_daily_rate" ~ "Daily rate of % weight change",
+      variable == "bmi_rate_change_daily" ~ "Daily rate of change in BMI while enrolled",
+      variable == "weight_rate_change_daily" ~ "Daily rate of % weight change while enrolled",
       .default = variable
     ))
 

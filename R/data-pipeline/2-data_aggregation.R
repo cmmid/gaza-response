@@ -5,6 +5,9 @@
 # fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
 # data_id <- clean_data(base_data, fup_data)
 
+#TODO tidy data: produce dataframe with
+# date - group - N - timepoint - indicator (cohort, bmi, weight) - stat - value
+
 pacman::p_load(dplyr, tidyr, purrr, gtsummary)
 
 # tabulate summary statistics across cohort ----------------------------
@@ -48,9 +51,11 @@ summarise_strata <- function(data, group_cols) {
       cohort_id_enrolled = length(unique(id)),
       # cohort new joiners ---
       cohort_id_new = sum(date == date_first_measurement),
+      # cohort in follow up
+      cohort_in_followup = sum(record_is_followup),
       # daily observations ---
       # number of recorded weights, denominator: cohort_n
-      cohort_obs_recorded = sum(!is.na(weight)),
+      cohort_obs_recorded = sum(participant_recorded),
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
       .groups = "drop"
@@ -69,12 +74,16 @@ summarise_strata <- function(data, group_cols) {
                "weight_unit_change_prewar",
                "weight_percent_change_firstmeasurement",
                "weight_percent_change_prewar",
-               "weight_percent_change_daily_rate",
+               "weight_rate_change_daily",
+               #
                "bmi",
                "bmi_unit_change_prewar",
                "bmi_percent_change_firstmeasurement",
                "bmi_percent_change_prewar",
-               "bmi_rate_change_daily"),
+               "bmi_rate_change_daily",
+               #
+               "participant_cumulative_days_enrolled",
+               "participant_cumulative_days_recorded"),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),

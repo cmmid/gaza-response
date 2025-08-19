@@ -75,45 +75,48 @@ data_id_daily <- data_id_daily |>
   mutate(organisation = fct_drop(organisation))
 
 # Pre-processing for summaries ---------------------------------------------
+# add "Overall" organisation
+data_id_daily <- data_id_daily |>
+  mutate(organisation = "Overall") |>
+  bind_rows(data_id_daily)
+
+# add "overall" variable as a buffer for stratification --
+data_id_daily <- data_id_daily |>
+  mutate(overall = "overall")
+
+# Get only last available record -----------------------------------------
 # create a df with only last recorded observation by ID
 data_id_last <- data_id_daily |>
   filter(last_measurement)
 
-# Summaries ------------------------------------------------------------
+# check last record dates by organisation
+latest_date <- as.Date(max(data_id_last$date, na.rm = TRUE))
+log$date_id_last <- count(data_id_last, organisation, date)
+# set date of last record to the future to use as a flag that this is the most recent record
+#   (noting all group calculations include date so will not be double-counted)
+data_id_last <- data_id_last |>
+  mutate(date = Sys.Date() + 3650)
+
+# table summaries -----------------------------------------------------
 # tabulate all participants by organisation
 log$tab_baseline <- data_id_last |>
+  filter(!grepl("Overall", organisation)) |>
   tabulate_baseline(by_group = "organisation",
                     col_labels = col_labels)
 # tab by follow up
 log$tab_followup <- data_id_last |>
+  filter(!grepl("Overall", organisation)) |>
   mutate(record_is_followup = if_else(record_is_followup,
                                       "In follow up",
                                       "Baseline only")) |>
   tabulate_baseline(by_group = "record_is_followup",
                     col_labels = col_labels)
 
-# add "Overall" organisation
-data_id_daily <- data_id_daily |>
-  mutate(organisation = "Overall") |>
-  bind_rows(data_id_daily)
-
+# BMI categories
 log$tab_bmi_categories <- bmi_crosstab(data_id_last, col_labels)
 
-# check dates by organisation
-latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
-log$date_id_last <- count(data_id_last, organisation, date)
-
 # strata summaries ----------------------------------------------------
-# add "overall" variable as a buffer for stratification --
-data_id_daily <- data_id_daily |>
-  mutate(overall = "overall")
-
-# bind latest data with full time series --
-# set date to the future to use as a flag that this is the most recent record
-#   (noting all group calculations include date so will not be double-counted)
-data_id_last <- data_id_last |>
-  mutate(date = Sys.Date() + 3650)
-
+# bind last available record with full time series --
 data_id_aggregate <- bind_rows(data_id_daily, data_id_last)
 # TODO create the "group" and "label" column (at end of data_agg script) here.
 

@@ -59,7 +59,7 @@ recode_data_table <- function(dataframe){
       grepl("overweight", variable) ~ "Overweight",
       #
       variable == "bmi_rate_change_daily" ~ "Daily rate of change in BMI",
-      variable == "weight_percent_change_daily_rate" ~ "Daily rate of % weight change"
+      variable == "weight_percent_change_daily_rate" ~ "Daily rate of % weight change",
       .default = variable
     ))
 

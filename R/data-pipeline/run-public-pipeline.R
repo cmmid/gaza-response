@@ -44,10 +44,10 @@ data_id_daily <- clean_data(base_data, fup_data)
 data_id_last <- data_id_daily |>
   filter(last_measurement)
 
-# set up dates: only observations within most recent 72h window
+# set up dates: only observations within most recent 30d window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
-recent_days <- seq.Date(from = latest_date - 3,
-                        length.out = 4, by = "day")
+recent_days <- seq.Date(from = latest_date - 30,
+                        length.out = 31, by = "day")
 data_id_current <- data_id_last |>
   filter(date %in% recent_days)
 log$recent_days <- count(data_id_current, date)

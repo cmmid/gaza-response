@@ -31,16 +31,16 @@ pacman::p_load(
 
 recode_data_table <- function(dataframe){
   bmi_levels <- c("Underweight","Normal","Overweight","Obese", "NA")
-  variable_levels <- c( "Weight, kg",
-                        "Weight change since start of war, kg",
-                        "% change in weight since enrollment",
-                        "% change in weight  start of war",
-                        "Weight daily rate of change while enrolled",
+  variable_levels <- c( "Weight (kg)",
+                        "Weight change since start of war (kg)",
+                        "Weight change since start of war (%)",
+                        "Weight change since enrollment (%)",
+                        "Weight rate of change while enrolled (kg/day)",
                         "BMI",
                         "BMI change since start of war",
-                        "BMI % change since enrollment",
-                        "BMI % change since start of war",
-                        "BMI daily rate of change while enrolled",
+                        "BMI change since start of war (%)",
+                        "BMI change since enrollment (%)",
+                        "BMI rate of change while enrolled (units/day)",
                         #
                         paste0("bmi_category_daily_",bmi_levels),
                         paste0("bmi_category_prewar_",bmi_levels),
@@ -56,16 +56,15 @@ recode_data_table <- function(dataframe){
   datarecoded_df <- dataframe |>
     mutate(variable = case_when(
       variable == "weight" ~ "Weight, kg",
-      variable == "weight_unit_change_prewar" ~ "Change in weight since October 2023, kg",
-      variable == "weight_percent_change_firstmeasurement" ~ "% change in weight since enrollment",
-      variable == "weight_percent_change_prewar" ~ "% change in weight since October 2023",
+      variable == "weight_unit_change_prewar" ~ "Weight change since start of war (kg)",
+      variable == "weight_percent_change_prewar" ~ "Weight change since start of war (%)",
+      variable == "weight_percent_change_firstmeasurement" ~ "Weight change since enrollment (%)",
+      variable == "weight_rate_change_daily" ~ "Weight rate of change while enrolled (kg/day)",
       variable == "bmi" ~ "BMI",
-      variable == "bmi_unit_change_prewar" ~ "Change in BMI since October 2023",
-      variable == "bmi_percent_change_firstmeasurement" ~ "% change in BMI since enrollment",
-      variable == "bmi_percent_change_prewar" ~ "% change in BMI since October 2023",
-      #
-      variable == "bmi_rate_change_daily" ~ "Daily rate of change in BMI while enrolled",
-      variable == "weight_rate_change_daily" ~ "Daily rate of % weight change while enrolled",
+      variable == "bmi_unit_change_prewar" ~ "BMI change since start of war (kg)",
+      variable == "bmi_percent_change_prewar" ~ "BMI change since start of war (%)",
+      variable == "bmi_percent_change_firstmeasurement" ~ "BMI change since enrollment (%)",
+      variable == "bmi_rate_change_daily" ~ "BMI rate of change while enrolled (units/day)",
       .default = variable
     ))
 

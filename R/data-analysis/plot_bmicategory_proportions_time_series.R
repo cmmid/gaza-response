@@ -31,12 +31,9 @@ pacman::p_load(
 
 plot_bmicategory_proportions_time_series <- function(data,
                                                      strata = "overall"){
-
-  bmi_categories <- c("underweight", "normal", "overweight", "obese")
-  names(bmi_categories) <- stringr::str_to_title(bmi_categories)
-
   # Filter data for the selected option
-  data_bmi <- data[[tolower(strata)]] |>
+  data <- data[[tolower(strata)]]
+  data_bmi <- data |>
     # check to exclude dummy date ("latest")
     filter(date <= Sys.Date() &
              !is.na(date)) |>
@@ -44,10 +41,6 @@ plot_bmicategory_proportions_time_series <- function(data,
     filter(grepl("bmi_category_daily", variable)) |>
     mutate(bmi_category = str_remove_all(variable,
                                          "bmi_category_daily_"),
-           bmi_category = na_if(bmi_category, "NA"),
-           bmi_category = ordered(bmi_category,
-                                  levels = bmi_categories,
-                                  labels = names(bmi_categories)),
            # add week
            week = lubridate::floor_date(date, "week")
            ) |>

@@ -53,7 +53,8 @@ plot_bmicategory_proportions_time_series <- function(data, strata = "overall"){
 
 
   if (strata == "overall") {
-    fig <- fig + theme(strip.text.x = element_blank())
+    fig <- fig + theme(strip.text.x = element_blank()) +
+      theme(lshtm_theme())
   }
   return(fig)
 

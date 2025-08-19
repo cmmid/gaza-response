@@ -70,7 +70,8 @@ plot_bmicategory_proportions_time_series <- function(data,
                       values = lshtm_palette$bmi_categories,
                       aesthetics = c("col", "fill")) +
     labs(x = NULL, y = "Weekly participant measurements") +
-    facet_wrap(~ label, scales = "free_y")
+    facet_wrap(~ label, scales = "free_y")+
+    theme(lshtm_theme())
 
   return(plot)
 }

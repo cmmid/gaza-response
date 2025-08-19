@@ -31,51 +31,33 @@ plot_time_series_statistics <- function(data, summary_variable,
                                         strata = "overall"){
 
   # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
+  data_filter <- data[[tolower(strata)]]
+
+  data_filter <- data_filter |>
     filter(variable == summary_variable) |>
-    # filter out the duplicate "current" records
+    # filter out any duplicate "current" records or "Other" values
     dplyr::filter(date <= Sys.Date()) %>%
     pivot_wider(names_from = stat, values_from = value) %>%
-    filter(!grepl("other|prefer no", label))
+    filter(!grepl("other|prefer no", label)) |>
+    filter(!is.na(median))
 
   data_filter <- recode_data_table(data_filter)
 
-  if (tolower(strata) == "overall") {
-
-    fig <- data_filter |>
-      ggplot(aes(x = date)) +
-      geom_linerange(aes(ymin = q1, ymax = q3),
-                     color = "#01454f",
-                     alpha = 0.3,
-                     linewidth = 2) +
-      geom_point(aes(y = median),
-                 color = "#01454f",
-                 alpha = 0.8,
-                 size = 3) +
-      facet_wrap(~label, scales = "free_y") +
-      labs(x = NULL, y = NULL,
-           subtitle = data_filter$variable[1]) +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            legend.spacing.y = unit(2, "pt"),
-            legend.margin = margin(2, 2, 2, 2))
-
-  } else {
     fig <- data_filter |>
       ggplot(aes(x = date)) +
       geom_linerange(aes(ymin = q1, ymax = q3, color = label),
+                     position = position_dodge(1),
                      alpha = 0.3,
                      linewidth = 2) +
       geom_point(aes(y = median, color = label),
+                 position = position_dodge(1),
                  alpha = 0.8,
                  size = 2) +
       facet_wrap(~label,
                  scales = "free_y") +
       labs(x = NULL, y = NULL,
-           subtitle = data_filter$variable[1]) +
-      theme(legend.spacing.y = unit(2, "pt"),
-            legend.margin    = margin(2, 2, 2, 2))
-
-  }
+           fill = "Strata", colour = "Strata") +
+      theme(lshtm_theme())
 
   return(fig)
 

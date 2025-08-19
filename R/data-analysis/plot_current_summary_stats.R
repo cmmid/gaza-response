@@ -5,7 +5,10 @@
 #...............................................................................
 ## ------ R SCRIPT TO GENERATE PLOTS OF CURRENT SUMMARY STATISTICS ----- ##
 #...............................................................................
-
+# Protocol  for analysis:
+# - [x] Mean, median and inter-quartile range absolute and percent reduction in weight and body mass index (BMI) from pre-war baseline.
+# - [ ] Proportion of staff with BMI in different WHO categories: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥
+# - [ ] Trends in the mean, median and inter-quartile range weight, BMI and percent weight change, by date.
 #...............................................................................
 ### Preparatory steps
 #...............................................................................
@@ -36,7 +39,7 @@ plot_current_summary_stats <- function(data, strata = "overall"){
   data_filter <- data_filter |>
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(median)) |>
-    filter(!grepl("_firstmeasurement", variable)) |>
+    filter(grepl("_prewar", variable) & !grepl("bmi_category_", variable)) |>
     filter(!grepl("other|prefer no", label))
 
   data_filter <- recode_data_table(data_filter)
@@ -46,22 +49,20 @@ plot_current_summary_stats <- function(data, strata = "overall"){
       geom_linerange(aes(xmin = q1, xmax = q3,
                          color = label),
                      alpha = 0.3,
-                     height = 0,
                      linewidth = 2,
                      show.legend = F) +
       geom_point(aes(x = median, col = label),
                  alpha = 0.8,
                  size = 3,
                  show.legend = F) +
-      scale_x_continuous(labels = scales::label_percent(scale=1)) +
       facet_wrap(~variable,
                  nrow = 2,
                  scales = "free_x",
                  labeller = label_wrap_gen(width = 25)) +
       labs(x = NULL,
            caption = "Median and 25-75% range") +
-      theme(axis.title.y = element_blank(),
-        legend.position = "bottom")
+      theme(axis.title.y = element_blank()) +
+      theme(lshtm_theme())
 
   return(fig)
 

@@ -106,6 +106,8 @@ clean_data <- function(base_data, fup_data) {
       bmi_percent_change_firstmeasurement = ((bmi - first_bmi_measurement)/
                                                first_bmi_measurement)*100,
       # change since prewar
+      weight_unit_change_prewar = weight - weight_prewar,
+      bmi_unit_change_prewar = bmi - bmi_prewar,
       weight_percent_change_prewar = ((weight - weight_prewar)/
                                         weight_prewar)*100,
       bmi_percent_change_prewar = ((bmi - bmi_prewar)/

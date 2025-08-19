@@ -66,10 +66,12 @@ summarise_strata <- function(data, group_cols) {
     group_by(across(all_of(group_cols))) |>
     summarise(
       across(c("weight",
+               "weight_unit_change_prewar",
                "weight_percent_change_firstmeasurement",
                "weight_percent_change_prewar",
                "weight_percent_change_daily_rate",
                "bmi",
+               "bmi_unit_change_prewar",
                "bmi_percent_change_firstmeasurement",
                "bmi_percent_change_prewar",
                "bmi_rate_change_daily"),

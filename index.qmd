@@ -42,9 +42,7 @@ strata <- unlist(
 )
 # Add 'Overall' as default/fallback
 strata <- c("overall", strata)
-
-organisations <- names(data)[2:length(data)]
-meta_params <- list(c(organisation = c("all", organisations)))
+meta_params <- list("organisation" = names(data))
 
 ## Source plotting scripts
 source(here("R", "data-analysis/generate_key_insights.R"))
@@ -64,13 +62,12 @@ This project provides real-time information on the nutritional status of humanit
 Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
 
 ::: {.callout-note collapse="true" title="About the project"}
-- In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
-- This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
-- All participation from those providing data, resources, support, and analysis, is entirely voluntary. 
-Many thanks to participating staff at: `r stringr::str_flatten_comma(log$orgs, last = " and ")`.
-- **Results are preliminary: please interpret with caution.**
+In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
+This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
+All participation is entirely voluntary. 
+_Results are preliminary: please interpret with caution._
 
-- Find out more [about the study](./about)
+**[Read more](./about)**
 
 :::
 
@@ -111,12 +108,18 @@ We are actively seeking participants to support the project, and welcome new col
 </div>
 :::
 
+<details>
+<summary>Updated</summary>
+<p> Data: `r log$max_date` | Website: `r Sys.Date()`</p>
+</details>
+
+
 <!-- Dashboard pages -->
 
 # All Participants
 
 ```{r}
-meta_params$organisation <- "all"
+meta_params$organisation <- "Overall"
 ```
 
 {{< include _template-org.qmd >}}

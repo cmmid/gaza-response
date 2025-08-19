@@ -24,7 +24,7 @@ pacman::p_load(
 #...............................................................................
 ### Plot
 #...............................................................................
-
+source(here("R", "data-analysis/ggplot_theme.R"))
 plot_participants_over_time <- function(data, strata = "overall"){
 
   plot_participants <- data[[tolower(strata)]] |>

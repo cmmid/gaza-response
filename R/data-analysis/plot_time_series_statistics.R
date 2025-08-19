@@ -26,7 +26,7 @@ pacman::p_load(
 #...............................................................................
 ### Plot
 #...............................................................................
-
+source(here("R", "data-analysis/ggplot_theme.R"))
 plot_time_series_statistics <- function(data, summary_variable,
                                         strata = "overall"){
 

@@ -27,7 +27,7 @@ pacman::p_load(
 #...............................................................................
 ### Plot
 #...............................................................................
-
+source(here("R", "data-analysis/ggplot_theme.R"))
 plot_bmicategory_proportions <- function(data, strata = "overall"){
 
   # Filter data for the selected option

@@ -32,7 +32,7 @@ log <- readRDS(here("data/public/log.RDS"))
 ## Load Data RDS
 data <- readRDS(here("data/public/summary-stats.RDS"))
 
-options <- c("sex", "agegroup", "governorate", "role", "children_feeding")
+options <- c("sex", "age", "governorate", "role", "children_feeding")
 # Generate all non-empty combinations
 strata <- unlist(
   #lapply(1:length(options), function(k) {
@@ -88,7 +88,7 @@ We are actively seeking participants to support the project, and welcome new col
       Sex
     </label><br>
     <label>
-      <input type="checkbox" name="data_filter" value="agegroup">
+      <input type="checkbox" name="data_filter" value="age">
       Age
     </label><br>
     <label>

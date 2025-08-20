@@ -24,7 +24,7 @@ factor_levels <- list(
                   "Rafah"),
   organisation = c("UNRWA",
                    "Save the Children International"),
-  agegroup = c("Age under 30",
+  age = c("Age under 30",
                "Age 30-45",
                "Age over 45",
                "anomaly"),

@@ -46,7 +46,6 @@ log$orgs <- unique(base_data$organisation)
 data_id_daily <- clean_data(base_data, fup_data)
 # Recode factors
 data_id_daily <- data_id_daily |>
-  rename("agegroup" = age) |>
   mutate(bmi_category_daily = bmi,
          bmi_category_prewar = bmi_prewar)
 suppressWarnings(
@@ -123,9 +122,9 @@ data_id_aggregate <- bind_rows(data_id_daily, data_id_last)
 
 # summarise by date, organisation, and group -----
 # Create 2 levels of stratification
-group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex", "participant_in_followup")
+group_cols <- c("age", "children_feeding", "governorate", "role", "sex", "participant_in_followup")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
-group_cols <- append(group_cols, as.list(c("overall", "agegroup",
+group_cols <- append(group_cols, as.list(c("overall", "age",
                                            "children_feeding", "governorate",
                                            "role", "sex")))
 group_cols <- append(map(group_cols,

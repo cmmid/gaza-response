@@ -1,7 +1,7 @@
 # little helper functions
 
 get_column_labels <- function() {
-  col_labels <- list("agegroup" =  "Age",
+  col_labels <- list("age" =  "Age",
                      "sex" = "Sex",
                      "children_feeding" = "Dependent children",
                      "role" = "Role",

@@ -18,7 +18,7 @@ execute:
 ```{r, include=FALSE}
 pacman::p_load(here, 
                purrr, readr, dplyr, forcats, stringr,
-               bslib, bsicons, 
+               bslib, bsicons,
                ggplot2, plotly, shiny, patchwork)
 source(here("R", "data-analysis/ggplot_theme.R"))
 data_filtered <- data[[meta_params$organisation]]

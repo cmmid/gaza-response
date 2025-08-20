@@ -40,11 +40,11 @@ plot_current_summary_stats <- function(data, strata = "overall"){
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(median)) |>
     filter(grepl("_prewar", variable) & !grepl("bmi_category_", variable)) |>
-    filter(!grepl("other|prefer no", label))
-
-  data_filter <- recode_data_table(data_filter)
+    filter(!grepl("other|prefer no", label)) |>
+    recode_data_table()
 
     fig <- data_filter %>%
+      group_by(indicator) |>
       ggplot(aes(y = label)) +
       geom_linerange(aes(xmin = q1, xmax = q3,
                          color = label),
@@ -53,7 +53,7 @@ plot_current_summary_stats <- function(data, strata = "overall"){
                      show.legend = F) +
       geom_point(aes(x = median, col = label),
                  alpha = 0.8,
-                 size = 3,
+                 size = 2, shape = 15,
                  show.legend = F) +
       facet_wrap(~variable,
                  nrow = 2,
@@ -62,7 +62,7 @@ plot_current_summary_stats <- function(data, strata = "overall"){
       labs(x = NULL,
            caption = "Median and 25-75% range") +
       theme(axis.title.y = element_blank()) +
-      theme(lshtm_theme())
+      lshtm_theme()
 
   return(fig)
 

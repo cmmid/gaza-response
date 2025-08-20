@@ -61,7 +61,7 @@ recode_data_table <- function(dataframe){
       variable == "weight_percent_change_firstmeasurement" ~ "Weight change since enrollment (%)",
       variable == "weight_rate_change_daily" ~ "Weight rate of change while enrolled (kg/day)",
       variable == "bmi" ~ "BMI",
-      variable == "bmi_unit_change_prewar" ~ "BMI change since start of war (kg)",
+      variable == "bmi_unit_change_prewar" ~ "BMI change since start of war",
       variable == "bmi_percent_change_prewar" ~ "BMI change since start of war (%)",
       variable == "bmi_percent_change_firstmeasurement" ~ "BMI change since enrollment (%)",
       variable == "bmi_rate_change_daily" ~ "BMI rate of change while enrolled (units/day)",

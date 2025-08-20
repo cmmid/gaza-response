@@ -69,7 +69,7 @@ clean_data <- function(base_data, fup_data) {
   # error catching -------------------------------------------------------
   # weight recorded in follow up survey on same date as baseline survey
   double_records <- id_date_grid |>
-    select(id, date_followup = date, date_entry,
+    dplyr::select(id, date_followup = date, date_entry,
            weight_followup, weight_entry, weight_prewar) |>
     filter(date_followup == date_entry &
              !is.na(weight_followup))
@@ -84,7 +84,7 @@ clean_data <- function(base_data, fup_data) {
         weight_entry != weight_followup &
           weight_entry == weight_prewar ~ weight_followup,
         .default = weight_entry)) |>
-    select(date = date_entry, id, clean_weight_entry)
+    dplyr::select(date = date_entry, id, clean_weight_entry)
 
   # validated joined dataset --------------------------
   observed_data <- id_date_grid |>

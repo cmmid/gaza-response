@@ -17,8 +17,10 @@ set_data_dictionary <- function() {
 
   # BMI categories ---------------------------------------
   bmi_levels <- c("Underweight","Normal","Overweight","Obese", "NA")
-  bmi_category <- c("Current BMI" = "bmi_category_daily",
+  bmi_category <- list("Current BMI" = "bmi_category_daily",
                "Pre-war BMI" = "bmi_category_prewar")
+  dictionary$bmi_category <- bmi_category
+
   bmi_category_labels <- paste0(rep(bmi_category, length(bmi_levels)),
                                 "_", bmi_levels)
   names(bmi_category_labels) <- paste(rep(names(bmi_category), length(bmi_levels)),
@@ -64,8 +66,9 @@ set_data_dictionary <- function() {
     "Number of participants in follow up" = "cohort_id_followup",
     "Number of participants lost to follow up" = "cohort_obs_missing",
     "Number of participant measurements" = "cohort_obs_recorded",
-    "Cumulative participant days since study entry" = "participant_cumulative_days_enrolled",
-    "Cumulative participant days with recorded weight" = "participant_cumulative_days_recorded",
+    "Participant in follow-up" = "participant_in_followup",
+    "Participant days since study entry" = "participant_cumulative_days_enrolled",
+    "Participant days with recorded weight" = "participant_cumulative_days_recorded",
     # demographics
     "Sex" = "sex",
     "Age" = "age",

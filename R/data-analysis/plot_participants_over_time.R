@@ -28,6 +28,8 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 plot_participants_over_time <- function(data, strata = "overall"){
 
   plot_participants <- data[[tolower(strata)]] |>
+
+    data |>
     filter(!is.na(date)) |>
     filter(variable == "weight" & stat == "median") |>
     dplyr::select(-value) |>
@@ -44,6 +46,9 @@ plot_participants_over_time <- function(data, strata = "overall"){
     geom_col(aes(y = value,
                  fill = Participant, alpha = Participant)) +
     labs(x = NULL, y = "Participant data") +
-    facet_wrap(~label, scales="free_y")
+    facet_wrap(~label, scales="free_y") +
+    gghighlight() +
+    lshtm_theme()
+
   return(plot_participants)
 }

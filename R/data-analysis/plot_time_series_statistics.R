@@ -53,10 +53,11 @@ plot_time_series_statistics <- function(data, summary_variable,
                  position = position_dodge(1),
                  alpha = 0.8,
                  size = 2, shape = 15) +
-      facet_wrap(~label,
-                 scales = "free_y") +
       labs(x = NULL, y = NULL,
            fill = "Strata", colour = "Strata") +
+      facet_wrap(~label,
+                 scales = "free_y") +
+      gghighlight() +
       theme(lshtm_theme())
 
   return(fig)

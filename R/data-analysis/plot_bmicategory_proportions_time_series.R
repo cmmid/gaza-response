@@ -13,6 +13,7 @@
 #...................................
 ## Install or load required R packages
 pacman::p_load(
+  gghighlight,
   lubridate,
   ggplot2,       # Visualise data
   tidyverse,     # Tidyverse suite of packages
@@ -70,7 +71,8 @@ plot_bmicategory_proportions_time_series <- function(data,
                       values = lshtm_palette$bmi_categories,
                       aesthetics = c("col", "fill")) +
     labs(x = NULL, y = "Weekly participant measurements") +
-    facet_wrap(~ label, scales = "free_y")+
+    facet_wrap(~ label, scales = "free_y") +
+    gghighlight() +
     theme(lshtm_theme())
 
   return(plot)

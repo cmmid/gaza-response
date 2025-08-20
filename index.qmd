@@ -26,7 +26,7 @@ pacman::p_load(here,
                ggplot2, plotly, shiny, patchwork)
 
 ## Load data dictionary
-datadict <- readRDS(here("data/data_dictionary.RDS"))
+datadict <- readRDS(here("data/data-dictionary.RDS"))
 ## Load log
 log <- readRDS(here("data/public/log.RDS"))
 ## Load Data RDS
@@ -45,8 +45,8 @@ strata <- c("overall", strata)
 meta_params <- list("organisation" = names(data))
 
 ## Source plotting scripts
+source(here("R", "data-pipeline", "0-data-dictionary.R"))
 source(here("R", "data-analysis/generate_key_insights.R"))
-source(here("R", "data-analysis/recode_data_table.R"))
 source(here("R", "data-analysis/plot_participants_over_time.R"))
 source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))

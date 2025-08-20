@@ -36,8 +36,8 @@ expected_fup <- c("id", "date", "weight")
 log$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
 
 # add basic stats to log for checking
-log$n_participants_baseline <- length(unique(base_data$id))
-log$n_participants_followup <- length(unique(fup_data$id))
+log$raw_n_baseline <- length(unique(base_data$id))
+log$raw_n_followup <- length(unique(fup_data$id))
 log$max_date <- max(fup_data$date)
 log$orgs <- unique(base_data$organisation)
 
@@ -57,9 +57,6 @@ suppressWarnings(
   }
 )
 # Data quality ------------------------------------------------------------
-# count levels of each factor
-log$factor_count <- count_factors(data_id_daily)
-
 # Replace anomaly measurements as missing
 data_id_daily <- data_id_daily |>
   mutate(across(contains(c("weight", "bmi")),
@@ -98,13 +95,18 @@ data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
 
 # table summaries -----------------------------------------------------
+# tally characteristics across all participants
+log$factor_count <- count_factors(data_id_daily)
+
 # tabulate all participants by organisation
 log$tab_baseline <- data_id_last |>
+  mutate(across(where(is.factor), ~ fct_drop(.x))) |>
   filter(!grepl("Overall", organisation)) |>
   tabulate_baseline(by_group = "organisation",
                     col_labels = col_labels)
 # tab by follow up
 log$tab_followup <- data_id_last |>
+  mutate(across(where(is.factor), ~ fct_drop(.x))) |>
   filter(!grepl("Overall", organisation)) |>
   mutate(participant_in_followup = if_else(participant_in_followup,
                                       "In follow up",

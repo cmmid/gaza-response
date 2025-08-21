@@ -75,6 +75,7 @@ suppressMessages({
                       summarise_ids(group_cols = .x)) |>
       clean_aggregated_data()
   })
+log$data_summary$overall_latest_date <- max(summary$all$overall$date, na.rm=TRUE)
 log$data_summary$overall_sample <- dplyr::slice_sample(summary$all$overall,
                                                        prop = 0.1)
 

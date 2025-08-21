@@ -120,7 +120,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
     mutate(last_measurement = participant_cumulative_days_recorded == max(
       participant_cumulative_days_recorded, na.rm = TRUE) & participant_recorded,
            date_last_measurement = date[which(last_measurement)],
-           weight_latest_measurement = weight[which(last_measurement)])
+           weight_last_measurement = weight[which(last_measurement)])
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -182,18 +182,18 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
 
  # Drop full grid of ID/date combinations, keep only observed records
  observed_data <- observed_data |>
-   filter(participant_recorded) |>
-   # add weight anomaly criteria
+   filter(participant_recorded)
+
+ # add weight anomaly criteria
+ observed_data <- observed_data |>
    mutate(
-     anomaly = as_factor(
-       case_when(
+     anomaly = case_when(
          is.na(weight) ~ "Missing",
          !between(weight, 30, 180) ~ "Excluded (weight <30kg or >180kg)",
          !between(bmi, 10, 60) ~ "Excluded (BMI <10 or >60)",
          weight_rate_change_daily >= 10 ~ "Excluded (>10% daily rate of weight change since entry)",
          !is.na(anomaly) ~ anomaly,
          TRUE ~ "Included")
-     )
    ) |>
    # Replace anomaly measurements as missing
    mutate(across(contains(c("weight", "bmi")),

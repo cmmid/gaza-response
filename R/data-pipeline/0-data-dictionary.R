@@ -51,7 +51,13 @@ set_data_dictionary <- function() {
                     "Rafah"),
     # derived data
     bmi_category_prewar = bmi_levels,
-    bmi_category_daily = bmi_levels
+    bmi_category_daily = bmi_levels,
+    anomaly = c("Excluded (>10% daily rate of weight change since entry)",
+                        "Excluded (BMI <10 or >60)",
+                        "Excluded (weight <30kg or >180kg)",
+                        "Missing",
+                        "Included (note: conflicting double record at study entry)",
+                        "Included")
   )
 
 # Variable name labels for display ---------------------------

@@ -27,6 +27,8 @@ tabulate_study <- function(data, data_dictionary) {
                    ~ quality_df |>
                      filter(Organisation == .x) |>
                      tbl_summary(
+                       include = -c("Organisation",
+                                    "Participant in follow-up"),
                        missing = "ifany", missing_text = "Missing") |>
                      as_gt()
   )
@@ -38,15 +40,17 @@ tabulate_study <- function(data, data_dictionary) {
   demog_df <- data |>
     dplyr::select(c("Organisation" = "organisation",
                     "Participant timepoint"="participant_timepoint",
-                    "Excluded weight measurements"="anomaly",
                     any_of(demog_vars))) |>
     rename(any_of(demog_vars))
   tab_demog <- map(organisations,
                  ~ demog_df |>
                    filter(Organisation == .x) |>
                    tbl_summary(by = "Participant timepoint",
+                               percent = "row",
+                               include = -c("Organisation"),
                                missing = "ifany",
                                missing_text = "Missing") |>
+                   add_overall() |>
                    as_gt()
                    )
   names(tab_demog) <- organisations
@@ -100,10 +104,6 @@ summarise_strata <- function(data, group_cols) {
       )
 
   # summarise observed metrics -----
-  ## drop anomalous and missing observations
-  # data <- data |>
-  #   filter(!is.na(weight) & !weight_anomaly)
-
   # averages
   df_centraltendency <- data |>
     group_by(across(all_of(group_cols))) |>
@@ -141,11 +141,6 @@ summarise_strata <- function(data, group_cols) {
     count(name = "value") |>
     mutate(stat = "count",
            variable = paste0(bmi_period, "_", bmi_category))
-  # |>
-  #   # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
-  #   complete(nesting(!!!syms(group_cols)),
-  #            stat, variable,
-  #            fill = list(value = 0))
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,
@@ -167,14 +162,9 @@ clean_aggregated_data <- function(summary_list) {
   summary_df <- list_rbind(summary_list) |>
     ungroup()
 
-  # label current summary stats - setting "date" to NA (as this is a summary of multiple dates),
-  #   and marking these records with "current_summary_date" = latest date in the data
-  latest_date <- max(summary_df |> filter(date <= Sys.Date()) |> pull(date), na.rm=TRUE)
-
+  # label current summary date
   summary_df <- summary_df |>
-    mutate(current_summary_date = as.Date(if_else(date > Sys.Date(),
-                                         latest_date, NA)),
-           date = replace(date, date > Sys.Date(), NA))
+    mutate(date_summarised = Sys.Date())
 
   # split into a list indexed by organisation
   org_split <- summary_df |>

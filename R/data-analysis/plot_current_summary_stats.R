@@ -40,8 +40,7 @@ plot_current_summary_stats <- function(data, strata = "overall"){
     pivot_wider(names_from = stat, values_from = value) %>%
     dplyr::filter(!is.na(median)) |>
     filter(grepl("_prewar", variable) & !grepl("bmi_category_", variable)) |>
-    filter(!grepl("other|prefer no", label)) |>
-    recode_data_table()
+    filter(!grepl("other|prefer no", label))
 
     fig <- data_filter %>%
       group_by(indicator) |>

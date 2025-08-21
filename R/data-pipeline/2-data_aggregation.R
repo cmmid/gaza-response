@@ -8,34 +8,39 @@
 #TODO tidy data: produce dataframe with
 # date - group - N - timepoint - indicator (cohort, bmi, weight) - stat - value
 
-pacman::p_load(dplyr, tidyr, purrr, gtsummary)
+pacman::p_load(dplyr, tidyr, purrr, gtsummary, janitor)
 
 # tabulate summary statistics across cohort ----------------------------
-# Big Table 1 summary
-tabulate_baseline <- function(df, by_group="organisation",col_labels) {
-  df$organisation <- fct_drop(df$organisation)
-  col_characteristics <- col_labels[!grepl("(bmi*)|(weight*)", names(col_labels))]
-  characteristics <- df |>
+# Table 1 summary
+tabulate_baseline <- function(df, by_group="organisation") {
+
+  return(characteristics)
+}
+
+tabulate_metrics <- function(df, by_group="organisation", col_labels) {
+  df <- mutate(df, across(where(is.factor), fct_drop))
+  col_include <- col_labels[grepl("(cohort*)|(bmi*)|(weight*)",
+                                  names(col_labels))]
+  metrics <- df |>
     tbl_summary(
       by = by_group,
-      include = names(col_characteristics),
-      label = col_characteristics
-    ) |>
-    add_overall()
-  return(characteristics)
+      include = as.character(col_include),
+      label = as.character(col_include) ~ names(col_include)
+    )
+  return(metrics)
 }
 
 # BMI category crosstab per organisation
 bmi_crosstab <- function(df, col_labels) {
   org_df <- split(df, df$organisation, drop = TRUE)
-  bmi_tab <- org_df |>
-    map(~tbl_cross(.x,
-                   row = bmi_category_prewar,
-                   col = bmi_category_daily,
-                   percent = "row",
-                   missing = "no",
-                   digits = 0,
-                   label = col_labels))
+  bmi_tab <- tbl_cross(df,
+                       row = "bmi_category_prewar",
+                       col = "bmi_category_daily",
+                       percent = "row",
+                       missing = "no",
+                       digits = 0,
+                       label = list("bmi_category_daily" = "Current BMI",
+                                    "bmi_category_prewar" = "Pre-war BMI"))
   return(bmi_tab)
 }
 
@@ -58,6 +63,8 @@ summarise_strata <- function(data, group_cols) {
       cohort_obs_recorded = sum(participant_recorded),
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
+      cohort_total_persondays = sum(participant_cumulative_days_enrolled),
+      #
       .groups = "drop"
       )
 
@@ -81,9 +88,7 @@ summarise_strata <- function(data, group_cols) {
                "bmi_percent_change_firstmeasurement",
                "bmi_percent_change_prewar",
                "bmi_rate_change_daily",
-               #
-               "participant_cumulative_days_enrolled",
-               "participant_cumulative_days_recorded"),
+               ),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),

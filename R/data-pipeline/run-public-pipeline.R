@@ -107,16 +107,11 @@ data_pretty <- data_id_last |>
                   "participant_in_followup",
                   "participant_cumulative_days_recorded",
                   "participant_cumulative_days_enrolled")) |>
-  mutate(across(where(is.factor), fct_drop),
-         participant_cumulative_days_recorded = as.integer(participant_cumulative_days_recorded),
-         participant_cumulative_days_enrolled = as.integer(participant_cumulative_days_enrolled)) |>
+  mutate(across(where(is.factor), fct_drop)) |>
   rename(any_of(data_dictionary$variable_names))
 
 log$tab_baseline <- data_pretty |>
   tbl_summary(by = "Organisation",
-              statistic = list(
-                contains("days") ~ "{median} ({p25}, {p75})",
-                all_categorical() ~ "{n} ({p}%)"),
               digits = all_continuous() ~ 1) |>
   add_overall()
 
@@ -146,9 +141,9 @@ suppressMessages({
                       summarise_strata(group_cols = .x)) |>
       clean_aggregated_data()
   })
-log$data_summary$overall_latest_date <- max(summary$all$overall$date, na.rm=TRUE)
-log$data_summary$overall_sample <- dplyr::slice_sample(summary$all$overall,
-                                                       prop = 0.1)
+log$data_summary$overall_latest_date <- max(summary$Overall$overall$date,
+                                            na.rm=TRUE)
+log$data_summary$overall_sample <- dplyr::slice_sample(summary$Overall$overall, prop = 0.1)
 
 # save ----------------------
 output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])

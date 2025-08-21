@@ -17,17 +17,19 @@ base <- sprintf("%s/", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/ga
 
 # Load functions -----
 pipeline_functions <- paste0(base,
-                             c("R/data-pipeline/0-data-dictionary.R",
+                             c(
+                               "R/data-pipeline/0-data-dictionary.R",
                                "R/data-pipeline/1-data_cleaning.R",
                                "R/data-pipeline/2-data_aggregation.R",
-                               "R/data-pipeline/helpers.R"))
+                               "R/data-pipeline/helpers.R"
+                               ))
 walk(pipeline_functions, source)
 
 # Load data stored locally -----
 base_data <- readRDS(paste0(base, "data/processed/df_base.RDS"))
 fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
-data_dictionary <- readRDS(paste0(base, "data/data_dictionary.RDS"))
-col_labels <- get_column_labels()
+data_dictionary <- set_data_dictionary()
+# col_labels <- get_column_labels()
 
 # log raw data validation
 log$data_raw <- list()
@@ -49,10 +51,7 @@ data_id_daily <- data_id_daily |>
          bmi_category_prewar = bmi_prewar)
 suppressWarnings(
   {data_id_daily <- set_factors(df = data_id_daily,
-                                 factor_levels = data_dictionary,
-                                 factor_cols = c(names(data_dictionary),
-                                                 "bmi_category_daily",
-                                                 "bmi_category_prewar"))
+                                 factor_levels = c(data_dictionary$data_levels))
   }
 )
 # Data quality ------------------------------------------------------------
@@ -95,50 +94,54 @@ log$data_clean$latest_date <- latest_date
 data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
 
-# table summaries -----------------------------------------------------
+# table summary by most recent record --------------------------------------
 # tally characteristics across all participants
-log$factor_count <- count_factors(data_id_daily)
+# log$factor_count <- count_factors(data_id_daily)
+#
+# # tabulate all participants by organisation
+#TODO fix labels
+data_pretty <- data_id_last |>
+  dplyr::select(c("date", "id", "organisation",
+                  "age", "sex", "children_feeding",
+                  "role", "governorate",
+                  "participant_in_followup",
+                  "participant_cumulative_days_recorded",
+                  "participant_cumulative_days_enrolled")) |>
+  mutate(across(where(is.factor), fct_drop),
+         participant_cumulative_days_recorded = as.integer(participant_cumulative_days_recorded),
+         participant_cumulative_days_enrolled = as.integer(participant_cumulative_days_enrolled)) |>
+  rename(any_of(data_dictionary$variable_names))
 
-# tabulate all participants by organisation
-log$tab_baseline <- data_id_last |>
-  mutate(across(where(is.factor), ~ fct_drop(.x))) |>
-  filter(!grepl("Overall", organisation)) |>
-  tabulate_baseline(by_group = "organisation",
-                    col_labels = col_labels)
-# tab by follow up
-log$tab_followup <- data_id_last |>
-  mutate(across(where(is.factor), ~ fct_drop(.x))) |>
-  filter(!grepl("Overall", organisation)) |>
-  mutate(participant_in_followup = if_else(participant_in_followup,
-                                      "In follow up",
-                                      "Baseline only")) |>
-  tabulate_baseline(by_group = "participant_in_followup",
-                    col_labels = col_labels)
+log$tab_baseline <- data_pretty |>
+  tbl_summary(by = "Organisation",
+              statistic = list(
+                contains("days") ~ "{median} ({p25}, {p75})",
+                all_categorical() ~ "{n} ({p}%)"),
+              digits = all_continuous() ~ 1) |>
+  add_overall()
 
 # BMI categories
-log$tab_bmi_categories <- bmi_crosstab(data_id_last, col_labels)
+log$tab_bmi_categories <- bmi_crosstab(data_id_last,
+                                       data_dictionary$bmi_category)
 
 # strata summaries ----------------------------------------------------
 # bind last available record with full time series --
 data_id_aggregate <- bind_rows(data_id_daily, data_id_last)
-# TODO create the "group" and "label" column (at end of data_agg script) here.
+# TODO create the "group" and "label" column (at end of data_agg script) here. - tidyr::unite
 
 # summarise by date, organisation, and group -----
 # Create 2 levels of stratification
-group_cols <- c("age", "children_feeding", "governorate", "role", "sex", "participant_in_followup")
-group_cols <- combn(group_cols, 2, simplify = FALSE)
-group_cols <- append(group_cols, as.list(c("overall", "age",
-                                           "children_feeding", "governorate",
-                                           "role", "sex")))
-group_cols <- append(map(group_cols,
-                         ~ c("date", "organisation", sort(.x))),
-                     map(group_cols,
-                         ~ c("date", sort(.x))))
-log$data_summary <- list()
-log$data_summary$group_cols <- group_cols
+group_cols <- c("overall", "age", "children_feeding", "governorate", "role", "sex")
+# group_cols <- combn(group_cols, 2, simplify = FALSE)
+# group_cols <- append(group_cols, as.list(c("overall", "age",
+#                                            "children_feeding", "governorate",
+#                                            "role", "sex")))
+group_cols <- append(group_cols, map(group_cols,
+                         ~ c("date", "organisation", sort(.x))))
+
 #' Do not print all messages
 suppressMessages({
-    summary <- imap(group_cols,
+    summary <- map(group_cols,
                     ~ data_id_aggregate |>
                       summarise_strata(group_cols = .x)) |>
       clean_aggregated_data()

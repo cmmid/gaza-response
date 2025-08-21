@@ -1,6 +1,6 @@
 # Run the full data processing pipeline on a local server hosting raw data, ready to be pushed to public Github
 
-# Set up -------
+# ------------------ Set up ------------------------------------
 pacman::p_load(here, purrr, dplyr, gtsummary)
 set.seed(123)
 #do not show summarise message
@@ -54,6 +54,7 @@ log$data_clean$exclusion <- data_id_daily |>
   summarise(n_records = n(),
             n_participants = n_distinct(id))
 
+# ------------------ Summary tables ------------------------------------
 # Pre-processing for summaries ---------------------------------------------
 # add "Overall" organisation
 data_id_daily <- data_id_daily |>
@@ -64,31 +65,12 @@ data_id_daily <- data_id_daily |>
 data_id_daily <- data_id_daily |>
   mutate(overall = "overall")
 
-# Most recent records -----------------------------------------
-# create a df with only last recorded observation by ID
-data_id_last <- data_id_daily |>
-  filter(last_measurement)
-log$data_latest$date_of_latest <- count(data_id_last, organisation, date)
-
-# # tabulate all participants by demography & data quality
-tables_latest <- tabulate_study(data_id_last, data_dictionary)
-log$data_latest$summary_tables <- tables_latest$Overall
-
-# strata summaries over time ------------------------------------------
-# set last date to the future to use as a flag that this is the most recent record
-#   (noting all group calculations include date so will not be double-counted)
-data_id_last <- data_id_last |>
-  mutate(date = Sys.Date() + 3650)
-
-# summarise by date, organisation, and group -----
-# bind last available record with full time series --
-data_id_aggregate <- bind_rows(data_id_daily, data_id_last)
-
-group_cols <- c("overall", "age", "children_feeding",
-                "governorate", "role", "sex")
-group_cols <- map(group_cols,
+# set group stratifications
+strata <- c("overall",
+                "age", "children_feeding", "governorate", "role", "sex")
+log$strata <- strata
+group_cols <- map(strata,
                   ~ c("date", "organisation", sort(.x)))
-
 # Create 2 levels of stratification
 # group_cols <- combn(group_cols, 2, simplify = FALSE)
 # group_cols <- append(group_cols, as.list(c("overall", "age",
@@ -97,24 +79,53 @@ group_cols <- map(group_cols,
 # group_cols <- append(group_cols, map(group_cols,
 #                          ~ c("date", "organisation", sort(.x))))
 
-#' Do not print all messages
+# SUMMARISE LATEST  ---------------------------------------------
+# summarise across whole sample using each participants' latest obs ---
+# create a df with only last recorded observation by ID
+data_id_latest <- data_id_daily |>
+  filter(last_measurement)
+log$data_latest$date_of_latest <- count(data_id_latest, organisation, date)
+
+## Reset "date" to a single common date (so avoid any grouping by daily date)
+data_id_latest <- data_id_latest |>
+  mutate(date_observation = date,
+         date == max(data_id_latest$date, na.rm=TRUE))
+
+# # tabulate all participants by demography & data quality
+tables_latest <- tabulate_study(data_id_latest, data_dictionary)
+log$data_latest$summary_tables <- tables_latest$Overall
+
+#' Summarise strata at latest record
 suppressMessages({
-  summary <- map(group_cols,
-                    ~ data_id_aggregate |>
+  summary_cohort_all <- map(group_cols,
+                 ~ data_id_latest |>
+                   summarise_strata(group_cols = .x)) |>
+    clean_aggregated_data()
+})
+log$summary_cohort_all$date_of_latest <- count(data_id_latest, organisation, date)
+log$summary_cohort_all$overall_sample <- slice_sample(summary_cohort_all$Overall$overall,
+                                                        prop = 0.1)
+# SUMMARISE TIMESERIES  ---------------------------------------------
+# summarise sample at each daily timestep ---------------
+suppressMessages({
+  summary_cohort_daily <- map(group_cols,
+                    ~ data_id_daily |>
                       summarise_strata(group_cols = .x)) |>
       clean_aggregated_data()
   })
+log$summary_cohort_daily$date_of_latest <- count(data_id_latest, organisation, date)
+log$summary_cohort_daily$overall_sample <- slice_sample(summary_cohort_daily$Overall$overall,
+                                                       prop = 0.1)
 
-log$data_summary$overall_latest_date <- max(summary$Overall$overall$date,
-                                            na.rm=TRUE)
-log$data_summary$overall_sample <- dplyr::slice_sample(summary$Overall$overall, prop = 0.1)
-
-# save ----------------------
+#  --------------------- Save ----------------------
 output_tables = sprintf("%s/data/public/summary-tables.RDS",.args["wd"])
 saveRDS(tables_latest, output_tables)
 
-output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])
-saveRDS(summary, output_file)
+output_all = sprintf("%s/data/public/summary_cohort_all.RDS", .args["wd"])
+saveRDS(summary_cohort_all, output_all)
+
+output_daily = sprintf("%s/data/public/summary-cohort-daily.RDS", .args["wd"])
+saveRDS(summary_cohort_daily, output_daily)
 
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)

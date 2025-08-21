@@ -51,14 +51,13 @@ set_data_dictionary <- function() {
                     "Rafah"),
     # derived data
     bmi_category_prewar = bmi_levels,
-    bmi_category_daily = bmi_levels,
-    weight_anomaly = c("valid", "anomaly"), # <30 or >180kg
-    bmi_anomaly = c("valid", "anomaly") # <10 or >60 BMI
+    bmi_category_daily = bmi_levels
   )
 
 # Variable name labels for display ---------------------------
-  dictionary$variable_names <- c(
+  dictionary$variable_names <- list(
     # cohort participation
+    participation = list(
     "Demographic" = "group",
     "Strata" = "label",
     "Number of participants" = "cohort_id_enrolled",
@@ -69,13 +68,18 @@ set_data_dictionary <- function() {
     "Participant in follow-up" = "participant_in_followup",
     "Participant days since study entry" = "participant_cumulative_days_enrolled",
     "Participant days with recorded weight" = "participant_cumulative_days_recorded",
+    "Exclusion criteria" = "anomaly"
+    ),
     # demographics
+    demographic = list(
     "Sex" = "sex",
     "Age" = "age",
     "Dependent children" = "children_feeding",
     "Staff role" = "role",
     "Organisation" = "organisation",
-    "Governorate" = "governorate",
+    "Governorate" = "governorate"
+    ),
+    measurement = list(
     # weight
       "Weight, kg" = "weight",
       "Weight change since start of war (kg)" = "weight_unit_change_prewar",
@@ -88,9 +92,10 @@ set_data_dictionary <- function() {
       "BMI change since start of war (%)" = "bmi_percent_change_prewar",
       "BMI change since enrollment (%)" = "bmi_percent_change_firstmeasurement",
       "BMI daily rate of change since study entry (units/day)" = "bmi_rate_change_daily",
-      bmi_category_labels
+    "Current BMI" = "bmi_category_daily",
+    "Pre-war BMI" = "bmi_category_prewar"
     )
-
+    )
   saveRDS(dictionary, file = here("data", "data-dictionary.RDS"))
 
     return(dictionary)
@@ -106,23 +111,23 @@ set_factors <- function(df, factor_levels,
       # Special cases for numeric variables
       if (col_name == "children_feeding" & is.numeric(df[[col_name]])) {
         df[[col_name]] <- case_when(
-          df[[col_name]] < 0 ~ "anomaly",
+          df[[col_name]] < 0 ~ NA,
           df[[col_name]] == 0 ~ "0",
           df[[col_name]] == 1 ~ "1",
           df[[col_name]] == 2 ~ "2",
           df[[col_name]] >= 3 & df[[col_name]] <= 20 ~ "3+",
-          df[[col_name]] >= 20 ~ "anomaly",
+          df[[col_name]] >= 20 ~ NA,
           .default = NA
         )
       }
 
       if (col_name == "age" & is.numeric(df[[col_name]])) {
         df[[col_name]] <- case_when(
-          df[[col_name]] < 16 ~ "anomaly",
+          df[[col_name]] < 16 ~ NA,
           df[[col_name]] < 30 ~ "Age under 30",
           df[[col_name]] >= 30 & df[[col_name]] <= 45 ~ "Age 30-45",
           df[[col_name]] > 45 ~ "Age over 45",
-          df[[col_name]] >= 99 ~ "anomaly",
+          df[[col_name]] >= 99 ~ NA,
           .default = NA
         )
       }
@@ -130,12 +135,12 @@ set_factors <- function(df, factor_levels,
       if (grepl("bmi_category_prewar|bmi_category_daily", col_name) &
           is.numeric(df[[col_name]])) {
         df[[col_name]] <- case_when(
-          df[[col_name]] <= 10 ~ "anomaly",
+          df[[col_name]] <= 10 ~ NA,
           df[[col_name]] < 18.5 ~ "Underweight",
           df[[col_name]] >= 18.5 & df[[col_name]] < 25 ~ "Normal",
           df[[col_name]] >= 25 & df[[col_name]] < 30 ~ "Overweight",
           df[[col_name]] >= 30 ~ "Obese",
-          df[[col_name]] >= 60 ~ "anomaly",
+          df[[col_name]] >= 60 ~ NA,
           .default = NA
         )
       }

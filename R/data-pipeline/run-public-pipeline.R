@@ -2,6 +2,7 @@
 
 # Set up -------
 pacman::p_load(here, purrr, dplyr, gtsummary)
+set.seed(123)
 #do not show summarise message
 options(dplyr.summarise.inform = FALSE)
 
@@ -28,18 +29,16 @@ fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
 data_dictionary <- readRDS(paste0(base, "data/data_dictionary.RDS"))
 col_labels <- get_column_labels()
 
-# log columns are correct
+# log raw data validation
+log$data_raw <- list()
 expected_base <- c("id", "date", "organisation", "age", "sex", "governorate",
               "role", "height", "weight_prewar", "weight", "children_feeding")
-log$base_cols_missing <- setdiff(expected_base, colnames(base_data))
+log$data_raw$base_cols_missing <- setdiff(expected_base, colnames(base_data))
 expected_fup <- c("id", "date", "weight")
-log$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
-
-# add basic stats to log for checking
-log$raw_n_baseline <- length(unique(base_data$id))
-log$raw_n_followup <- length(unique(fup_data$id))
-log$max_date <- max(fup_data$date)
-log$orgs <- unique(base_data$organisation)
+log$data_raw$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
+log$data_raw$n_participants_baseline <- length(unique(base_data$id))
+log$data_raw$max_date <- max(fup_data$date)
+log$data_raw$orgs <- unique(base_data$organisation)
 
 # Clean data ------------------------------------------------------------
 # combine baseline and follow up data; calculate BMI and change
@@ -61,6 +60,9 @@ suppressWarnings(
 data_id_daily <- data_id_daily |>
   mutate(across(contains(c("weight", "bmi")),
                 ~ if_else(weight_anomaly=="anomaly", NA, .x)))
+
+log$data_clean$nrow <- nrow(data_id_daily)
+log$data_clean$n_id <- length(unique(data_id_daily$id))
 
 # Replace all anomaly values as missing
 data_id_daily <- data_id_daily |>
@@ -85,11 +87,10 @@ data_id_daily <- data_id_daily |>
 # create a df with only last recorded observation by ID
 data_id_last <- data_id_daily |>
   filter(last_measurement)
+latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
+log$data_clean$latest_date <- latest_date
 
-# check last record dates by organisation
-latest_date <- as.Date(max(data_id_last$date, na.rm = TRUE))
-log$date_id_last <- count(data_id_last, organisation, date)
-# set date of last record to the future to use as a flag that this is the most recent record
+# set date to the future to use as a flag that this is the most recent record
 #   (noting all group calculations include date so will not be double-counted)
 data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
@@ -133,7 +134,8 @@ group_cols <- append(map(group_cols,
                          ~ c("date", "organisation", sort(.x))),
                      map(group_cols,
                          ~ c("date", sort(.x))))
-
+log$data_summary <- list()
+log$data_summary$group_cols <- group_cols
 #' Do not print all messages
 suppressMessages({
     summary <- imap(group_cols,
@@ -141,6 +143,9 @@ suppressMessages({
                       summarise_strata(group_cols = .x)) |>
       clean_aggregated_data()
   })
+log$data_summary$overall_latest_date <- max(summary$all$overall$date, na.rm=TRUE)
+log$data_summary$overall_sample <- dplyr::slice_sample(summary$all$overall,
+                                                       prop = 0.1)
 
 # save ----------------------
 output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])

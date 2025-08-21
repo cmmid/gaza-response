@@ -12,36 +12,66 @@ pacman::p_load(dplyr, tidyr, purrr, gtsummary, janitor)
 
 # tabulate summary statistics across cohort ----------------------------
 # Table 1 summary
-tabulate_baseline <- function(df, by_group="organisation") {
+tabulate_study <- function(data, data_dictionary) {
+  organisations <- unique(data$organisation)
 
-  return(characteristics)
-}
+  # Data quality
+  quality_vars <- list_simplify(
+    data_dictionary[["variable_names"]][["participation"]])
+  quality_df <- data |>
+    dplyr::select(c("Organisation" = "organisation",
+                    "Participant timepoint"="participant_timepoint",
+                    any_of(quality_vars))) |>
+    rename(any_of(quality_vars))
+  tab_quality <- map(organisations,
+                   ~ quality_df |>
+                     filter(Organisation == .x) |>
+                     tbl_summary(
+                       missing = "ifany", missing_text = "Missing") |>
+                     as_gt()
+  )
+  names(tab_quality) <- organisations
 
-tabulate_metrics <- function(df, by_group="organisation", col_labels) {
-  df <- mutate(df, across(where(is.factor), fct_drop))
-  col_include <- col_labels[grepl("(cohort*)|(bmi*)|(weight*)",
-                                  names(col_labels))]
-  metrics <- df |>
-    tbl_summary(
-      by = by_group,
-      include = as.character(col_include),
-      label = as.character(col_include) ~ names(col_include)
+  # Demographics
+  demog_vars <- list_simplify(
+                    data_dictionary[["variable_names"]][["demographic"]])
+  demog_df <- data |>
+    dplyr::select(c("Organisation" = "organisation",
+                    "Participant timepoint"="participant_timepoint",
+                    "Excluded weight measurements"="anomaly",
+                    any_of(demog_vars))) |>
+    rename(any_of(demog_vars))
+  tab_demog <- map(organisations,
+                 ~ demog_df |>
+                   filter(Organisation == .x) |>
+                   tbl_summary(by = "Participant timepoint",
+                               missing = "ifany",
+                               missing_text = "Missing") |>
+                   as_gt()
+                   )
+  names(tab_demog) <- organisations
+
+    # BMI category crosstab
+    tab_bmi <- map(organisations,
+          ~ data |>
+            filter(organisation == .x) |>
+            tbl_cross(row = "bmi_category_prewar",
+                      col = "bmi_category_daily",
+                      percent = "row",
+                      missing = "no",
+                      digits = 0,
+                      label = list("bmi_category_daily" = "Current BMI",
+                                   "bmi_category_prewar" = "Pre-war BMI")) |>
+            as_gt()
     )
-  return(metrics)
-}
+    names(tab_bmi) <- unique(data$organisation)
 
-# BMI category crosstab per organisation
-bmi_crosstab <- function(df, col_labels) {
-  org_df <- split(df, df$organisation, drop = TRUE)
-  bmi_tab <- tbl_cross(df,
-                       row = "bmi_category_prewar",
-                       col = "bmi_category_daily",
-                       percent = "row",
-                       missing = "no",
-                       digits = 0,
-                       label = list("bmi_category_daily" = "Current BMI",
-                                    "bmi_category_prewar" = "Pre-war BMI"))
-  return(bmi_tab)
+    study_tables <- list("data_quality" = tab_quality,
+                         "demographic" = tab_demog,
+                         "bmi_crosstab" = tab_bmi)
+    org_tables <- list_transpose(study_tables)
+
+    return(org_tables)
 }
 
 # summarise by any given strata ------------------------------------
@@ -63,7 +93,8 @@ summarise_strata <- function(data, group_cols) {
       cohort_obs_recorded = sum(participant_recorded),
       # missing weight among all enrolled, denominator: cohort_n
       cohort_obs_missing = sum(is.na(weight)),
-      cohort_total_persondays = sum(participant_cumulative_days_enrolled),
+      #
+      cohort_persondays = sum(participant_cumulative_days_enrolled),
       #
       .groups = "drop"
       )
@@ -139,6 +170,7 @@ clean_aggregated_data <- function(summary_list) {
   # label current summary stats - setting "date" to NA (as this is a summary of multiple dates),
   #   and marking these records with "current_summary_date" = latest date in the data
   latest_date <- max(summary_df |> filter(date <= Sys.Date()) |> pull(date), na.rm=TRUE)
+
   summary_df <- summary_df |>
     mutate(current_summary_date = as.Date(if_else(date > Sys.Date(),
                                          latest_date, NA)),

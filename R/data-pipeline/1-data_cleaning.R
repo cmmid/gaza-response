@@ -23,16 +23,17 @@ pacman::p_load(
   viridis)       # Colour-blind palette
 
 # example
-# # Load data stored locally
+# source(here("R/data-pipeline/0-data-dictionary.R")) # get helper fn for factors
+# data_dictionary <- readRDS(here("data", "data-dictionary.RDS"))
 # base_data <- readRDS(here("data", "processed", "df_base.RDS"))
 # fup_data <- readRDS(here("data", "processed", "df_fup.RDS"))
-# data <- clean_data(base_data, fup_data)
+# data <- clean_data(base_data, fup_data, data_dictionary)
 
 #...............................................................................
 ### Read in and match data
 #...............................................................................
 
-clean_data <- function(base_data, fup_data) {
+clean_data <- function(base_data, fup_data, data_dictionary) {
 
   # parse dates in raw data
   base_data <- base_data |>
@@ -95,11 +96,11 @@ clean_data <- function(base_data, fup_data) {
     left_join(clean_weight_entry, by = c("date", "id")) |>
     mutate(weight = if_else(!is.na(clean_weight_entry),
                             clean_weight_entry, weight),
-           weight_flag = if_else(date == date_entry &
-                                            !is.na(weight_followup) &
-                                            weight_followup != clean_weight_entry &
-                                            weight_followup != weight_prewar,
-                                          "Conflicting entry weight records", NA))
+           anomaly = if_else(date == date_entry &
+                                      !is.na(weight_followup) &
+                                      weight_followup != clean_weight_entry &
+                                      weight_followup != weight_prewar,
+                                    "Included (note: conflicting double record at study entry)", NA))
 
 # Dates & cohort time -----------------------------------------------------
   observed_data <- observed_data |>
@@ -182,15 +183,16 @@ clean_data <- function(base_data, fup_data) {
  # Drop full grid of ID/date combinations, keep only observed records
  observed_data <- observed_data |>
    filter(participant_recorded) |>
-   # add weight anomaly factor
+   # add weight anomaly criteria
    mutate(
-     weight_anomaly = as_factor(
+     anomaly = as_factor(
        case_when(
-         weight < 30 ~ "anomaly",
-         weight > 180 ~ "anomaly",
-         !between(bmi, 10, 60) ~ "anomaly",
-         weight_rate_change_daily >= 10 ~ "anomaly",
-         TRUE ~ "valid")
+         is.na(weight) ~ "Missing",
+         !between(weight, 30, 180) ~ "Excluded (weight <30kg or >180kg)",
+         !between(bmi, 10, 60) ~ "Excluded (BMI <10 or >60)",
+         weight_rate_change_daily >= 10 ~ "Excluded (>10% daily rate of weight change since entry)",
+         !is.na(anomaly) ~ anomaly,
+         TRUE ~ "Included")
      )
    )
 

@@ -20,7 +20,7 @@ execute:
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
-               purrr, readr, dplyr,
+                purrr, readr, dplyr,
                bslib, bsicons, 
                ggplot2, plotly)
 

@@ -16,14 +16,6 @@ pacman::p_load(
   ggplot2,       # Visualise data
   tidyverse)     # Tidyverse suite of packages
 
-#...............................................................................
-### Read in current summary statistics data
-#...............................................................................
-
-# time_series_stats_filename <- "data/time_series_table.csv"
-# time_series_stats <- read.csv(time_series_stats_filename)
-
-#...............................................................................
 ### Plot
 #...............................................................................
 source(here("R", "data-analysis/ggplot_theme.R"))

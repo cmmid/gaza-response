@@ -20,13 +20,6 @@ pacman::p_load(
   tidyverse)     # Tidyverse suite of packages
 
 #...............................................................................
-### Read in current summary statistics data
-#...............................................................................
-
-# current_summary_stats_filename <- "current_summary_stats.csv"
-# current_summary_stats <- read.csv(current_summary_stats_filename)
-
-#...............................................................................
 ### Plot
 #...............................................................................
 source(here("R", "data-analysis/ggplot_theme.R"))

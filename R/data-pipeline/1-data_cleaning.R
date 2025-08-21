@@ -194,7 +194,22 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
          !is.na(anomaly) ~ anomaly,
          TRUE ~ "Included")
      )
-   )
+   ) |>
+   # Replace anomaly measurements as missing
+   mutate(across(contains(c("weight", "bmi")),
+                 ~ if_else(anomaly != "Included",
+                           NA, .x)))
+
+ # Recode factors
+ observed_data <- observed_data |>
+   mutate(bmi_category_daily = bmi,
+          bmi_category_prewar = bmi_prewar)
+ observed_data <- set_factors(df = observed_data,
+                              factor_levels = c(data_dictionary$data_levels))
+
+ # Drop empty levels of organisation
+ observed_data <- observed_data |>
+   mutate(organisation = fct_drop(organisation))
 
  return(observed_data)
 }

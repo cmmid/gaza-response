@@ -82,6 +82,7 @@ log$data_summary$overall_sample <- dplyr::slice_sample(summary$all$overall,
 # save ----------------------
 output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])
 saveRDS(summary, output_file)
+log$output_file <- output_file
 
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)

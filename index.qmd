@@ -2,14 +2,28 @@
 title: Dashboard
 format: 
   dashboard:
-    orientation: rows
-    scrolling: true
+    orientation: columns
+    scrolling: false
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
     css: "styles.css"
     fig-format: svg
 toc: false
+filters:
+  - social-share
+share:
+  permalink: "https://cmmid.github.io/gaza-response/"
+  description: "Monitoring the nutritional status of humanitarian workers in Gaza"
+  twitter: true
+  facebook: true
+  reddit: true
+  stumble: true
+  tumblr: true
+  linkedin: true
+  email: true
+  mastodon: true
+  bsky: true
 execute: 
   echo: false
   freeze: auto
@@ -30,12 +44,8 @@ log <- readRDS(here("data/public/log.RDS"))
  
 ## Load summary: cross-sectional timeseries
 summary_daily <- readRDS(here("data", "public", "summary-cohort-daily.RDS"))
-summary_daily <- map_depth(summary_daily, .depth = 2, 
-                       ~ filter(., !grepl("other|prefer no", label)))
 ## Load summary: latest data for all participants
 summary_all <- readRDS(here("data", "public", "summary-cohort-all.RDS"))
-summary_all <- map_depth(summary_all, .depth = 2, 
-                       ~ filter(., !grepl("other|prefer no", label)))
 ## Load summary tables
 summary_tables <- readRDS(here("data", "public", "summary-tables.RDS"))
 

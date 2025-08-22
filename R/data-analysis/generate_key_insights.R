@@ -47,7 +47,7 @@ generate_key_insights <- function(data) {
     # Median weight change in %
     wt_chg_iqr_pct = summary_text_tab[summary_text_tab$variable == "weight_change_percent_prewar","median_iqr"],
     # % in "underweight" category
-    cohort_underwt_pc = summary_text_tab[summary_text_tab$variable == "bmi_category_daily_Underweight","bmi_pc"]
+    cohort_underwt_pc = summary_text_tab[summary_text_tab$variable == "bmi_category_daily_Underweight","bmi_pc"],
     # % in "underweight" category pre-war
     cohort_underwt_pc_prewar = summary_text_tab[summary_text_tab$variable == "bmi_category_prewar_Underweight","bmi_pc"]
   )

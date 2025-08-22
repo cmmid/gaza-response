@@ -30,20 +30,14 @@ pacman::p_load(
 ### Plot
 #...............................................................................
 source(here("R", "data-analysis/ggplot_theme.R"))
-plot_bmicategory_proportions_time_series <- function(data,
+plot_bmicategory_proportions_time_series <- function(data_timeseries,
                                                      strata = "overall"){
   # Filter data for the selected option
-  data <- data[[tolower(strata)]]
-  data_bmi <- data |>
-    # check to exclude dummy date ("latest")
-    filter(date <= Sys.Date() &
-             !is.na(date)) |>
+  plot_data <- data_timeseries[[tolower(strata)]]
+  data_bmi <- plot_data |>
     # daily data (ie drop prewar)
     filter(grepl("bmi_category_daily", variable)) |>
-    mutate(bmi_category = str_remove_all(variable,
-                                         "bmi_category_daily_"),
-           # add week
-           week = lubridate::floor_date(date, "week")
+    mutate(week = lubridate::floor_date(date, "week")
            ) |>
     # only keep counts
     filter(stat == "count") |>
@@ -72,7 +66,7 @@ plot_bmicategory_proportions_time_series <- function(data,
                       aesthetics = c("col", "fill")) +
     labs(x = NULL, y = "Weekly participant measurements") +
     facet_wrap(~ label, scales = "free_y") +
-    gghighlight() +
+    #gghighlight() +
     theme(lshtm_theme())
 
   return(plot)

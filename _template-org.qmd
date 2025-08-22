@@ -2,7 +2,7 @@
 format: 
   dashboard:
     orientation: columns
-    scrolling: true
+    scrolling: false
     include-in-header:
       text: |
             <script src="lshtm.js"></script>
@@ -42,26 +42,54 @@ summary_tables_org <- summary_tables[[meta_params$organisation]]
 <!--- new tab ------------------------------------------------------------>
 ### Trends by demographic {.tabset}
 
+#### Overall
+
 ```{r, include=FALSE}
-meta_params$stratum <- "Sex"
+meta_params$stratum <- "overall"
 ```
-#### `r meta_params$stratum`
 
 {{< include ./quarto/_tab-demographic.qmd >}}
 
+#### Sex
+
 ```{r, include=FALSE}
-meta_params$stratum <- "Age"
+meta_params$stratum <- "sex"
 ```
-#### `r meta_params$stratum`
 
 {{< include ./quarto/_tab-demographic.qmd >}}
 
+#### Age
+
 ```{r, include=FALSE}
-meta_params$stratum <- "Role"
+meta_params$stratum <- "age"
 ```
-#### `r meta_params$stratum`
 
 {{< include ./quarto/_tab-demographic.qmd >}}
+
+#### Dependent children^[number of dependent children]
+
+```{r, include=FALSE}
+meta_params$stratum <- "children_feeding"
+```
+
+{{< include ./quarto/_tab-demographic.qmd >}}
+
+#### Role
+
+```{r, include=FALSE}
+meta_params$stratum <- "role"
+```
+
+{{< include ./quarto/_tab-demographic.qmd >}}
+
+#### Governorate
+
+```{r, include=FALSE}
+meta_params$stratum <- "governorate"
+```
+
+{{< include ./quarto/_tab-demographic.qmd >}}
+
 
 <!--- new tab ------------------------------------------------------------>
 ### Participation

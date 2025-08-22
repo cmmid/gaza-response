@@ -1,5 +1,4 @@
 ---
-title: Dashboard
 format: 
   dashboard:
     orientation: columns
@@ -16,34 +15,40 @@ execute:
 ---
 
 ```{r, include=FALSE}
+# Set up template page per organisation
 pacman::p_load(here, 
                purrr, readr, dplyr, forcats, stringr,
                bslib, bsicons,
                ggplot2, plotly, shiny, patchwork)
 source(here("R", "data-analysis/ggplot_theme.R"))
-data_filtered <- data[[meta_params$organisation]]
-# split data into current 72h summary, or full timeseries
-data_filtered_current <- map(data_filtered,
-                             ~ filter(.x, !is.na(current_summary_date)) |> 
-                               mutate(date = current_summary_date))
-data_filtered_timeseries <- map(data_filtered,
-                             ~ filter(.x, !is.na(date)))
+if (is.null(meta_params$organisation) | length(meta_params$organisation) > 1) {
+  meta_params$organisation <- "Overall"}
 
-params <- generate_key_insights(data_filtered_current, strata = "overall")
+# Get relevant data
+# --- across full cohort (latest record for each ppt)
+summary_all_org <- summary_all[[meta_params$organisation]]
+# --- at daily intervals (participants recorded each day)
+summary_daily_org <- summary_daily[[meta_params$organisation]]
+# --- print-ready tables
+summary_tables <- summary_tables[[meta_params$organisation]]
 ```
 
 ## ROW {.tabset}
 
 ### Key insights
+```{r include=FALSE}
+# Create key insights text
+key_text <- generate_key_insights(summary_all_org[["overall"]])
+```
 
 ####
 
 ##### {width="20%"}
 
 ::: {.card}
-- Data updated as of **`r params$latest_date`**
-- Data contributed by **`r params$cohort_size` participants**
-- Since **October 2023**, median weight change of **`r params$median_change`%** (25-75% range: `r params$lower_change`-`r params$upper_change`%)
+- Data contributed by **`r key_text$cohort_n` participants** over `r key_text$date_range`^[All participants reported at baseline, with `r key_text$cohort_fup` participants reporting repeated measurements in follow up]
+- Since **October 2023**, median weight change of **`r key_text$organisation=`%** (25-75% range: `r key_text$lower_change`-`r key_text$upper_change`%)^[Self reported weight before the war compared to latest weight measured in study]
+- `r key_text$cohort_underwt_pc` participants with **underweight** body mass index, compared to `r key_text$cohort_underwt_pc_prewar` before October 2023^[Using reference WHO categories for an underweight BMI of < 18.5]
 :::
 
 ##### 
@@ -58,7 +63,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
   print(
     plot_current_summary_stats(
-      data = data_filtered_current,
+      data = summary_all_org,
       strata = i
     )
   )
@@ -77,7 +82,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_{i}'>"))
   print(
     plot_participants_over_time(
-      data = data_filtered_timeseries,
+      data = summary_daily_org,
       strata = i
     )
   )
@@ -129,7 +134,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='bmi_cat_{i}'>"))
   print(
      plot_bmicategory_proportions_time_series(
-     data = data_filtered_timeseries,
+     data = summary_daily_org,
      strata = i
     )
   )
@@ -152,13 +157,13 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='weight_trend_{i}'>"))
   print(
    plot_time_series_statistics(
-      data = data_filtered_timeseries,
+      data = summary_daily_org,
       summary_variable = "weight",
       strata = i
     ) +
   plot_time_series_statistics(
-      data = data_filtered_timeseries,
-      summary_variable = "weight_percent_change_prewar",
+      data = summary_daily_org,
+      summary_variable = "weight_change_percent_prewar",
       strata = i
     ) +
      plot_layout(ncol = 2)
@@ -180,13 +185,13 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='bmi_trend_{i}'>"))
   print(
    plot_time_series_statistics(
-      data = data_filtered_timeseries,
+      data = summary_daily_org,
       summary_variable = "bmi",
       strata = i
     ) +
   plot_time_series_statistics(
-      data = data_filtered_timeseries,
-      summary_variable = "bmi_percent_change_prewar",
+      data = summary_daily_org,
+      summary_variable = "bmi_change_percent_prewar",
       strata = i
     ) +
      plot_layout(ncol = 2)
@@ -216,23 +221,24 @@ knitr::knit_print(log$tab_baseline)
 
 ```{r}
 #| title: "Data quality"
-log$factor_count |> 
-  mutate(p = round(p*100, digits=0)) |> 
-  filter(f %in% c("Missing", "anomaly")) |> 
-  mutate(f = stringr::str_to_sentence(f),
-         variable = stringr::str_to_sentence(variable),
-         variable = case_when(variable == "Agegroup"~ "Age",
-                              variable == "Children_feeding"~"Dependent children",
-                              variable == "Bmi_category_daily"~"BMI category, current",
-                              variable == "Bmi_category_prewar"~
-                                "BMI category, autumn 2023",
-                              variable == "Weight_anomaly"~"Weight",
-                              TRUE~variable)) |> 
-  rename("Group" = variable, 
-         "Participant record status" = f, 
-         "Count" = n, 
-         "% all records" = p) |> 
-  kableExtra::kable() |> 
-  kableExtra::add_footnote("Valid ranges: weight, 30-180kg; BMI, 10-60; age, 16-99 years; dependent children, 0-20")
+# log$factor_count |> 
+#   mutate(p = round(p*100, digits=0)) |> 
+#   filter(f %in% c("Missing", "anomaly")) |> 
+#   mutate(f = stringr::str_to_sentence(f),
+#          variable = stringr::str_to_sentence(variable),
+#          variable = case_when(variable == "Agegroup"~ "Age",
+#                               variable == "Children_feeding"~"Dependent children",
+#                               variable == "Bmi_category_daily"~"BMI category, current",
+#                               variable == "Bmi_category_prewar"~
+#                                 "BMI category, autumn 2023",
+#                               variable == "Weight_anomaly"~"Weight",
+#                               TRUE~variable)) |> 
+#   rename("Group" = variable, 
+#          "Participant record status" = f, 
+#          "Count" = n, 
+#          "% all records" = p) |> 
+#   kableExtra::kable() |> 
+#   kableExtra::add_footnote("Valid ranges: weight, 30-180kg; BMI, 10-60; age, 16-99 years; dependent children, 0-20")
+print(summary_tables$data_quality)
 ```
 

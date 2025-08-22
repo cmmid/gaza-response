@@ -26,23 +26,35 @@ pacman::p_load(here,
                ggplot2, plotly, shiny, patchwork)
 
 ## Load data dictionary
-datadict <- readRDS(here("data/data-dictionary.RDS"))
+data_dictionary <- readRDS(here("data/data-dictionary.RDS"))
 ## Load log
 log <- readRDS(here("data/public/log.RDS"))
-## Load Data RDS
-data <- readRDS(here("data/public/summary-stats.RDS"))
+ 
+## Load summary: cross-sectional timeseries
+summary_daily <- readRDS(here("data", "public", "summary-cohort-daily.RDS"))
+summary_daily <- map_depth(summary_daily, .depth = 2, 
+                       ~ filter(., !grepl("other|prefer no", label)))
+## Load summary: latest data for all participants
+summary_all <- readRDS(here("data", "public", "summary-cohort-all.RDS"))
+summary_all <- map_depth(summary_all, .depth = 2, 
+                       ~ filter(., !grepl("other|prefer no", label)))
+## Load summary tables
+summary_tables <- readRDS(here("data", "public", "summary-tables.RDS"))
 
-options <- c("sex", "age", "governorate", "role", "children_feeding")
-# Generate all non-empty combinations
-strata <- unlist(
-  #lapply(1:length(options), function(k) {
-  lapply(1:2, function(k) {
-    combn(sort(options), k, FUN = function(x) paste(x, collapse = "-"))
-  })
-)
+# Stratifications
+strata <- log$strata
+# --- [[ code for 2x stratification ]] ---
+# options <- c("sex", "age", "governorate", "role", "children_feeding")
+# # Generate all non-empty combinations
+# strata <- unlist(
+#   #lapply(1:length(options), function(k) {
+#   lapply(1:2, function(k) {
+#     combn(sort(options), k, FUN = function(x) paste(x, collapse = "-"))
+#   })
+# )
 # Add 'Overall' as default/fallback
 strata <- c("overall", strata)
-meta_params <- list("organisation" = names(data))
+meta_params <- list("organisation" = names(summary_all))
 
 ## Source plotting scripts
 source(here("R", "data-pipeline", "0-data-dictionary.R"))

@@ -16,8 +16,7 @@ tabulate_study <- function(data, data_dictionary) {
   organisations <- unique(data$organisation)
 
   # Data quality
-  quality_vars <- list_simplify(
-    data_dictionary[["variable_names"]][["participation"]])
+  quality_vars <- data_dictionary[["variable_names"]][["participation"]]
   quality_df <- data |>
     mutate(participant_cumulative_days_recorded = as.numeric(participant_cumulative_days_recorded)) |>
     dplyr::select("Organisation" = "organisation",
@@ -42,8 +41,7 @@ tabulate_study <- function(data, data_dictionary) {
   names(tab_quality) <- organisations
 
   # Demographics
-  demog_vars <- list_simplify(
-                    data_dictionary[["variable_names"]][["demographic"]])
+  demog_vars <- data_dictionary[["variable_names"]][["demographic"]]
   demog_df <- data |>
     dplyr::select(c("Organisation" = "organisation",
                     "Participant timepoint"="participant_timepoint",

@@ -6,7 +6,6 @@
 # examples:
 # df$variable <- forcats::fct_recode(df$variable,
 #                                   !!!data_dictionary$variable_names))
-# dictionary <- fct_unify(set_data_dictionary())
 
 library(forcats)
 library(dplyr)
@@ -62,8 +61,12 @@ set_data_dictionary <- function() {
 
 # Variable name labels for display ---------------------------
   dictionary$variable_names <- list(
+    # meta
+    meta = c(
+    "Date" = "date",
+    "Date of study entry" = "date_entry"),
     # cohort participation
-    participation = list(
+    participation = c(
     "Demographic" = "group",
     "Strata" = "label",
     "Number of participants" = "cohort_id_recorded",
@@ -79,7 +82,7 @@ set_data_dictionary <- function() {
     "Exclusion criteria" = "anomaly"
     ),
     # demographics
-    demographic = list(
+    demographic = c(
     "Sex" = "sex",
     "Age" = "age",
     "Dependent children" = "children_feeding",
@@ -87,7 +90,7 @@ set_data_dictionary <- function() {
     "Organisation" = "organisation",
     "Governorate" = "governorate"
     ),
-    measurement = list(
+    measurement = c(
     # weight
       "Weight, kg" = "weight",
       "Weight change since start of war (kg)" = "weight_change_unit_prewar",
@@ -108,6 +111,9 @@ set_data_dictionary <- function() {
 
     return(dictionary)
   }
+
+
+# Helpers -----------------------------------------------------------------
 
 # Set factors
 set_factors <- function(df, factor_levels,
@@ -187,4 +193,23 @@ count_factors <- function(df){
               add_row(f = "Missing", n = sum(is.na(.x))),
             .id = "variable")
   return(count)
+}
+
+# rename using data dictionary
+rename_with_dictionary <- function(df, data_dictionary,
+                                   long = FALSE) {
+  if (long) {
+    suppressWarnings(
+      df <- df |>
+        mutate(variable_name = fct_recode(variable,
+                                          !!!list_c(data_dictionary$variable_names)))
+    )
+  } else {
+    suppressWarnings(
+      df <- df |>
+        rename(any_of(list_c(data_dictionary$variable_names)))
+    )
+  }
+
+  return(df)
 }

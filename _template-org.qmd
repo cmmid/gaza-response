@@ -11,7 +11,7 @@ format:
 toc: false
 execute: 
   echo: false
-  cache: true
+  cache: false
 ---
 
 ```{r, include=FALSE}
@@ -30,7 +30,7 @@ summary_all_org <- summary_all[[meta_params$organisation]]
 # --- at daily intervals (participants recorded each day)
 summary_daily_org <- summary_daily[[meta_params$organisation]]
 # --- print-ready tables
-summary_tables <- summary_tables[[meta_params$organisation]]
+summary_tables_org <- summary_tables[[meta_params$organisation]]
 ```
 
 ## ROW {.tabset}
@@ -47,7 +47,7 @@ key_text <- generate_key_insights(summary_all_org[["overall"]])
 
 ::: {.card}
 - Data contributed by **`r key_text$cohort_n` participants** over `r key_text$date_range`^[All participants reported at baseline, with `r key_text$cohort_fup` participants reporting repeated measurements in follow up]
-- Since **October 2023**, median weight change of **`r key_text$organisation=`%** (25-75% range: `r key_text$lower_change`-`r key_text$upper_change`%)^[Self reported weight before the war compared to latest weight measured in study]
+- Since **October 2023**, median weight change of **`r key_text$organisation`%** (25-75% range: `r key_text$lower_change`-`r key_text$upper_change`%)^[Self reported weight before the war compared to latest weight measured in study]
 - `r key_text$cohort_underwt_pc` participants with **underweight** body mass index, compared to `r key_text$cohort_underwt_pc_prewar` before October 2023^[Using reference WHO categories for an underweight BMI of < 18.5]
 :::
 
@@ -63,7 +63,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
   print(
     plot_current_summary_stats(
-      data = summary_all_org,
+      summary_all_org,
       strata = i
     )
   )
@@ -82,7 +82,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_{i}'>"))
   print(
     plot_participants_over_time(
-      data = summary_daily_org,
+      summary_daily_org,
       strata = i
     )
   )
@@ -95,8 +95,8 @@ for(i in strata) {
 ##### 
 
 ```{r}
-#| title: "Estimated change in BMI"
-markdown("Placeholder here")
+#| title: "Change in BMI category"
+summary_tables_org$bmi_crosstab
 ```
 
 #### {height="15%"}
@@ -134,7 +134,7 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='bmi_cat_{i}'>"))
   print(
      plot_bmicategory_proportions_time_series(
-     data = summary_daily_org,
+     summary_daily_org,
      strata = i
     )
   )
@@ -157,13 +157,13 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='weight_trend_{i}'>"))
   print(
    plot_time_series_statistics(
-      data = summary_daily_org,
-      summary_variable = "weight",
+      summary_daily_org,
+      #summary_variable = "weight",
       strata = i
     ) +
   plot_time_series_statistics(
-      data = summary_daily_org,
-      summary_variable = "weight_change_percent_prewar",
+      summary_daily_org,
+      #summary_variable = "weight_change_percent_prewar",
       strata = i
     ) +
      plot_layout(ncol = 2)
@@ -185,13 +185,13 @@ for(i in strata) {
   cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='bmi_trend_{i}'>"))
   print(
    plot_time_series_statistics(
-      data = summary_daily_org,
-      summary_variable = "bmi",
+      summary_daily_org,
+      #summary_variable = "bmi",
       strata = i
     ) +
   plot_time_series_statistics(
-      data = summary_daily_org,
-      summary_variable = "bmi_change_percent_prewar",
+      summary_daily_org,
+      #summary_variable = "bmi_change_percent_prewar",
       strata = i
     ) +
      plot_layout(ncol = 2)
@@ -214,7 +214,7 @@ Trends over time in participant current measurements, with comparison to pre-war
 
 ```{r}
 #| title: "Participant characteristics at baseline"
-knitr::knit_print(log$tab_baseline)
+summary_tables_org$demographic
 ```
 
 #### 
@@ -224,7 +224,6 @@ knitr::knit_print(log$tab_baseline)
 # log$factor_count |> 
 #   mutate(p = round(p*100, digits=0)) |> 
 #   filter(f %in% c("Missing", "anomaly")) |> 
-#   mutate(f = stringr::str_to_sentence(f),
 #          variable = stringr::str_to_sentence(variable),
 #          variable = case_when(variable == "Agegroup"~ "Age",
 #                               variable == "Children_feeding"~"Dependent children",
@@ -239,6 +238,6 @@ knitr::knit_print(log$tab_baseline)
 #          "% all records" = p) |> 
 #   kableExtra::kable() |> 
 #   kableExtra::add_footnote("Valid ranges: weight, 30-180kg; BMI, 10-60; age, 16-99 years; dependent children, 0-20")
-print(summary_tables$data_quality)
+summary_tables_org$data_quality
 ```
 

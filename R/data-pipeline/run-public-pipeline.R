@@ -89,23 +89,23 @@ log$data_latest$date_of_latest <- count(data_id_latest, organisation, date)
 ## Reset "date" to a single common date (so avoid any grouping by daily date)
 data_id_latest <- data_id_latest |>
   mutate(date_observation = date,
-         date == max(data_id_latest$date, na.rm=TRUE))
+         date = max(data_id_latest$date, na.rm=TRUE))
 
 # # tabulate all participants by demography & data quality
 tables_latest <- tabulate_study(data_id_latest, data_dictionary)
 log$data_latest$summary_tables <- tables_latest$Overall
 
-#' Summarise strata at latest record
+# Summarise strata at latest record
 suppressMessages({
   summary_cohort_all <- map(group_cols,
                  ~ data_id_latest |>
                    summarise_strata(group_cols = .x)) |>
     clean_aggregated_data()
 })
-log$summary_cohort_all$date_of_latest <- count(data_id_latest, organisation, date)
+log$summary_cohort_all$date_of_latest <- count(data_id_latest, organisation, date_observation)
 log$summary_cohort_all$overall_sample <- slice_sample(summary_cohort_all$Overall$overall,
                                                         prop = 0.1)
-# SUMMARISE TIMESERIES  ---------------------------------------------
+# SUMMARISE DAILY CROSS-SECTION  ---------------------------------------------
 # summarise sample at each daily timestep ---------------
 suppressMessages({
   summary_cohort_daily <- map(group_cols,
@@ -121,7 +121,7 @@ log$summary_cohort_daily$overall_sample <- slice_sample(summary_cohort_daily$Ove
 output_tables = sprintf("%s/data/public/summary-tables.RDS",.args["wd"])
 saveRDS(tables_latest, output_tables)
 
-output_all = sprintf("%s/data/public/summary_cohort_all.RDS", .args["wd"])
+output_all = sprintf("%s/data/public/summary-cohort-all.RDS", .args["wd"])
 saveRDS(summary_cohort_all, output_all)
 
 output_daily = sprintf("%s/data/public/summary-cohort-daily.RDS", .args["wd"])

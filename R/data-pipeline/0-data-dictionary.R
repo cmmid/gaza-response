@@ -66,12 +66,14 @@ set_data_dictionary <- function() {
     participation = list(
     "Demographic" = "group",
     "Strata" = "label",
-    "Number of participants" = "cohort_id_enrolled",
+    "Number of participants" = "cohort_id_recorded",
+    "Number of measurements" = "cohort_obs_recorded",
     "Number of newly enrolled participants" = "cohort_id_new",
-    "Number of participants in follow up" = "cohort_id_followup",
-    "Number of participants lost to follow up" = "cohort_obs_missing",
-    "Number of participant measurements" = "cohort_obs_recorded",
-    "Participant in follow-up" = "participant_in_followup",
+    "Number of follow up measurements" = "cohort_id_followup_record",
+    "Number of participants ever in follow up" = "cohort_id_followup_ever",
+    "Number of participants missing measurements" = "cohort_obs_missing",
+    "Cumulative participant days since entry" = "cohort_persondays",
+    "Cumulative participant days since entry among follow-up" = "cohort_persondays_followup",
     "Participant days since study entry" = "participant_cumulative_days_enrolled",
     "Participant days with recorded weight" = "participant_cumulative_days_recorded",
     "Exclusion criteria" = "anomaly"
@@ -88,16 +90,16 @@ set_data_dictionary <- function() {
     measurement = list(
     # weight
       "Weight, kg" = "weight",
-      "Weight change since start of war (kg)" = "weight_unit_change_prewar",
-      "Weight change since start of war (%)" = "weight_percent_change_prewar",
-      "Weight change since study entry (%)" = "weight_percent_change_firstmeasurement",
-      "Weight daily rate of change since study entry (kg/day)" = "weight_rate_change_daily",
+      "Weight change since start of war (kg)" = "weight_change_unit_prewar",
+      "Weight change since start of war (%)" = "weight_change_percent_prewar",
+      "Weight change since study entry (%)" = "weight_change_percent_entry",
+      "Weight daily rate of change since study entry (%/day)" = "weight_change_percent_daily_rate_entry",
     # BMI
       "BMI" = "bmi",
-      "BMI change since start of war" = "bmi_unit_change_prewar",
-      "BMI change since start of war (%)" = "bmi_percent_change_prewar",
-      "BMI change since enrollment (%)" = "bmi_percent_change_firstmeasurement",
-      "BMI daily rate of change since study entry (units/day)" = "bmi_rate_change_daily",
+      "BMI change since start of war" = "bmi_change_unit_prewar",
+      "BMI change since start of war (%)" = "bmi_change_percent_prewar",
+      "BMI change since enrollment (%)" = "bmi_change_percent_entry",
+      "BMI daily rate of change since study entry (%/day)" = "bmi_change_percent_daily_rate_entry",
     "Current BMI" = "bmi_category_daily",
     "Pre-war BMI" = "bmi_category_prewar"
     )

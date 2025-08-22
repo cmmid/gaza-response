@@ -100,7 +100,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
                                       !is.na(weight_followup) &
                                       weight_followup != clean_weight_entry &
                                       weight_followup != weight_prewar,
-                                    "Included (note: conflicting double record at study entry)", NA))
+                                    "Excluded (conflicting double record at study entry)", NA))
 
 # Dates & cohort time -----------------------------------------------------
   observed_data <- observed_data |>
@@ -119,8 +119,8 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
     # add latest measure as separate variable
     mutate(last_measurement = participant_cumulative_days_recorded == max(
       participant_cumulative_days_recorded, na.rm = TRUE) & participant_recorded,
-           date_last_measurement = date[which(last_measurement)],
-           weight_last_measurement = weight[which(last_measurement)])
+           date_last = date[which(last_measurement)],
+           weight_last = weight[which(last_measurement)])
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -134,28 +134,26 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
       bmi_prewar = if_else(!is.na(weight),
                            weight_prewar / (height/100)^2,
                            NA),
-      first_bmi_measurement = bmi[date == date_entry],
-      last_bmi_measurement = bmi[date == date_last_measurement],
-      # change since study entry
-      weight_percent_change_firstmeasurement = ((weight - weight_entry)/
-                                                  weight_entry)*100,
-      bmi_percent_change_firstmeasurement = ((bmi - first_bmi_measurement)/
-                                               first_bmi_measurement)*100,
-      # daily rate of change since study entry
-      bmi_rate_change_daily = (bmi - first_bmi_measurement) /
+      bmi_entry = bmi[date == date_entry],
+      bmi_last = bmi[date == date_last],
+      # percent change since study entry
+      weight_change_percent_entry = ((weight - weight_entry) / weight_entry)*100,
+      bmi_change_percent_entry = ((bmi - bmi_entry) / bmi_entry)*100,
+      # percent daily rate of change since study entry
+      weight_change_percent_daily_rate_entry = weight_change_percent_entry /
         participant_cumulative_days_enrolled,
-      weight_rate_change_daily = (weight - weight_entry) /
+      bmi_change_percent_daily_rate_entry = bmi_change_percent_entry /
         participant_cumulative_days_enrolled,
       # change since prewar
-      weight_unit_change_prewar = weight - weight_prewar,
-      bmi_unit_change_prewar = bmi - bmi_prewar,
-      weight_percent_change_prewar = ((weight - weight_prewar) /
+      weight_change_unit_prewar = weight - weight_prewar,
+      bmi_change_unit_prewar = bmi - bmi_prewar,
+      weight_change_percent_prewar = ((weight - weight_prewar) /
                                         weight_prewar)*100,
-      bmi_percent_change_prewar = ((bmi - bmi_prewar) /
+      bmi_change_percent_prewar = ((bmi - bmi_prewar) /
                                      bmi_prewar)*100) |>
     ungroup() |>
     # drop 0 percent change on date of first measurement
-    mutate(across(contains("_percent_change_firstmeasurement"),
+    mutate(across(matches("(.*)_change_(.*)_entry"),
            ~ ifelse(date == date_entry, NA, .x)))
 
  change_from_previous <- observed_data %>%
@@ -166,14 +164,14 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
                   previous_bmi = lag(bmi),
                   days_since_previousmeasurement = as.integer(
                     difftime(date, lag(date), units = "days")),
-                  weight_percent_change_previousmeasurement = ((weight - previous_weight) /
+                  weight_change_percent_previousmeasurement = ((weight - previous_weight) /
                                                                  previous_weight)*100,
-                  bmi_percent_change_previousmeasurement = ((bmi - previous_bmi) /
+                  bmi_change_percent_previousmeasurement = ((bmi - previous_bmi) /
                                                               previous_bmi)*100) |>
     dplyr::select(id, date,
                   days_since_previousmeasurement,
-                  weight_percent_change_previousmeasurement,
-                  bmi_percent_change_previousmeasurement) |>
+                  weight_change_percent_previousmeasurement,
+                  bmi_change_percent_previousmeasurement) |>
     ungroup()
 
  observed_data <- left_join(observed_data,
@@ -191,7 +189,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
          is.na(weight) ~ "Missing",
          !between(weight, 30, 180) ~ "Excluded (weight <30kg or >180kg)",
          !between(bmi, 10, 60) ~ "Excluded (BMI <10 or >60)",
-         weight_rate_change_daily >= 10 ~ "Excluded (>10% daily rate of weight change since entry)",
+         weight_change_percent_daily_rate_entry >= 10 ~ "Excluded (>10% daily rate of weight change since entry)",
          !is.na(anomaly) ~ anomaly,
          TRUE ~ "Included")
    ) |>

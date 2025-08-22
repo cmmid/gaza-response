@@ -51,7 +51,7 @@ tabulate_study <- function(data, data_dictionary) {
                  ~ demog_df |>
                    filter(Organisation == .x) |>
                    tbl_summary(by = "Participant timepoint",
-                               percent = "row",
+                               percent = "column",
                                include = -c("Organisation"),
                                missing = "ifany",
                                missing_text = "Missing") |>

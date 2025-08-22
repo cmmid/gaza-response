@@ -33,211 +33,38 @@ summary_daily_org <- summary_daily[[meta_params$organisation]]
 summary_tables_org <- summary_tables[[meta_params$organisation]]
 ```
 
-## ROW {.tabset}
+## ROW OF TABS {.tabset}
 
 ### Key insights
-```{r include=FALSE}
-# Create key insights text
-key_text <- generate_key_insights(summary_all_org[["overall"]])
-```
 
-####
-
-##### {width="20%"}
-
-::: {.card}
-- Data contributed by **`r key_text$cohort_n` participants** over `r key_text$date_range`^[All participants reported at baseline, with `r key_text$cohort_fup` participants reporting repeated measurements in follow up]
-- Since **October 2023**, median weight change of **`r key_text$organisation`%** (25-75% range: `r key_text$lower_change`-`r key_text$upper_change`%)^[Self reported weight before the war compared to latest weight measured in study]
-- `r key_text$cohort_underwt_pc` participants with **underweight** body mass index, compared to `r key_text$cohort_underwt_pc_prewar` before October 2023^[Using reference WHO categories for an underweight BMI of < 18.5]
-:::
-
-##### 
-
-::: {.card .current_summary_card .lshtm_widget title="Current summary" fill="false"}
-<div class="lshtm_widget_identifier" id="current_summary">
-```{r, results="asis"}
-#| fig-align: center
-for(i in strata) {
-  # show the first stratum (overall) by default
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
-  print(
-    plot_current_summary_stats(
-      summary_all_org,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-::: {.card .participants_card .lshtm_widget fill="false"}
-<div class="lshtm_widget_identifier" id="participants">
-```{r, results="asis"}
-#| fig-align: center
-for(i in strata) {
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_{i}'>"))
-  print(
-    plot_participants_over_time(
-      summary_daily_org,
-      strata = i
-    )
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-##### 
-
-```{r}
-#| title: "Change in BMI category"
-summary_tables_org$bmi_crosstab
-```
-
-#### {height="15%"}
-
-::: {.callout-note collapse="true" title="Data" appearance="simple"}
-Summary ranges:
-- Median and 25-75% range of participant weight in kilograms (kg) and [Body Mass Index](https://www.cdc.gov/bmi/adult-calculator/index.html?), with % change from pre-October 2023. Negative % indicate weight loss.
-
-Daily participation:
-- Measurements contributed by newly recruited participants ("New")
-- Measurements from previously enrolled participants ("Repeated")
-- Enrolled participants measured at baseline only ("Lost to follow up")
-:::
+{{< include ./quarto/_tab-key-insights.qmd >}}
 
 <!--- new tab ------------------------------------------------------------>
-### Trends {.tabset}
+### Trends by demographic {.tabset}
 
-#### BMI categories
-
-##### {width="70%"}
-
-```{r, results='asis'}
-#| title: "Pre-war to now"
-print(log$tab_bmi_categories[[meta_params$organisation]])
+```{r, include=FALSE}
+meta_params$stratum <- "Sex"
 ```
+#### `r meta_params$stratum`
 
-##### {width="30%"}
+{{< include ./quarto/_tab-demographic.qmd >}}
 
-::: {.card .bmi_cat_card .lshtm_widget fill="false" title="BMI category % by week"}
-<div class="lshtm_widget_identifier" id="bmi_cat">
-```{r, results="asis"}
-#| fig-align: center
-for(i in strata) {
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='bmi_cat_{i}'>"))
-  print(
-     plot_bmicategory_proportions_time_series(
-     summary_daily_org,
-     strata = i
-    )
-  )
-  cat('</div>')
-}
+```{r, include=FALSE}
+meta_params$stratum <- "Age"
 ```
-</div>
-:::
+#### `r meta_params$stratum`
 
-#### Weight and BMI
+{{< include ./quarto/_tab-demographic.qmd >}}
 
-##### column
-
-::: {.card .weight_trend_card .lshtm_widget fill="false"}
-<div class="lshtm_widget_identifier" id="weight_trend">
-```{r, results="asis"}
-#| fig-align: center
-for(i in strata) {
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='weight_trend_{i}'>"))
-  print(
-   plot_time_series_statistics(
-      summary_daily_org,
-      #summary_variable = "weight",
-      strata = i
-    ) +
-  plot_time_series_statistics(
-      summary_daily_org,
-      #summary_variable = "weight_change_percent_prewar",
-      strata = i
-    ) +
-     plot_layout(ncol = 2)
-  )
-  cat('</div>')
-}
+```{r, include=FALSE}
+meta_params$stratum <- "Role"
 ```
-</div>
-:::
+#### `r meta_params$stratum`
 
-##### column
+{{< include ./quarto/_tab-demographic.qmd >}}
 
-::: {.card .bmi_trend_card .lshtm_widget fill="false"}
-<div class="lshtm_widget_identifier" id="bmi_trend">
-```{r, results="asis"}
-#| fig-align: center
-for(i in strata) {
-  visible_class = ifelse(i == strata[1], "visible", "")
-  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='bmi_trend_{i}'>"))
-  print(
-   plot_time_series_statistics(
-      summary_daily_org,
-      #summary_variable = "bmi",
-      strata = i
-    ) +
-  plot_time_series_statistics(
-      summary_daily_org,
-      #summary_variable = "bmi_change_percent_prewar",
-      strata = i
-    ) +
-     plot_layout(ncol = 2)
-  )
-  cat('</div>')
-}
-```
-</div>
-:::
-
-####
-
-::: {.callout-note collapse="true" appearance="minimnal"}
-Trends over time in participant current measurements, with comparison to pre-war levels (% change since October 2023), since the beginning of the project. BMI by WHO category: underweight <18.5, normal 18.50 – 24.99, overweight ≥ 25, obese ≥ 30. Calculated as the number of measurements per week that fall in each category, divided by the total number of measurements that week ("N").
-:::
-
+<!--- new tab ------------------------------------------------------------>
 ### Participation
 
-####
-
-```{r}
-#| title: "Participant characteristics at baseline"
-summary_tables_org$demographic
-```
-
-#### 
-
-```{r}
-#| title: "Data quality"
-# log$factor_count |> 
-#   mutate(p = round(p*100, digits=0)) |> 
-#   filter(f %in% c("Missing", "anomaly")) |> 
-#          variable = stringr::str_to_sentence(variable),
-#          variable = case_when(variable == "Agegroup"~ "Age",
-#                               variable == "Children_feeding"~"Dependent children",
-#                               variable == "Bmi_category_daily"~"BMI category, current",
-#                               variable == "Bmi_category_prewar"~
-#                                 "BMI category, autumn 2023",
-#                               variable == "Weight_anomaly"~"Weight",
-#                               TRUE~variable)) |> 
-#   rename("Group" = variable, 
-#          "Participant record status" = f, 
-#          "Count" = n, 
-#          "% all records" = p) |> 
-#   kableExtra::kable() |> 
-#   kableExtra::add_footnote("Valid ranges: weight, 30-180kg; BMI, 10-60; age, 16-99 years; dependent children, 0-20")
-summary_tables_org$data_quality
-```
+{{< include ./quarto/_tab-participation.qmd >}}
 

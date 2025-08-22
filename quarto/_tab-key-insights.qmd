@@ -1,0 +1,74 @@
+```{r include=FALSE}
+# Create key insights text
+key_text <- generate_key_insights(summary_all_org[["overall"]])
+```
+
+####
+
+##### {width="20%"}
+
+::: {.card}
+- Data contributed by **`r key_text$cohort_n` participants** over `r key_text$date_range`^[All participants reported at baseline, with `r key_text$cohort_fup` participants reporting repeated measurements in follow up]
+- Since **October 2023**, median weight change of **`r key_text$median_iqr`%**^[Self reported weight before the war compared to latest weight measured in study]
+- `r key_text$cohort_underwt_pc` participants with **underweight** body mass index, compared to `r key_text$cohort_underwt_pc_prewar` before October 2023^[WHO category for underweight BMI of < 18.5]
+:::
+
+##### 
+
+::: {.card .current_summary_card .lshtm_widget title="Current summary" fill="false"}
+<div class="lshtm_widget_identifier" id="current_summary">
+```{r, results="asis"}
+#| fig-align: center
+for(i in strata) {
+  # show the first stratum (overall) by default
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='current_summary_{i}'>"))
+  print(
+    plot_current_summary_stats(
+      summary_all_org,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
+:::
+
+::: {.card .participants_card .lshtm_widget fill="false"}
+<div class="lshtm_widget_identifier" id="participants">
+```{r, results="asis"}
+#| fig-align: center
+for(i in strata) {
+  visible_class = ifelse(i == strata[1], "visible", "")
+  cat(glue::glue("<div class='lshtm_widget_content {visible_class}' id='participants_{i}'>"))
+  print(
+    plot_participants_over_time(
+      summary_daily_org,
+      strata = i
+    )
+  )
+  cat('</div>')
+}
+```
+</div>
+:::
+
+##### 
+
+```{r}
+#| title: "Change in BMI category"
+summary_tables_org$bmi_crosstab
+```
+
+#### {height="15%"}
+
+::: {.callout-note collapse="true" title="Data" appearance="simple"}
+Summary ranges:
+- Median and 25-75% range of participant weight in kilograms (kg) and [Body Mass Index](https://www.cdc.gov/bmi/adult-calculator/index.html?), with % change from pre-October 2023. Negative % indicate weight loss.
+
+Daily participation:
+- Measurements contributed by newly recruited participants ("New")
+- Measurements from previously enrolled participants ("Repeated")
+- Enrolled participants measured at baseline only ("Lost to follow up")
+:::

@@ -16,8 +16,6 @@ execute:
   cache: false
 ---
 
-<!-- Setup, no output -->
-
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
@@ -65,6 +63,8 @@ source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
 ```
+
+<!--- MAIN PAGE FRAME -------------------------------------------------------->
 
 <!-- Global sidebar -->
 
@@ -122,11 +122,11 @@ We are actively seeking participants to support the project, and welcome new col
 
 <details>
 <summary>Updated</summary>
-<p> Data: `r log$max_date` | Website: `r Sys.Date()`</p>
+<p> Data: `r log$data_raw$max_date` | Website: `r Sys.Date()`</p>
 </details>
 
 
-<!-- Dashboard pages -->
+<!-- TOP LEVEL TAB PAGES ------------------------------------------------->
 
 # All Participants
 

@@ -1,0 +1,30 @@
+
+##### {width="50%"}
+
+```{r, results='asis'}
+#| title: "Pre-war to now"
+plot_bmi_units <- plot_time_series_statistics(
+      summary_daily_org,
+      #summary_variable = "bmi",
+      strata = meta_params$stratum
+    )
+plot_bmi_percent <- plot_time_series_statistics(
+      summary_daily_org,
+      #summary_variable = "bmi_change_percent_prewar",
+      strata = meta_params$stratum
+    )
+
+subplot(plot_bmi_units, plot_bmi_percent)
+```
+
+##### {width="50%"}
+
+```{r}
+#| title: "BMI category by week (% weekly participants)"
+#| fig-align: center
+plot_bmicategory_proportions_time_series(
+     summary_daily_org,
+     strata = meta_params$stratum
+    ) |> 
+  ggplotly()
+```

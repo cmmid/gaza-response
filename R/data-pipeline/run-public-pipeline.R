@@ -2,6 +2,7 @@
 
 # Set up -------
 pacman::p_load(here, purrr, dplyr)
+set.seed(123)
 #do not show summarise message
 options(dplyr.summarise.inform = FALSE)
 
@@ -24,41 +25,37 @@ walk(pipeline_functions, source)
 base_data <- readRDS(paste0(base, "data/processed/df_base.RDS"))
 fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
 
-# log columns are correct
+# log raw data validation
+log$data_raw <- list()
 expected_base <- c("id", "date", "organisation", "age", "sex", "governorate",
               "role", "height", "weight_prewar", "weight", "children_feeding")
-log$base_cols_missing <- setdiff(expected_base, colnames(base_data))
+log$data_raw$base_cols_missing <- setdiff(expected_base, colnames(base_data))
 expected_fup <- c("id", "date", "weight")
-log$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
-
-# add basic stats to log for checking
-log$n_participants_baseline <- length(unique(base_data$id))
-log$max_date <- max(fup_data$date)
-log$orgs <- unique(base_data$organisation)
+log$data_raw$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
+log$data_raw$n_participants_baseline <- length(unique(base_data$id))
+log$data_raw$max_date <- max(fup_data$date)
+log$data_raw$orgs <- unique(base_data$organisation)
 
 # Clean data -----
 data_id_daily <- clean_data(base_data, fup_data)
+log$data_clean$nrow <- nrow(data_id_daily)
+log$data_clean$n_id <- length(unique(data_id_daily$id))
 
 # Summaries ------------------------------------------------------------
 # filter to last recorded observation for all participants
 data_id_last <- data_id_daily |>
   filter(last_measurement)
 
-# set up dates: only observations within most recent 72h window
 latest_date <- as.Date(max(data_id_daily$date, na.rm = TRUE))
-recent_days <- seq.Date(from = latest_date - 3,
-                        length.out = 4, by = "day")
-data_id_current <- data_id_last |>
-  filter(date %in% recent_days)
-log$recent_days <- count(data_id_current, date)
+log$data_clean$latest_date <- latest_date
 
 # set date to the future to use as a flag that this is the most recent record
 #   (noting all group calculations include date so will not be double-counted)
-data_id_current <- data_id_current |>
+data_id_last <- data_id_last |>
   mutate(date = Sys.Date() + 3650)
 
-# bind latest data with full time series
-data_id <- bind_rows(data_id_daily, data_id_current)
+# bind latest observation with full time series
+data_id <- bind_rows(data_id_daily, data_id_last)
 
 # summarise by date, organisation, and group -----
 # Create 2 levels of stratification
@@ -69,18 +66,23 @@ group_cols <- append(map(group_cols,
                          ~ c("date", "organisation", sort(.x))),
                      map(group_cols,
                          ~ c("date", sort(.x))))
-
+log$data_summary <- list()
+log$data_summary$group_cols <- group_cols
 #' Do not print all messages
 suppressMessages({
     summary <- imap(group_cols,
                     ~ data_id |>
                       summarise_ids(group_cols = .x)) |>
-      clean_aggregated_data(latest_date = latest_date)
+      clean_aggregated_data()
   })
+log$data_summary$overall_latest_date <- max(summary$all$overall$date, na.rm=TRUE)
+log$data_summary$overall_sample <- dplyr::slice_sample(summary$all$overall,
+                                                       prop = 0.1)
 
 # save ----------------------
 output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])
 saveRDS(summary, output_file)
+log$output_file <- output_file
 
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)

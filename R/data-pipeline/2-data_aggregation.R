@@ -65,25 +65,15 @@ summarise_ids <- function(data, group_cols) {
     count(name = "value") |>
     mutate(stat = "count",
            variable = paste0(bmi_period, "_", bmi_category))
-
-    # get % per category compared to all those measured in that group
-  df_bmi_props <- df_bmi_count |>
-    left_join(dplyr::select(df_participants,
-                            all_of(c(group_cols, "cohort_obs_recorded")))) |>
-    mutate(value = value / cohort_obs_recorded * 100,
-           stat = "percent",
-           variable = paste0(bmi_period, "_", bmi_category)) |>
-    ungroup() |>
-    bind_rows(df_bmi_count) |>
-    dplyr::select(all_of(c(group_cols, "value", "stat", "variable"))) |>
-    # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
-    complete(nesting(!!!syms(group_cols)),
-             stat, variable,
-             fill = list(value = 0))
+  # |>
+  #   # TODO this might need updating to use the data dictionary, as nesting() only completes based on what's in the data
+  #   complete(nesting(!!!syms(group_cols)),
+  #            stat, variable,
+  #            fill = list(value = 0))
 
   # combine summaries -----
   df_summary <- bind_rows(df_centraltendency,
-                          df_bmi_props) |>
+                          df_bmi_count) |>
     left_join(df_participants,
               by = group_cols) |>
     ungroup() |>

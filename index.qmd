@@ -10,20 +10,6 @@ format:
     css: "styles.css"
     fig-format: svg
 toc: false
-filters:
-  - social-share
-share:
-  permalink: "https://cmmid.github.io/gaza-response/"
-  description: "Monitoring the nutritional status of humanitarian workers in Gaza"
-  twitter: true
-  facebook: true
-  reddit: true
-  stumble: true
-  tumblr: true
-  linkedin: true
-  email: true
-  mastodon: true
-  bsky: true
 execute: 
   echo: false
   freeze: auto

@@ -1,35 +1,47 @@
 ```{r, include=FALSE}
-plot_data_timeseries <- map(summary_daily_org, 
-                            ~ filter(., !grepl("other|prefer no", tolower(label))) |> 
-                              mutate(label = fct_drop(label)))
+# Filter all data to relevant demographic strata
+if (is.na(meta_params$strata) | length(meta_params$strata) > 1) {
+  meta_params$strata <- "overall"}
+
+plot_data_timeseries <- org_summary$data$daily_records |> 
+  filter(strata == meta_params$strata)
+
+plot_data_latest <- org_summary$data$latest_records |> 
+  filter(strata == meta_params$strata)
+
 ```
 
-##### {width="50%"}
+#####
 
 ```{r}
-#| title: "Pre-war to now"
-plot_bmi_units <- plot_time_series_statistics(
-      plot_data_timeseries,
-      #summary_variable = "bmi",
-      strata = meta_params$stratum
-    )
-plot_bmi_percent <- plot_time_series_statistics(
-      plot_data_timeseries,
-      #summary_variable = "bmi_change_percent_prewar",
-      strata = meta_params$stratum
-    )
-
-subplot(plot_bmi_units, plot_bmi_percent)
+#| title: "Current summary"
+#| fig-align: center
+plot_current_summary_stats(
+  plot_data_latest,
+  strata = meta_params$strata) |> 
+  ggplotly()
 ```
 
-##### {width="50%"}
+#####
+
+```{r}
+#| title: "Recent trends"
+plot_time_series_statistics(
+      plot_data = plot_data_timeseries,
+      strata = meta_params$strata
+    )
+```
+
+#####
 
 ```{r}
 #| title: "BMI category, % weekly participants"
 #| fig-align: center
-plot_bmicategory_proportions_time_series(
-     plot_data_timeseries,
-     strata = meta_params$stratum
-    ) |> 
+plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |> 
+  ggplotly()
+```
+```{r}
+plot_participants_over_time(plot_data_timeseries, 
+                            strata = meta_params$strata) |> 
   ggplotly()
 ```

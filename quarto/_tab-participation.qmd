@@ -3,7 +3,7 @@
 
 ```{r}
 #| title: "Participant characteristics at baseline"
-summary_tables_org$demographic
+org_summary$tables$demographic_strata
 ```
 
 ####
@@ -27,5 +27,6 @@ summary_tables_org$demographic
 #          "% all records" = p) |> 
 #   kableExtra::kable() |> 
 #   kableExtra::add_footnote("Valid ranges: weight, 30-180kg; BMI, 10-60; age, 16-99 years; dependent children, 0-20")
-summary_tables_org$data_quality
+org_summary$tables$data_quality
 ```
+

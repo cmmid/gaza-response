@@ -8,15 +8,14 @@
 #TODO tidy data: produce dataframe with
 # date - group - N - timepoint - indicator (cohort, bmi, weight) - stat - value
 
-pacman::p_load(dplyr, tidyr, purrr, gtsummary, janitor)
+pacman::p_load(dplyr, tidyr, purrr, gtsummary, janitor, stringr)
 
 # tabulate summary statistics across cohort ----------------------------
 # Table 1 summary
-tabulate_study <- function(data, data_dictionary) {
+tabulate_study <- function(data, strata, data_dictionary) {
   organisations <- unique(data$organisation)
 
   # Data quality
-  quality_vars <- data_dictionary[["variable_names"]][["participation"]]
   quality_df <- data |>
     mutate(participant_cumulative_days_recorded = as.numeric(participant_cumulative_days_recorded)) |>
     dplyr::select("Organisation" = "organisation",
@@ -24,7 +23,7 @@ tabulate_study <- function(data, data_dictionary) {
                   "Number of observations per participant" = participant_cumulative_days_recorded,
                   "Excluded observations" = anomaly
                   ) |>
-    rename(any_of(quality_vars))
+    rename(any_of(c(data_dictionary$data_levels)))
 
   tab_quality <- map(organisations,
                    ~ quality_df |>
@@ -40,15 +39,14 @@ tabulate_study <- function(data, data_dictionary) {
                    )
   names(tab_quality) <- organisations
 
-  # Demographics
-  demog_vars <- data_dictionary[["variable_names"]][["demographic"]]
-  demog_df <- data |>
-    dplyr::select(c("Organisation" = "organisation",
-                    "Participant timepoint"="participant_timepoint",
-                    any_of(demog_vars))) |>
-    rename(any_of(demog_vars))
-  tab_demog <- map(organisations,
-                 ~ demog_df |>
+  # Demographic strata
+  strata_df <- data |>
+    dplyr::select("organisation",
+                  "Participant timepoint" = "participant_timepoint",
+                  any_of(c(!!!strata))) |>
+    rename(any_of(c(data_dictionary$data_levels)))
+  tab_strata <- map(organisations,
+                 ~ strata_df |>
                    filter(Organisation == .x) |>
                    tbl_summary(by = "Participant timepoint",
                                percent = "column",
@@ -58,7 +56,7 @@ tabulate_study <- function(data, data_dictionary) {
                    add_overall() |>
                    as_gt()
                    )
-  names(tab_demog) <- organisations
+  names(tab_strata) <- organisations
 
     # BMI category crosstab
     tab_bmi <- map(organisations,
@@ -76,7 +74,7 @@ tabulate_study <- function(data, data_dictionary) {
     names(tab_bmi) <- unique(data$organisation)
 
     study_tables <- list("data_quality" = tab_quality,
-                         "demographic" = tab_demog,
+                         "demographic_strata" = tab_strata,
                          "bmi_crosstab" = tab_bmi)
     org_tables <- list_transpose(study_tables)
 
@@ -84,12 +82,17 @@ tabulate_study <- function(data, data_dictionary) {
 }
 
 # summarise by any given strata ------------------------------------
-summarise_strata <- function(data, group_cols) {
+summarise_strata <- function(data, strata) {
   #if(interactive()) print(group_cols)
+
+  # create single grouping id
+  data <- data |>
+    mutate(strata = {{ strata }},
+           stratum = paste(!!!syms(strata)))
 
   # summarise participants per group -----
   df_participants <- data |>
-    group_by(across(all_of(group_cols))) |>
+    group_by(date, organisation, strata, stratum) |>
     summarise(
       # participants ---
       # -- all observed
@@ -107,9 +110,9 @@ summarise_strata <- function(data, group_cols) {
                                          cohort_id_followup_ever),
       # daily observations
       # number of recorded weights
-      cohort_obs_recorded = sum(!is.na(weight)),
+      cohort_obs_recorded = sum(!is.na(weight_daily)),
       # missing/anomalous weight among recorded
-      cohort_obs_missing = sum(is.na(weight)),
+      cohort_obs_missing = sum(is.na(weight_daily)),
       #
       .groups = "drop"
       )
@@ -117,9 +120,9 @@ summarise_strata <- function(data, group_cols) {
   # summarise observed metrics -----
   # averages
   df_centraltendency <- data |>
-    group_by(across(all_of(group_cols))) |>
+    group_by(date, organisation, strata, stratum) |>
     summarise(
-      across(c("weight",
+      across(any_of(c("weight_daily",
                "weight_change_unit_prewar",
                "weight_change_percent_entry",
                "weight_change_percent_prewar",
@@ -131,8 +134,8 @@ summarise_strata <- function(data, group_cols) {
                "bmi_change_percent_prewar",
                "bmi_change_percent_daily_rate_entry",
                #
-               "participant_cumulative_days_enrolled",
-               ),
+               "participant_cumulative_days_enrolled"
+               )),
              .fns = list(
                mean = ~ mean(., na.rm = TRUE),
                median = ~ median(., na.rm = TRUE),
@@ -141,18 +144,18 @@ summarise_strata <- function(data, group_cols) {
              .names = "{.col}.{.fn}"),
       .groups = "drop"
     ) |>
-    pivot_longer(cols = -group_cols) %>%
+    pivot_longer(cols = -c(date, organisation, strata, stratum)) %>%
     separate(name, into = c("variable", "stat"), sep = "\\.")
 
   # BMI by category
   df_bmi_count <- data |>
-    filter(!is.na(bmi)) |>
-    group_by(across(all_of(c(group_cols)))) |>
-
-
+    filter(!is.na(bmi_daily)) |>
+    group_by(date, organisation, strata, stratum) |>
     pivot_longer(cols = contains("bmi_category"),
-                 names_to = "bmi_period", values_to = "bmi_category") |>
-    group_by(across(all_of(c(group_cols, "bmi_period", "bmi_category")))) |>
+                 names_to = "bmi_period",
+                 values_to = "bmi_category") |>
+    group_by(date, organisation, strata, stratum,
+             bmi_period, bmi_category) |>
     count(name = "value") |>
     mutate(stat = "count",
            variable = paste0(bmi_period, "_", bmi_category))
@@ -161,34 +164,13 @@ summarise_strata <- function(data, group_cols) {
   df_summary <- bind_rows(df_centraltendency,
                           df_bmi_count) |>
     left_join(df_participants,
-              by = group_cols) |>
+              by = c("date", "organisation",
+                     "strata", "stratum")) |>
     ungroup() |>
-    # create single grouping id
-    mutate(group = paste(group_cols, collapse = "-"),
-            label = pmap_chr(across(all_of(setdiff(group_cols,
-                                                   c("date",
-                                                     "organisation")))),
-                             ~ paste(..., sep = ", ")))
-
-  return(df_summary)
-}
-
-clean_aggregated_data <- function(summary_list) {
-  summary_df <- list_rbind(summary_list) |>
-    ungroup()
-
-  # label current summary date
-  summary_df <- summary_df |>
     mutate(date_summarised = Sys.Date())
 
-  # split into a list indexed by organisation
-  org_split <- summary_df |>
-    mutate(group = str_replace_all(group, "date-organisation-", "")) |>
-    mutate(group = str_replace_all(group, "date-", "")) |>
-    dplyr::select(-overall)
-  org_split <- split(org_split, org_split$organisation)
-  org_split <- map(org_split,
-                   ~ split(., .$group))
+  df_summary <- df_summary |>
+    filter(stratum != "NA")
 
-  return(org_split)
+  return(df_summary)
 }

@@ -3,9 +3,6 @@ format:
   dashboard:
     orientation: columns
     scrolling: false
-    include-in-header:
-      text: |
-            <script src="lshtm.js"></script>
     css: "styles.css"
     fig-format: svg
 toc: false
@@ -16,21 +13,14 @@ execute:
 
 ```{r, include=FALSE}
 # Set up template page per organisation
-pacman::p_load(here, 
-               purrr, readr, dplyr, forcats, stringr,
-               bslib, bsicons,
-               ggplot2, plotly, shiny, patchwork)
-source(here("R", "data-analysis/ggplot_theme.R"))
-if (is.null(meta_params$organisation) | length(meta_params$organisation) > 1) {
+if (is.na(meta_params$organisation) | length(meta_params$organisation) > 1) {
   meta_params$organisation <- "Overall"}
-
-# Get relevant data
-# --- across full cohort (latest record for each ppt)
-summary_all_org <- summary_all[[meta_params$organisation]]
-# --- at daily intervals (participants recorded each day)
-summary_daily_org <- summary_daily[[meta_params$organisation]]
+org_summary <- list()
+# Filter data to organisation
+org_summary$data <- map(summary$data,
+                   ~ .x |> filter(organisation == meta_params$organisation))
 # --- print-ready tables
-summary_tables_org <- summary_tables[[meta_params$organisation]]
+org_summary$tables <- summary$tables[[meta_params$organisation]]
 ```
 
 ## ROW OF TABS {.tabset}
@@ -45,7 +35,7 @@ summary_tables_org <- summary_tables[[meta_params$organisation]]
 #### Overall
 
 ```{r, include=FALSE}
-meta_params$stratum <- "overall"
+meta_params$strata <- "overall"
 ```
 
 {{< include ./quarto/_tab-demographic.qmd >}}
@@ -53,7 +43,7 @@ meta_params$stratum <- "overall"
 #### Sex
 
 ```{r, include=FALSE}
-meta_params$stratum <- "sex"
+meta_params$strata <- "sex"
 ```
 
 {{< include ./quarto/_tab-demographic.qmd >}}
@@ -61,15 +51,15 @@ meta_params$stratum <- "sex"
 #### Age
 
 ```{r, include=FALSE}
-meta_params$stratum <- "age"
+meta_params$strata <- "age"
 ```
 
 {{< include ./quarto/_tab-demographic.qmd >}}
 
-#### Dependent children^[number of dependent children]
+#### Dependent children
 
 ```{r, include=FALSE}
-meta_params$stratum <- "children_feeding"
+meta_params$strata <- "children_feeding"
 ```
 
 {{< include ./quarto/_tab-demographic.qmd >}}
@@ -77,7 +67,7 @@ meta_params$stratum <- "children_feeding"
 #### Role
 
 ```{r, include=FALSE}
-meta_params$stratum <- "role"
+meta_params$strata <- "role"
 ```
 
 {{< include ./quarto/_tab-demographic.qmd >}}
@@ -85,11 +75,10 @@ meta_params$stratum <- "role"
 #### Governorate
 
 ```{r, include=FALSE}
-meta_params$stratum <- "governorate"
+meta_params$strata <- "governorate"
 ```
 
 {{< include ./quarto/_tab-demographic.qmd >}}
-
 
 <!--- new tab ------------------------------------------------------------>
 ### Participation

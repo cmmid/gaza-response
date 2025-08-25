@@ -4,9 +4,6 @@ format:
   dashboard:
     orientation: columns
     scrolling: false
-    include-in-header:
-      text: |
-            <script src="lshtm.js"></script>
     css: "styles.css"
     fig-format: svg
 toc: false
@@ -22,35 +19,7 @@ pacman::p_load(here,
                purrr, readr, dplyr, forcats, stringr,
                bslib, bsicons, 
                ggplot2, plotly, shiny, patchwork)
-
-## Load data dictionary
-data_dictionary <- readRDS(here("data/data-dictionary.RDS"))
-## Load log
-log <- readRDS(here("data/public/log.RDS"))
- 
-## Load summary: cross-sectional timeseries
-summary_daily <- readRDS(here("data", "public", "summary-cohort-daily.RDS"))
-## Load summary: latest data for all participants
-summary_all <- readRDS(here("data", "public", "summary-cohort-all.RDS"))
-## Load summary tables
-summary_tables <- readRDS(here("data", "public", "summary-tables.RDS"))
-
-# Stratifications
-strata <- log$strata
-# --- [[ code for 2x stratification ]] ---
-# options <- c("sex", "age", "governorate", "role", "children_feeding")
-# # Generate all non-empty combinations
-# strata <- unlist(
-#   #lapply(1:length(options), function(k) {
-#   lapply(1:2, function(k) {
-#     combn(sort(options), k, FUN = function(x) paste(x, collapse = "-"))
-#   })
-# )
-# Add 'Overall' as default/fallback
-strata <- c("overall", strata)
-meta_params <- list("organisation" = names(summary_all))
-
-## Source plotting scripts
+# Source plotting scripts
 source(here("R", "data-pipeline", "0-data-dictionary.R"))
 source(here("R", "data-analysis/generate_key_insights.R"))
 source(here("R", "data-analysis/plot_participants_over_time.R"))
@@ -58,6 +27,35 @@ source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
+
+# Load metadata
+## Data dictionary
+data_dictionary <- set_data_dictionary()
+## Pipeline log
+log <- readRDS(here("data/public/log.RDS"))
+ 
+# Load data
+summary <- list()
+summary$tables <- readRDS(here("data", "public", "summary-tables.RDS"))
+summary$data$latest_records <- readRDS(here("data", "public", "summary-cohort-all.RDS")) 
+summary$data$daily_records <- readRDS(here("data", "public", "summary-cohort-daily.RDS"))
+# recode labelling (convention: Upper-case variable name = pretty label name)
+suppressWarnings(
+  summary$data <- map(summary$data, 
+                 ~ .x |> 
+                   mutate(Strata = as_factor(strata),
+                               Strata = fct_recode(Strata,
+                                                   !!!data_dictionary$data_levels),
+                               Stratum = as_factor(stratum),
+                               Stratum = fct_recode(Stratum,
+                                                    !!!data_dictionary$data_levels),
+                               Variable = as_factor(variable),
+                               Variable = fct_recode(Variable,
+                                                    !!!data_dictionary$data_levels))
+  )
+)
+
+meta_params <- list(organisation = NA, strata = NA)
 ```
 
 <!--- MAIN PAGE FRAME -------------------------------------------------------->
@@ -72,53 +70,28 @@ Our aim is to inform humanitarian decision-making, advocacy, and diplomatic acti
 ::: {.callout-note collapse="true" title="About the project"}
 In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
 This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
-All participation is entirely voluntary. 
+ All participation is entirely voluntary. 
+
 _Results are preliminary: please interpret with caution._
 
-**[Read more](./about)**
+[**Read more**](./about){.btn .btn-info .btn role="button"}
 
 :::
 
-::: {.callout-caution collapse="true" title="Join us"}
-We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. We invite all humanitarian staff to participate.
+::: {.callout-caution collapse="false" title="Join us"}
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. 
+We invite all humanitarian staff to participate.
 
-- [**Get involved**](./contact)
+[**Get involved**](./contact){.btn .btn-info .btn role="button"}
 :::
 
-::: {.callout-tip collapse="false" title="Stratify data"}
-<!-- Add data filter-->
-<div class="lshtm_widget_filter">
-  <div class="filter_content">
-  <fieldset>
-    <!--<legend>Stratify data by</legend>-->
-    <label>
-      <input type="checkbox" name="data_filter" value="sex">
-      Sex
-    </label><br>
-    <label>
-      <input type="checkbox" name="data_filter" value="age">
-      Age
-    </label><br>
-    <label>
-      <input type="checkbox" name="data_filter" value="governorate">
-      Location
-    </label><br>
-    <label>
-      <input type="checkbox" name="data_filter" value="role">
-      Staff role
-    </label>
-    <label>
-      <input type="checkbox" name="data_filter" value="children_feeding">
-      Dependent children
-    </label><br>
-  </fieldset>
-</div>
-</div>
-:::
 
 <details>
 <summary>Updated</summary>
-<p> Data: `r log$data_raw$max_date` | Website: `r Sys.Date()`</p>
+<p> 
+- Data: `r log$data_raw$max_date`
+- Website: `r Sys.Date()`
+</p>
 </details>
 
 
@@ -130,7 +103,7 @@ We are actively seeking participants to support the project, and welcome new col
 meta_params$organisation <- "Overall"
 ```
 
-{{< include _template-org.qmd >}}
+{{< include ./quarto/_template-org.qmd >}}
 
 
 <!-- # UN Relief and Works Agency -->
@@ -139,7 +112,7 @@ meta_params$organisation <- "Overall"
 <!-- meta_params$organisation <- "UNRWA" -->
 <!-- ``` -->
 
-<!-- {{< include _template-org.qmd >}} -->
+<!-- {{< ./quarto/include _template-org.qmd >}} -->
 
 
 <!-- # Save the Children International -->
@@ -148,5 +121,5 @@ meta_params$organisation <- "Overall"
 <!-- meta_params$organisation <- "Save the Children International" -->
 <!-- ``` -->
 
-<!-- {{< include _template-org.qmd >}} -->
+<!-- {{< ./quarto/include _template-org.qmd >}} -->
 

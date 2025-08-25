@@ -22,16 +22,18 @@ pacman::p_load(
 source(here("R", "data-analysis/ggplot_theme.R"))
 plot_participants_over_time <- function(data_timeseries, strata = "overall"){
 
-  plot_data <- data_timeseries[[tolower(strata)]]
+  plot_data <- data_timeseries |>
+    filter(strata == {{ strata }})
+
   # reshape data
   plot_data <- plot_data |>
     filter(!is.na(date)) |>
-    filter(variable == "weight" & stat == "median") |>
+    filter(variable == "weight_daily" & stat == "median") |>
     dplyr::select(-value) |>
-    group_by(organisation, group, label) |>
+    group_by(organisation, strata, stratum) |>
     mutate(cohort_participant_cumsum = cumsum(cohort_id_recorded),
            cohort_record_cumsum = cumsum(cohort_obs_recorded)) |>
-    group_by(date, organisation, group, label) |>
+    group_by(date, organisation, strata, stratum) |>
     pivot_longer(cols = c("cohort_obs_missing",
                           "cohort_id_new",
                           "cohort_id_followup_record")) |>
@@ -43,9 +45,9 @@ plot_participants_over_time <- function(data_timeseries, strata = "overall"){
 
   # set caption with N participants
   caption <- plot_data |>
-    group_by(label) |>
+    group_by(stratum) |>
     filter(cohort_participant_cumsum == max(cohort_participant_cumsum)) |>
-    mutate(strata_n = paste0(label, ": N=", cohort_participant_cumsum))
+    mutate(strata_n = paste0(stratum, ": N=", cohort_participant_cumsum))
   caption_n <- paste0("Unique participants (cumulative total, grey shaded), and weight measurements (cumulative total, grey line). \n Daily measurements shown by participant status (missing, new joiner, or previously enrolled in the study).\n",
     paste0(unique(caption$strata_n), collapse = "; "))
 
@@ -58,7 +60,7 @@ plot_participants_over_time <- function(data_timeseries, strata = "overall"){
       geom_line(aes(y = cohort_participant_cumsum), alpha = 0.1) +
       labs(x = NULL, y = "Participant observations",
            caption = caption_n) +
-      facet_wrap(~label, scales="free_y") +
+      facet_wrap(~Stratum, scales="free_y") +
       #gghighlight() +
       lshtm_theme()
 

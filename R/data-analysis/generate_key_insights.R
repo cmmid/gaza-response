@@ -18,14 +18,15 @@
 # A typical change in weight of `r summary_text[summary_text$variable =="weight_change_unit_prewar","median_iqr"]`kg (median, 25-75% range)
 # '
 
-generate_key_insights <- function(data) {
+generate_key_insights <- function(data, strata) {
   summary_text_tab <- data |>
-    group_by(label) |>
+    filter(strata == {{ strata }} ) |>
+    group_by(stratum) |>
     pivot_wider(names_from = stat, values_from = value) |>
-    dplyr::select(date, organisation, label,
+    dplyr::select(date, organisation, stratum,
                   cohort_obs_recorded, cohort_id_followup_record,
                   variable, median, q1, q3, count) |>
-    mutate(across(where(is.numeric), round, 1),
+    mutate(across(where(is.numeric), ~ round(., 1)),
            median_iqr = paste0(median, " (", q1, "-", q3, ")"),
            bmi_pc = paste0(count, " (",
                                 round((count / cohort_obs_recorded*100),0), "%)"))

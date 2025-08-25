@@ -47,7 +47,8 @@ plot_bmicategory_proportions <- function(data, strata = "overall"){
     theme_bw() +
     theme(legend.position = "none",
           plot.caption = element_text(hjust = 0, face = "italic")) +
-    facet_grid(cols = vars(Group), row = vars(Stratification), switch = "y", labeller = label_wrap_gen(width = 25), scales = "free")+
+    facet_grid(cols = vars(Group), row = vars(Stratification),
+               switch = "y", scales = "free")+
     theme(lshtm_theme())
 
   return(fig)

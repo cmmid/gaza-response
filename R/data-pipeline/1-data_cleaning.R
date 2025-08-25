@@ -12,6 +12,7 @@
 
 # Install or load packages from CRAN
 pacman::p_load(
+  dplyr,
   lubridate,
   ggplot2,       # Visualise data
   ggpubr,        # Arrange multiple plots into a single plot
@@ -90,27 +91,28 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
   # validated joined dataset --------------------------
   observed_data <- id_date_grid |>
     # set first day's weight to baseline measurement
-    mutate(weight = if_else(date == date_entry & is.na(weight_followup),
+    mutate(weight_daily = if_else(date == date_entry & is.na(weight_followup),
                             weight_entry, weight_followup)) |>
   # replace incorrect with clean weights
     left_join(clean_weight_entry, by = c("date", "id")) |>
-    mutate(weight = if_else(!is.na(clean_weight_entry),
-                            clean_weight_entry, weight),
+    mutate(weight_daily = if_else(!is.na(clean_weight_entry),
+                            clean_weight_entry, weight_daily),
            anomaly = if_else(date == date_entry &
                                       !is.na(weight_followup) &
                                       weight_followup != clean_weight_entry &
                                       weight_followup != weight_prewar,
-                                    "Excluded (conflicting double record at study entry)", NA))
+                                    "excluded_conflict", NA)) |>
+    dplyr::select(-c(weight_followup, clean_weight_entry))
 
 # Dates & cohort time -----------------------------------------------------
   observed_data <- observed_data |>
-    dplyr::group_by(id) |>
+    group_by(id) |>
     # time in cohort
-    dplyr::mutate(
-      participant_recorded = !is.na(weight),
+    mutate(
+      participant_recorded = !is.na(weight_daily),
       participant_cumulative_days_enrolled = 1 + as.integer(
                     difftime(date, date_entry, units = "days")),
-      participant_cumulative_days_recorded = cumsum(!is.na(weight)),
+      participant_cumulative_days_recorded = cumsum(!is.na(weight_daily)),
       participant_in_followup = any(participant_cumulative_days_recorded > 1),
       participant_timepoint = fct(if_else(date == date_entry,
                                           "Study entry", "Follow up"))) |>
@@ -120,7 +122,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
     mutate(last_measurement = participant_cumulative_days_recorded == max(
       participant_cumulative_days_recorded, na.rm = TRUE) & participant_recorded,
            date_last = date[which(last_measurement)],
-           weight_last = weight[which(last_measurement)])
+           weight_last = weight_daily[which(last_measurement)])
 
   #...............................................................................
   ### Add BMI and % wt change
@@ -130,26 +132,26 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
     group_by(id) |>
     dplyr::mutate(
       # BMI
-      bmi = weight / (height/100)^2,
-      bmi_prewar = if_else(!is.na(weight),
+      bmi_daily = weight_daily / (height/100)^2,
+      bmi_prewar = if_else(!is.na(weight_daily),
                            weight_prewar / (height/100)^2,
                            NA),
-      bmi_entry = bmi[date == date_entry],
-      bmi_last = bmi[date == date_last],
+      bmi_entry = bmi_daily[date == date_entry],
+      bmi_last = bmi_daily[date == date_last],
       # percent change since study entry
-      weight_change_percent_entry = ((weight - weight_entry) / weight_entry)*100,
-      bmi_change_percent_entry = ((bmi - bmi_entry) / bmi_entry)*100,
+      weight_change_percent_entry = ((weight_daily - weight_entry) / weight_entry)*100,
+      bmi_change_percent_entry = ((bmi_daily - bmi_entry) / bmi_entry)*100,
       # percent daily rate of change since study entry
       weight_change_percent_daily_rate_entry = weight_change_percent_entry /
         participant_cumulative_days_enrolled,
       bmi_change_percent_daily_rate_entry = bmi_change_percent_entry /
         participant_cumulative_days_enrolled,
       # change since prewar
-      weight_change_unit_prewar = weight - weight_prewar,
-      bmi_change_unit_prewar = bmi - bmi_prewar,
-      weight_change_percent_prewar = ((weight - weight_prewar) /
+      weight_change_unit_prewar = weight_daily - weight_prewar,
+      bmi_change_unit_prewar = bmi_daily - bmi_prewar,
+      weight_change_percent_prewar = ((weight_daily - weight_prewar) /
                                         weight_prewar)*100,
-      bmi_change_percent_prewar = ((bmi - bmi_prewar) /
+      bmi_change_percent_prewar = ((bmi_daily - bmi_prewar) /
                                      bmi_prewar)*100) |>
     ungroup() |>
     # drop 0 percent change on date of first measurement
@@ -159,17 +161,17 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
  change_from_previous <- observed_data %>%
     dplyr::arrange(id, date) %>%
     dplyr::group_by(id) %>%
-    dplyr::filter(!is.na(weight)) %>%
-    dplyr::mutate(previous_weight = lag(weight),
-                  previous_bmi = lag(bmi),
-                  days_since_previousmeasurement = as.integer(
+    dplyr::filter(!is.na(weight_daily)) %>%
+    dplyr::mutate(previous_weight = lag(weight_daily),
+                  previous_bmi = lag(bmi_daily),
+                  participant_days_since_previousmeasurement = as.integer(
                     difftime(date, lag(date), units = "days")),
-                  weight_change_percent_previousmeasurement = ((weight - previous_weight) /
+                  weight_change_percent_previousmeasurement = ((weight_daily - previous_weight) /
                                                                  previous_weight)*100,
-                  bmi_change_percent_previousmeasurement = ((bmi - previous_bmi) /
+                  bmi_change_percent_previousmeasurement = ((bmi_daily - previous_bmi) /
                                                               previous_bmi)*100) |>
     dplyr::select(id, date,
-                  days_since_previousmeasurement,
+                  participant_days_since_previousmeasurement,
                   weight_change_percent_previousmeasurement,
                   bmi_change_percent_previousmeasurement) |>
     ungroup()
@@ -186,28 +188,75 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
  observed_data <- observed_data |>
    mutate(
      anomaly = case_when(
-         is.na(weight) ~ "Missing",
-         !between(weight, 30, 180) ~ "Excluded (weight <30kg or >180kg)",
-         !between(bmi, 10, 60) ~ "Excluded (BMI <10 or >60)",
-         weight_change_percent_daily_rate_entry >= 10 ~ "Excluded (>10% daily rate of weight change since entry)",
+         is.na(weight_daily) ~ "missing",
+         !between(weight_daily, 30, 180) ~ "excluded_weight",
+         !between(bmi_daily, 10, 60) ~ "excluded_bmi",
+         weight_change_percent_daily_rate_entry >= 10 ~ "excluded_rate",
          !is.na(anomaly) ~ anomaly,
-         TRUE ~ "Included")
+         TRUE ~ "included")
    ) |>
    # Replace anomaly measurements as missing
    mutate(across(contains(c("weight", "bmi")),
-                 ~ if_else(anomaly != "Included",
+                 ~ if_else(anomaly != "included",
                            NA, .x)))
 
- # Recode factors
+ # Handle factors ----------------------------------------------------------
  observed_data <- observed_data |>
-   mutate(bmi_category_daily = bmi,
-          bmi_category_prewar = bmi_prewar)
- observed_data <- set_factors(df = observed_data,
-                              factor_levels = c(data_dictionary$data_levels))
+   mutate(age = case_when(
+     age < 16 ~ NA,
+     age < 30 ~ "Age under 30",
+     age >= 30 & age <= 45 ~ "Age 30-45",
+     age > 45 ~ "Age over 45",
+     age >= 99 ~ NA,
+     .default = NA
+   ))
 
- # Drop empty levels of organisation
  observed_data <- observed_data |>
-   mutate(organisation = fct_drop(organisation))
+   mutate(children_feeding = case_when(
+       children_feeding < 0 ~ NA,
+       children_feeding == 0 ~ "0",
+       children_feeding == 1 ~ "1",
+       children_feeding == 2 ~ "2",
+       children_feeding >= 3 & children_feeding <= 20 ~ "3+",
+       children_feeding >= 20 ~ NA,
+       .default = NA
+     ))
 
- return(observed_data)
+ observed_data <- observed_data |>
+   mutate(bmi_category_daily = bmi_daily,
+          bmi_category_prewar = bmi_prewar) |>
+   mutate(across(starts_with("bmi_category"),
+          ~  case_when(
+            .x <= 10 ~ NA,
+            .x < 18.5 ~ "Underweight",
+            .x >= 18.5 & .x < 25 ~ "Normal",
+            .x >= 25 & .x < 30 ~ "Overweight",
+            .x >= 30 ~ "Obese",
+            .x >= 60 ~ NA,
+            .default = NA
+          )))
+
+
+ # Convert to factor
+ suppressWarnings(
+   clean_data <- observed_data |>
+     mutate(across(any_of(data_dictionary$factor_cols),
+                   ~ as_factor(.))) |> # preserves unexpected values
+     mutate(across(any_of(data_dictionary$factor_cols),
+                   ~ fct_recode(., !!!data_dictionary$data_levels)))
+ )
+
+ # neaten the df
+ clean_data <- clean_data |>
+   dplyr::select(date, id, date_entry, date_last,
+          anomaly, last_measurement,
+          starts_with("participant"),
+          any_of(data_dictionary$factor_cols),
+          height,
+          starts_with("weight"),
+          starts_with("bmi"),
+          everything()
+          )
+
+ return(clean_data)
 }

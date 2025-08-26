@@ -93,13 +93,13 @@ log$data_latest$summary_tables <- tables_latest$Overall
 
 # Summarise strata at latest record
 suppressMessages({
-  summary_all <- map_dfr(strata,
+  summary_latest <- map_dfr(strata,
                  ~ data_id_latest |>
                    summarise_strata(strata = .x))
 })
-log$summary_all$date_of_latest <- count(data_id_latest,
+log$summary_latest$date_of_latest <- count(data_id_latest,
                                                organisation, date_observation)
-log$summary_all$overall_sample <- summary_all |>
+log$summary_latest$overall_sample <- summary_latest |>
   filter(organisation == "Overall" & strata == "overall") |>
   slice_sample(prop = 0.1)
 
@@ -135,8 +135,8 @@ saveRDS(data_dictionary, output_dictionary)
 output_tables = sprintf("%s/data/public/summary-tables.RDS", .args["wd"])
 saveRDS(tables_latest, output_tables)
 
-output_all = sprintf("%s/data/public/summary-latest.RDS", .args["wd"])
-saveRDS(summary_all, output_all)
+output_latest = sprintf("%s/data/public/summary-latest.RDS", .args["wd"])
+saveRDS(summary_latest, output_latest)
 
 output_timeseries = sprintf("%s/data/public/summary-timeseries.RDS", .args["wd"])
 saveRDS(summary_timeseries, output_timeseries)

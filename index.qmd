@@ -36,8 +36,8 @@ log <- readRDS(here("data/public/log.RDS"))
 # Load data
 summary <- list()
 summary$tables <- readRDS(here("data", "public", "summary-tables.RDS"))
-summary$data$latest_records <- readRDS(here("data", "public", "summary-cohort-all.RDS")) 
-summary$data$daily_records <- readRDS(here("data", "public", "summary-cohort-daily.RDS"))
+summary$data$latest <- readRDS(here("data", "public", "summary-latest.RDS")) 
+summary$data$timeseries <- readRDS(here("data", "public", "summary-timeseries.RDS"))
 # recode labelling (convention: Upper-case variable name = pretty label name)
 suppressWarnings(
   summary$data <- map(summary$data, 
@@ -66,17 +66,6 @@ meta_params <- list(organisation = NA, strata = NA)
 This project provides real-time information on the nutritional status of humanitarian staff in Gaza. 
 Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. 
 
-::: {.callout-note collapse="true" title="About the project"}
-In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
-This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM). 
- All participation is entirely voluntary. 
-
-_Results are preliminary: please interpret with caution._
-
-[**Read more**](./about){.btn .btn-info .btn role="button"}
-
-:::
-
 ::: {.callout-caution collapse="false" title="Join us"}
 We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. 
 We invite all humanitarian staff to participate.
@@ -84,14 +73,39 @@ We invite all humanitarian staff to participate.
 [**Get involved**](./contact){.btn .btn-info .btn role="button"}
 :::
 
+::: {.callout-note collapse="true" title="About the project"}
+In this study we are monitoring nutritional status by tracking changes in weight and BMI. 
+This information system is set up by organisations providing humanitarian services inside the Gaza Strip, with the technical and scientific support of the London School of Hygiene and Tropical Medicine (LSHTM).
 
-<details>
-<summary>Updated</summary>
-<p> 
+_Results are preliminary: please interpret with caution._
+
+[**Read more**](./about){.btn .btn-info .btn role="button"}
+
+:::
+
+::: {.callout-note collapse="true" title="About the data"}
+
+Last updated:
+
 - Data: `r log$data_raw$max_date`
 - Website: `r Sys.Date()`
-</p>
-</details>
+
+We publish aggregated summary statistics as publicly available data.
+
+- Find the [latest public data](https://github.com/cmmid/gaza-response/tree/main/data/public)
+- Read more [about data collection](./about)
+
+All code is public and open source under an MIT license. 
+
+- Explore the [code](https://github.com/cmmid/gaza-response/)
+
+This project is built and maintained collectively and for free by volunteers. 
+We develop in the open, using R, Quarto, and Github.
+**We welcome and encourage contributors!** 
+
+- [Contribute](https://github.com/cmmid/gaza-response/discussions)
+
+:::
 
 
 <!-- TOP LEVEL TAB PAGES ------------------------------------------------->

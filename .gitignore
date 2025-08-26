@@ -48,10 +48,10 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-/.quarto/
-
 # Website files
 _site
+/.quarto/
+_freeze/*
 
 # Other
 *.DS_Store

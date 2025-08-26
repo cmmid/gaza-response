@@ -87,3 +87,33 @@ log$output_file <- output_file
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)
 # RDS data pushed to Github public repo
+
+# extra logging for debugging
+log$debug$working_directory <- getwd()
+log$debug$args_received <- .args
+log$debug$base_path <- base
+
+# raw data
+base_file <- paste0(base, "data/processed/df_base.RDS")
+fup_file <- paste0(base, "data/processed/df_fup.RDS")
+log$debug$base_file_exists <- file.exists(base_file)
+if (file.exists(base_file)) {
+  log$debug$base_file_timestamp <- file.info(base_file)$mtime
+  log$debug$base_file_size <- file.info(base_file)$size
+}
+log$debug$fup_file_exists <- file.exists(fup_file)
+if (file.exists(fup_file)) {
+  log$debug$fup_file_timestamp <- file.info(fup_file)$mtime
+  log$debug$fup_file_size <- file.info(fup_file)$size
+}
+
+# processed public data
+public_dir <- paste0(base, "data/public/")
+if (dir.exists(public_dir)) {
+  log$debug$public_files <- list.files(public_dir, full.names = FALSE)
+}
+summary_file <- paste0(base, "data/public/summary-stats.RDS")
+log$debug$summary_file_exists <- file.exists(summary_file)
+if (file.exists(summary_file)) {
+  log$debug$summary_file_timestamp <- file.info(summary_file)$mtime
+}

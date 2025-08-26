@@ -99,7 +99,7 @@ set_data_dictionary <- function() {
       "Weight change since study entry (%)" = "weight_change_percent_entry",
       "Weight daily rate of change since study entry (%/day)" = "weight_change_percent_daily_rate_entry",
     # BMI
-      "BMI" = "bmi_daily",
+      "BMI, kg/m²" = "bmi_daily",
       "BMI change since start of war" = "bmi_change_unit_prewar",
       "BMI change since start of war (%)" = "bmi_change_percent_prewar",
       "BMI change since enrollment (%)" = "bmi_change_percent_entry",

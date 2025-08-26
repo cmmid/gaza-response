@@ -121,6 +121,7 @@ summarise_strata <- function(data, strata) {
   # averages
   df_centraltendency <- data |>
     group_by(date, organisation, strata, stratum) |>
+    arrange(date, .by_group = TRUE) |>
     summarise(
       across(any_of(c("weight_daily",
                "weight_change_unit_prewar",

@@ -108,7 +108,7 @@ summarise_strata <- function(data, strata) {
       # -- time in study among those in follow up
       cohort_persondays_followup = sum(cohort_persondays - cohort_id_new +
                                          cohort_id_followup_ever),
-      # daily observations
+      # observations
       # number of recorded weights
       cohort_obs_recorded = sum(!is.na(weight_daily)),
       # missing/anomalous weight among recorded

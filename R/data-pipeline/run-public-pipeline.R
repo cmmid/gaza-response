@@ -104,24 +104,26 @@ log$summary_all$overall_sample <- summary_all |>
   slice_sample(prop = 0.1)
 
 # SUMMARISE BY TIME WINDOW ---------------------------------------------
-window <- "week"
+timeseries_window <- "week"
+log$timeseries_window <- window
+
 data_id_window <- data_id_daily |>
   # set the time window
-  mutate(window = lubridate::floor_date(date, unit = "week")) |>
+  mutate(timeseries_window = lubridate::floor_date(date, unit = "week")) |>
   # take only most recent record for each participant within the window
-  group_by(id, window) |>
+  group_by(id, timeseries_window) |>
   filter(date == max(date, na.rm = TRUE)) |>
   ungroup() |>
-  mutate(date = window)
+  mutate(date = timeseries_window)
 
 # summarise available records at each timestep
 suppressMessages({
-  summary_daily <- map_dfr(strata,
+  summary_timeseries <- map_dfr(strata,
                     ~ data_id_window |>
                       summarise_strata(strata = .x))
   })
-log$summary_daily$date_of_latest <- count(data_id_window, organisation, date)
-log$summary_daily$overall_sample <- summary_daily |>
+log$summary_timeseries$date_of_latest <- count(data_id_window, organisation, date)
+log$summary_timeseries$overall_sample <- summary_timeseries |>
   filter(organisation == "Overall" & strata == "overall") |>
   slice_sample(prop = 0.1)
 
@@ -133,11 +135,11 @@ saveRDS(data_dictionary, output_dictionary)
 output_tables = sprintf("%s/data/public/summary-tables.RDS", .args["wd"])
 saveRDS(tables_latest, output_tables)
 
-output_all = sprintf("%s/data/public/summary-cohort-all.RDS", .args["wd"])
+output_all = sprintf("%s/data/public/summary-latest.RDS", .args["wd"])
 saveRDS(summary_all, output_all)
 
-output_daily = sprintf("%s/data/public/summary-cohort-daily.RDS", .args["wd"])
-saveRDS(summary_daily, output_daily)
+output_timeseries = sprintf("%s/data/public/summary-timeseries.RDS", .args["wd"])
+saveRDS(summary_timeseries, output_timeseries)
 
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)

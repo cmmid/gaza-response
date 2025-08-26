@@ -56,7 +56,7 @@ _freeze/*
 # Other
 *.DS_Store
 .DS_Store
-
+README_files/*
 index_files
 index_files/*
 site_libs
@@ -64,3 +64,4 @@ site_libs/*
 /data/processed
 data/processed
 renv/library/*
+README.html

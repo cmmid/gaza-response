@@ -1,16 +1,3 @@
----
-format: 
-  dashboard:
-    orientation: columns
-    scrolling: false
-    css: "styles.css"
-    fig-format: svg
-toc: false
-execute: 
-  echo: false
-  cache: false
----
-
 ```{r, include=FALSE}
 # Set up template page per organisation
 if (is.na(meta_params$organisation) | length(meta_params$organisation) > 1) {
@@ -38,7 +25,7 @@ org_summary$tables <- summary$tables[[meta_params$organisation]]
 meta_params$strata <- "overall"
 ```
 
-{{< include ./quarto/_tab-demographic.qmd >}}
+{{< include ./quarto/_tab-strata.qmd >}}
 
 #### Sex
 
@@ -46,7 +33,7 @@ meta_params$strata <- "overall"
 meta_params$strata <- "sex"
 ```
 
-{{< include ./quarto/_tab-demographic.qmd >}}
+<!-- {{< include ./quarto/_tab-strata.qmd >}} -->
 
 #### Age
 
@@ -54,7 +41,7 @@ meta_params$strata <- "sex"
 meta_params$strata <- "age"
 ```
 
-{{< include ./quarto/_tab-demographic.qmd >}}
+<!-- {{< include ./quarto/_tab-strata.qmd >}} -->
 
 #### Dependent children
 
@@ -62,7 +49,7 @@ meta_params$strata <- "age"
 meta_params$strata <- "children_feeding"
 ```
 
-{{< include ./quarto/_tab-demographic.qmd >}}
+<!-- {{< include ./quarto/_tab-strata.qmd >}} -->
 
 #### Role
 
@@ -70,7 +57,7 @@ meta_params$strata <- "children_feeding"
 meta_params$strata <- "role"
 ```
 
-{{< include ./quarto/_tab-demographic.qmd >}}
+<!-- {{< include ./quarto/_tab-strata.qmd >}} -->
 
 #### Governorate
 
@@ -78,7 +65,7 @@ meta_params$strata <- "role"
 meta_params$strata <- "governorate"
 ```
 
-{{< include ./quarto/_tab-demographic.qmd >}}
+<!-- {{< include ./quarto/_tab-strata.qmd >}} -->
 
 <!--- new tab ------------------------------------------------------------>
 ### Participation

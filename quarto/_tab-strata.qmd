@@ -18,8 +18,7 @@ plot_data_latest <- org_summary$data$latest_records |>
 #| fig-align: center
 plot_current_summary_stats(
   plot_data_latest,
-  strata = meta_params$strata) |> 
-  ggplotly()
+  strata = meta_params$strata)
 ```
 
 #####
@@ -37,11 +36,5 @@ plot_time_series_statistics(
 ```{r}
 #| title: "BMI category, % weekly participants"
 #| fig-align: center
-plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |> 
-  ggplotly()
-```
-```{r}
-plot_participants_over_time(plot_data_timeseries, 
-                            strata = meta_params$strata) |> 
-  ggplotly()
+plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries)
 ```

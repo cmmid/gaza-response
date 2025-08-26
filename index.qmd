@@ -3,14 +3,13 @@ title: Dashboard
 format: 
   dashboard:
     orientation: columns
-    scrolling: false
+    scrolling: true
     css: "styles.css"
     fig-format: svg
-toc: false
 execute: 
   echo: false
   freeze: auto
-  cache: false
+  cache: true
 ---
 
 ```{r setup, include=FALSE}
@@ -103,7 +102,7 @@ We invite all humanitarian staff to participate.
 meta_params$organisation <- "Overall"
 ```
 
-{{< include ./quarto/_template-org.qmd >}}
+{{< include ./quarto/_organisation.qmd >}}
 
 
 <!-- # UN Relief and Works Agency -->
@@ -112,7 +111,7 @@ meta_params$organisation <- "Overall"
 <!-- meta_params$organisation <- "UNRWA" -->
 <!-- ``` -->
 
-<!-- {{< ./quarto/include _template-org.qmd >}} -->
+<!-- {{< ./quarto/include _organisation.qmd >}} -->
 
 
 <!-- # Save the Children International -->
@@ -121,5 +120,5 @@ meta_params$organisation <- "Overall"
 <!-- meta_params$organisation <- "Save the Children International" -->
 <!-- ``` -->
 
-<!-- {{< ./quarto/include _template-org.qmd >}} -->
+<!-- {{< ./quarto/include _organisation.qmd >}} -->
 

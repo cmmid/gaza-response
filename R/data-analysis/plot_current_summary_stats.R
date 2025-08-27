@@ -21,13 +21,17 @@ pacman::p_load(
 #...............................................................................
 source(here("R", "data-analysis/ggplot_theme.R"))
 
-plot_current_summary_stats <- function(plot_data, strata = "overall"){
+plot_current_summary_stats <- function(plot_data, stratum = NULL){
+
+  if (!is.null(stratum)) {
+    plot_data <- filter(plot_data, stratum == {{ stratum }})
+  }
 
   # set caption with N participants
   plot_data <- plot_data |>
-    mutate(strata_n = paste0(stratum, ": N=", cohort_id_recorded))
+    mutate(stratum_n = paste0(Stratum, ": N=", cohort_id_recorded))
   caption_n <- paste0("Median and 25-75% range. ",
-                      paste0(unique(plot_data$strata_n), collapse = "; "))
+                      paste0(unique(plot_data$stratum_n), collapse = "; "))
   # reshape and rename
   plot_data <- plot_data |>
     pivot_wider(names_from = stat, values_from = value) %>%
@@ -55,8 +59,7 @@ plot_current_summary_stats <- function(plot_data, strata = "overall"){
       labs(x = NULL,
            caption = caption_n) +
       theme(axis.title.y = element_blank()) +
-      lshtm_theme() +
-      ggplotly()
+      lshtm_theme()
 
   return(plot)
 

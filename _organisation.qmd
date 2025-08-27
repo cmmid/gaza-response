@@ -1,0 +1,85 @@
+
+## Insights (cards)
+
+```{r, include=FALSE}
+# Set up template page per organisation
+# if (is.na(meta_params$organisation) | length(meta_params$organisation) > 1) {
+#   meta_params$organisation <- "Overall"}
+org_summary <- list()
+#  --- Filter data to organisation
+org_summary$data <- map(summary$data,
+                   ~ .x |> filter(organisation == meta_params$organisation))
+# --- print-ready tables
+org_summary$tables <- summary$tables[[meta_params$organisation]]
+# overall data
+key_insights_data <- map(org_summary$data,
+                        ~ .x |> filter(strata == "overall"))
+
+# Create key insights text
+key_text <- generate_key_insights(key_insights_data$latest)
+meta_params$strata <- "sex"
+```
+
+::: {.card title="Key insights" fill=false}
+- **`r key_text$n_id` participants** contributing data
+  - `r key_text$n_followup` participants are continuing to report ongoing weight measurements
+- **`r key_text[["weight_change_percent_prewar"]]` loss of bodyweight**^[Median and interquartile range (25%-75% of participants)] from pre-war to latest measurement, equivalent to 
+  - A median weight loss of `r key_text[["weight_change_unit_prewar"]]`
+  - A drop in BMI by `r key_text[["bmi_change_unit_prewar"]]`
+- **`r key_text[["bmi_category_daily_Underweight"]]` participants clinically underweight**^[WHO classification: underweight body mass index of < 18.5], compared to `r key_text[["bmi_category_prewar_Underweight"]]` pre-war
+:::
+
+```{r, out.width="100%"}
+#| title: "BMI classification"
+#| fill: false
+org_summary$tables$bmi_crosstab
+markdown("<details> <summary> About the data </summary> 
+         Prevalence of body mass index (BMI) classifications among participants, calculated from self-reported weight before October 2023 (pre-war), and latest measurement during study period (from July 2025). Adult BMI classifications are underweight (under 18.5 kg/m2), normal weight (18.5 to 24.9), overweight (25 to 29.9), and obese (30 or more).")
+```
+
+## Participation (tabs)
+
+::: {.panel-tabset}
+
+### Participation
+```{r, out.height="100%"}
+#| fill: false
+#| fig-align: center
+plot_participants_over_time(key_insights_data$timeseries) |> 
+  ggplotly()
+markdown("<details> <summary> About the data </summary> 
+         Daily participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line). </details>")
+```
+
+### Baseline
+```{r}
+#| fill: false
+org_summary$tables$demographic_strata
+```
+
+### Data
+```{r}
+#| fill: false
+org_summary$tables$data_quality
+```
+:::
+
+## Demographic strata
+
+::: {.panel-tabset}
+
+### Overall 
+
+{{< include _tab-strata.qmd >}}
+
+
+### Sex
+
+{{< include _tab-strata.qmd >}}
+
+
+### Age
+
+{{< include _tab-strata.qmd >}}
+
+:::

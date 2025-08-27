@@ -1,0 +1,24 @@
+
+```{r out.width="100%", warning=FALSE}
+# Filter all data to relevant demographic strata
+plot_data_timeseries <- org_summary$data$timeseries |> 
+  filter(strata == meta_params$strata)
+plot_data_latest <- org_summary$data$latest |> 
+  filter(strata == meta_params$strata)
+
+# plot_current_summary_stats(plot_data_latest) |> 
+#   ggplotly()
+# # About the data
+# markdown("<details><summary>About the data</summary>Median and 25-75% range of participant weight in kilograms (kg) and [Body Mass Index](https://www.cdc.gov/bmi/about/index.html), with % change from pre-October 2023. Negative % indicates weight loss.</details")
+
+plot_timeseries <- plot_time_series_statistics(plot_data = plot_data_timeseries) |> 
+  ggplotly() |> 
+  layout(legend = list(orientation = 'h'))
+
+plot_bmi <- plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |> 
+  ggplotly(tooltip = c("y", "fill")) |> 
+  layout(showlegend = FALSE)
+
+subplot(plot_timeseries, plot_bmi, nrows = 2, shareX = TRUE)
+```
+

@@ -13,7 +13,8 @@ log <- list(log_time = Sys.time())
 .args = if(interactive()) here() else commandArgs(trailingOnly = TRUE)
 .args = setNames(.args, c("wd"))
 
-base <- sprintf("%s/", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
+base <- sprintf("%s/", .args["wd"])
+
 # Load functions -----
 pipeline_functions <- paste0(base,
                              c("R/data-pipeline/0-data-dictionary.R",
@@ -47,6 +48,9 @@ suppressWarnings(
 )
 log$data_clean$n_records <- nrow(data_id_daily)
 log$data_clean$n_id <- length(unique(data_id_daily$id))
+log$data_clean$n_followup <- length(unique(
+  filter(data_id_daily, participant_in_followup)$id
+))
 log$data_clean$exclusion <- data_id_daily |>
   group_by(organisation, anomaly) |>
   summarise(n_records = n(),
@@ -105,7 +109,7 @@ log$summary_latest$overall_sample <- summary_latest |>
 
 # SUMMARISE BY TIME WINDOW ---------------------------------------------
 timeseries_window <- "week"
-log$timeseries_window <- window
+log$timeseries_window <- timeseries_window
 
 data_id_window <- data_id_daily |>
   # set the time window
@@ -144,3 +148,5 @@ saveRDS(summary_timeseries, output_timeseries)
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)
 # RDS data pushed to Github public repo
+
+

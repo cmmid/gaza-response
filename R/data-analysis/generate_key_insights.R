@@ -13,44 +13,52 @@
 #...............................................................................
 ### Generate list of key insights
 #...............................................................................
-# eg
-# '
-# A typical change in weight of `r summary_text[summary_text$variable =="weight_change_unit_prewar","median_iqr"]`kg (median, 25-75% range)
-# '
 
-generate_key_insights <- function(data, strata) {
-  summary_text_tab <- data |>
-    filter(strata == {{ strata }} ) |>
-    group_by(stratum) |>
+generate_key_insights <- function(key_insights_data) {
+
+  bmi_category <- key_insights_data |>
+    filter(!is.na(bmi_category)) |>
+    expand(bmi_period, bmi_category, organisation, strata, cohort_id_recorded) |>
+    mutate(stat = "count",
+           value = 0,
+           variable = paste0(bmi_period, "_", bmi_category)) |>
+    filter(!(variable %in% key_insights_data$variable))
+
+  summary_text_tab <- key_insights_data |>
+    bind_rows(bmi_category) |>
+    mutate(value = if_else(grepl("bmi_category_", variable),
+                           round(value / cohort_id_recorded * 100, 0),
+                           value),
+           stat = if_else(grepl("bmi_category_", variable), "percent", stat),
+           unit = case_when(
+             grepl("weight_daily|weight_change_unit_", variable) ~ "kg",
+             grepl("bmi_daily|bmi_change_unit_", variable) ~ "kg/m2",
+             grepl("change_percent_daily_rate", variable) ~ "%/day",
+             grepl("change_percent", variable) ~ "%",
+             grepl("bmi_category_", variable) ~ "%",
+           )) |>
     pivot_wider(names_from = stat, values_from = value) |>
-    dplyr::select(date, organisation, stratum,
-                  cohort_obs_recorded, cohort_id_followup_record,
-                  variable, median, q1, q3, count) |>
-    mutate(across(where(is.numeric), ~ round(., 1)),
-           median_iqr = paste0(median, " (", q1, "-", q3, ")"),
-           bmi_pc = paste0(count, " (",
-                                round((count / cohort_obs_recorded*100),0), "%)"))
+    mutate(across(c(median, q1, q3, percent), ~ round(., 1))) |>
+    mutate(value_text = case_when(
+      !is.na(median) ~ paste0(median, unit, " (", q1, unit, " - ", q3, unit, ")"),
+      !is.na(percent) ~ paste0(percent, unit)))
+
+  summary_text <- summary_text_tab |> dplyr::select(variable, value_text) |> deframe()
+
+  summary_text |>  getElement("bmi_category_daily_Underweight")
+
 
   key_text <- list(
-    # Number of ppts (date range)
-    cohort_n = max(data$cohort_id_recorded),
-    # Number in follow up
-    cohort_fup = max(data$cohort_id_followup_ever),
-    # date range of current summary
-    date_range = paste0(min(log$data_latest$date_of_latest$date),
-                        " - ", max(log$data_latest$date_of_latest$date)),
-    # Median weight change in kg (IQR) since pre-war
-    wt_chg_iqr_kg = summary_text_tab[summary_text_tab$variable == "weight_change_unit_prewar","median_iqr"],
-    # Median weight change in %
-    wt_chg_iqr_pct = summary_text_tab[summary_text_tab$variable == "weight_change_percent_prewar","median_iqr"],
-    # PPts in follow up, % weight change in kg (IQR) since entry
-    wt_chg_iqr_kg = summary_text_tab[summary_text_tab$variable == "weight_change_unit_entry","median_iqr"],
-    # Median weight change in %
-    wt_chg_iqr_pct = summary_text_tab[summary_text_tab$variable == "weight_change_percent_prewar","median_iqr"],
-    # % in "underweight" category
-    cohort_underwt_pc = summary_text_tab[summary_text_tab$variable == "bmi_category_daily_Underweight","bmi_pc"],
-    # % in "underweight" category pre-war
-    cohort_underwt_pc_prewar = summary_text_tab[summary_text_tab$variable == "bmi_category_prewar_Underweight","bmi_pc"]
+    # Number of ppts
+    n_id = key_insights_data$cohort_id_recorded[1],
+    n_followup = key_insights_data$cohort_id_followup_ever[2],
+    # summary of change measurements
+    weight_change_percent_prewar = summary_text |>  getElement("weight_change_percent_prewar"),
+    weight_change_unit_prewar = summary_text |>  getElement("weight_change_unit_prewar"),
+    bmi_change_percent_prewar = summary_text |>  getElement("bmi_change_percent_prewar"),
+    bmi_change_unit_prewar = summary_text |>  getElement("bmi_change_unit_prewar"),
+    bmi_category_daily_Underweight = summary_text |>  getElement("bmi_category_daily_Underweight"),
+    bmi_category_prewar_Underweight = summary_text |>  getElement("bmi_category_prewar_Underweight")
   )
 
   # average length of time in study

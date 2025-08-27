@@ -84,9 +84,7 @@ output_file = sprintf("%s/data/public/summary-stats.RDS", .args["wd"])
 saveRDS(summary, output_file)
 log$output_file <- output_file
 
-output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
-saveRDS(log, output_log)
-# RDS data pushed to Github public repo
+# -------------------------------------------------------------------------
 
 # extra logging for debugging
 log$debug$working_directory <- getwd()
@@ -117,3 +115,7 @@ log$debug$summary_file_exists <- file.exists(summary_file)
 if (file.exists(summary_file)) {
   log$debug$summary_file_timestamp <- file.info(summary_file)$mtime
 }
+
+output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
+saveRDS(log, output_log)
+# RDS data pushed to Github public repo

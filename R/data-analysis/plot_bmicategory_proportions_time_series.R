@@ -65,7 +65,7 @@ plot_bmicategory_proportions_time_series <- function(plot_data){
     scale_colour_manual(name = "BMI category",
                       values = lshtm_palette$bmi_categories) +
     labs(x = NULL, y = "Weekly participant measurements") +
-    facet_wrap(~ Stratum, scales = "free_y", nrow=1) +
+    facet_wrap(~ Stratum, scales = "free_y", ncol=1) +
     theme(lshtm_theme())
 
   return(plot)

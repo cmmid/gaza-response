@@ -8,8 +8,8 @@ format:
     fig-format: svg
 execute: 
   echo: false
-  freeze: auto
-  cache: true
+  freeze: false
+  cache: false
 ---
 
 ```{r setup, include=FALSE}
@@ -116,23 +116,20 @@ We develop in the open, using R, Quarto, and Github.
 meta_params$organisation <- "Overall"
 ```
 
-{{< include ./quarto/_organisation.qmd >}}
+{{< include _organisation.qmd >}}
 
+# UN Relief and Works Agency
 
-<!-- # UN Relief and Works Agency -->
+```{r}
+meta_params$organisation <- "UNRWA"
+```
 
-<!-- ```{r} -->
-<!-- meta_params$organisation <- "UNRWA" -->
-<!-- ``` -->
+{{< include _organisation.qmd >}}
 
-<!-- {{< ./quarto/include _organisation.qmd >}} -->
+# Save the Children International
 
+```{r}
+meta_params$organisation <- "Save the Children International"
+```
 
-<!-- # Save the Children International -->
-
-<!-- ```{r} -->
-<!-- meta_params$organisation <- "Save the Children International" -->
-<!-- ``` -->
-
-<!-- {{< ./quarto/include _organisation.qmd >}} -->
-
+{{< include _organisation.qmd >}}

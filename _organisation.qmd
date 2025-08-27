@@ -42,11 +42,13 @@ markdown("<details> <summary> About the data </summary>
 ::: {.panel-tabset}
 
 ### Participation
-```{r, out.height="100%"}
+```{r}
 #| fill: false
+#| out-width: "100%"
 #| fig-align: center
 plot_participants_over_time(key_insights_data$timeseries) |> 
-  ggplotly()
+  ggplotly()|> 
+  layout(legend = list(orientation = 'h'))
 markdown("<details> <summary> About the data </summary> 
          Daily participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line). </details>")
 ```
@@ -70,15 +72,23 @@ org_summary$tables$data_quality
 
 ### Overall 
 
-{{< include _tab-strata.qmd >}}
+```{r}
+meta_params$strata <- "overall"
+```
 
+{{< include _tab-strata.qmd >}}
 
 ### Sex
+```{r}
+meta_params$strata <- "sex"
+```
 
 {{< include _tab-strata.qmd >}}
 
-
 ### Age
+```{r}
+meta_params$strata <- "age"
+```
 
 {{< include _tab-strata.qmd >}}
 

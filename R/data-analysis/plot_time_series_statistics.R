@@ -34,7 +34,7 @@ plot_time_series_statistics <- function(plot_data) {
     filter(variable == "bmi_change_percent_prewar") |>
     pivot_wider(names_from = stat, values_from = value) %>%
     filter(!is.na(median)) |>
-    mutate(Participants = cut(cohort_id_recorded, c(0,10,30,50,100),
+    mutate(Participants = cut(cohort_id_recorded, c(0,10,30,50,Inf),
                    labels = c("<10", "10-20", "20-50", ">50"),
                    ordered_result = TRUE))
 
@@ -59,62 +59,6 @@ plot_time_series_statistics <- function(plot_data) {
       theme(lshtm_theme())
 
   return(plot)
-
-}
-
-plotly_time_series <- function() {
-
-  # Define alpha values for each participant group
-  participant_alpha <- c("<10" = 0.1, "10-20" = 0.3, "20-50" = 0.5, ">50" = 0.7)
-
-  plot_data <- plot_data |>
-    filter(variable == "bmi_change_percent_prewar") |>
-    pivot_wider(names_from = stat, values_from = value) |>
-    filter(!is.na(median)) |>
-    mutate(
-      Participants = cut(cohort_id_recorded, c(0,10,30,50,100),
-                         labels = c("<10", "10-20", "20-50", ">50"),
-                         ordered_result = TRUE),
-      # Add alpha mapping directly to the data
-      alpha_value = participant_alpha[as.character(Participants)]
-    )
-
-  plot_data_list <- split(plot_data, plot_data$stratum)
-
-  subplot_list <- map(plot_data_list,
-                      ~ plot_data_list$Female |>
-                        plot_ly() |>
-    # Add IQR line ranges
-    add_segments(
-      x = ~date, xend = ~date,
-      y = ~q1, yend = ~q3,
-      color = ~Participants,
-      colors = c("#0000FF19", "#0000FF4D", "#0000FF80", "#0000FFB3"),
-      line = list(width = 4),
-      showlegend = FALSE,
-      hovertemplate = "Date: %{x}<br>Q1: %{y}<br>Q3: %{yend}<br>Participants: %{customdata}<extra></extra>",
-      customdata = ~Participants
-    ) |>
-    # Add median points
-    add_markers(
-      x = ~date,
-      y = ~median,
-      color = I("blue"),
-      size = I(8),
-      showlegend = FALSE,
-      hovertemplate = "Date: %{x}<br>Median: %{y}<br>Participants: %{customdata}<extra></extra>",
-      customdata = ~Participants
-    ) |>
-    layout(
-      xaxis = list(title = ""),
-      yaxis = list(title = "")
-    )
-  )
-
-    plot <- subplot(subplot_list, nrows = length(stratum),
-                    shareX = TRUE)
-
-  plot
 
 }
 

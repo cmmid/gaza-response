@@ -138,6 +138,9 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
                            NA),
       bmi_entry = bmi_daily[date == date_entry],
       bmi_last = bmi_daily[date == date_last],
+      # unit change since study entry
+      weight_change_unit_entry = weight_daily - weight_entry,
+      bmi_change_unit_entry = bmi_daily - bmi_entry,
       # percent change since study entry
       weight_change_percent_entry = ((weight_daily - weight_entry) / weight_entry)*100,
       bmi_change_percent_entry = ((bmi_daily - bmi_entry) / bmi_entry)*100,
@@ -226,7 +229,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
    mutate(bmi_category_daily = bmi_daily,
           bmi_category_prewar = bmi_prewar) |>
    mutate(across(starts_with("bmi_category"),
-          ~  case_when(
+          ~ case_when(
             .x <= 10 ~ NA,
             .x < 18.5 ~ "Underweight",
             .x >= 18.5 & .x < 25 ~ "Normal",

@@ -9,24 +9,39 @@ options(dplyr.summarise.inform = FALSE)
 # error logging
 log <- list(log_time = Sys.time())
 
+
+# Load data from local private repo ---------------------------------------
 # Get wd from passed argument if ran on server
 .args = if(interactive()) here() else commandArgs(trailingOnly = TRUE)
 .args = setNames(.args, c("wd"))
+public_repo <- sprintf("%s/", .args["wd"])
+# get filepath to local private data
+private_repo <- gsub("gaza-response", "wt_monitoring_gaza", public_repo)
 
-base <- sprintf("%s/", .args["wd"]) #"https://raw.githubusercontent.com/cmmid/gaza-response/main/R/data-pipeline"
+if (file.exists(paste0(private_repo, "data/processed/df_base.RDS"))) {
+  base_data_path <- paste0(private_repo, "data/processed/df_base.RDS")
+} else {base_data_path <- paste0(public_repo, "data/processed/df_base.RDS")}
 
-# Load functions -----
-pipeline_functions <- paste0(base,
-                             c("R/data-pipeline/1-data_cleaning.R",
-                               "R/data-pipeline/2-data_aggregation.R"))
-walk(pipeline_functions, source)
+if (file.exists(paste0(private_repo, "data/processed/df_fup.RDS"))) {
+  fup_data_path <- paste0(private_repo, "data/processed/df_fup.RDS")
+} else {fup_data_path <- paste0(public_repo, "data/processed/df_fup.RDS")}
 
-# Load data stored locally -----
-base_data <- readRDS(paste0(base, "data/processed/df_base.RDS"))
-fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
+base_data <- readRDS(base_data_path)
+fup_data <- readRDS(fup_data_path)
 
-# log raw data validation
+# log raw data
 log$data_raw <- list()
+log$data_raw$base_data_source <- base_data_path
+log$data_raw$fup_data_source <- fup_data_path
+if (file.exists(base_data_path)) {
+  log$debug$base_file_timestamp <- file.info(base_data_path)$mtime
+  log$debug$base_file_size <- file.info(base_data_path)$size
+}
+if (file.exists(fup_data_path)) {
+  log$debug$fup_file_timestamp <- file.info(fup_data_path)$mtime
+  log$debug$fup_file_size <- file.info(fup_data_path)$size
+}
+
 expected_base <- c("id", "date", "organisation", "age", "sex", "governorate",
               "role", "height", "weight_prewar", "weight", "children_feeding")
 log$data_raw$base_cols_missing <- setdiff(expected_base, colnames(base_data))
@@ -36,13 +51,21 @@ log$data_raw$n_participants_baseline <- length(unique(base_data$id))
 log$data_raw$max_date <- max(fup_data$date)
 log$data_raw$orgs <- unique(base_data$organisation)
 
-# Clean data -----
+
+# Data processing -----------------------------------------------------------
+# Load functions -----
+pipeline_functions <- paste0(public_repo,
+                             c("R/data-pipeline/1-data_cleaning.R",
+                               "R/data-pipeline/2-data_aggregation.R"))
+walk(pipeline_functions, source)
+
+# Clean individual level data -----------------------------------------
 data_id_daily <- clean_data(base_data, fup_data)
 log$data_clean$nrow <- nrow(data_id_daily)
 log$data_clean$n_id <- length(unique(data_id_daily$id))
 
 # Summaries ------------------------------------------------------------
-# filter to last recorded observation for all participants
+# summary 1: last recorded observation for all participants
 data_id_last <- data_id_daily |>
   filter(last_measurement)
 
@@ -57,7 +80,7 @@ data_id_last <- data_id_last |>
 # bind latest observation with full time series
 data_id <- bind_rows(data_id_daily, data_id_last)
 
-# summarise by date, organisation, and group -----
+# summary 2: by date, organisation, and group -----
 # Create 2 levels of stratification
 group_cols <- c("agegroup", "children_feeding", "governorate", "role", "sex")
 group_cols <- combn(group_cols, 2, simplify = FALSE)
@@ -88,33 +111,18 @@ log$output_file <- output_file
 
 # extra logging for debugging
 log$debug$working_directory <- getwd()
+log$debug$private_repo <- private_repo
+log$debug$public_repo <- public_repo
 log$debug$args_received <- .args
-log$debug$base_path <- base
 
-# raw data
-base_file <- paste0(base, "data/processed/df_base.RDS")
-fup_file <- paste0(base, "data/processed/df_fup.RDS")
-log$debug$base_file_exists <- file.exists(base_file)
-if (file.exists(base_file)) {
-  log$debug$base_file_timestamp <- file.info(base_file)$mtime
-  log$debug$base_file_size <- file.info(base_file)$size
-}
-log$debug$fup_file_exists <- file.exists(fup_file)
-if (file.exists(fup_file)) {
-  log$debug$fup_file_timestamp <- file.info(fup_file)$mtime
-  log$debug$fup_file_size <- file.info(fup_file)$size
-}
+private_dir <- paste0(private_repo, "data/processed/")
+log$debug$private_data_processed <- list.files(private_dir, full.names = TRUE)
 
-# processed public data
-public_dir <- paste0(base, "data/public/")
-if (dir.exists(public_dir)) {
-  log$debug$public_files <- list.files(public_dir, full.names = FALSE)
-}
-summary_file <- paste0(base, "data/public/summary-stats.RDS")
-log$debug$summary_file_exists <- file.exists(summary_file)
-if (file.exists(summary_file)) {
-  log$debug$summary_file_timestamp <- file.info(summary_file)$mtime
-}
+public_dir <- paste0(public_repo, "data/public/")
+log$debug$data_public <- list.files(public_dir, full.names = FALSE)
+
+summary_file <- paste0(public_repo, "data/public/summary-stats.RDS")
+log$debug$summary_file_timestamp <- file.info(summary_file)$mtime
 
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)

@@ -2,7 +2,7 @@
 title: Dashboard
 format: 
   dashboard:
-    orientation: columns
+    orientation: rows
     scrolling: true
     css: "styles.css"
     fig-format: svg

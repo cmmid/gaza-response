@@ -32,7 +32,7 @@ if (file.exists(private_raw_base)) {
   private_raw_base <- try(read.csv(private_raw_base))
   if (!"error" %in% class(private_raw_base)) {
     log$data_raw$base_data_raw_names <- names(private_raw_base)
-    log$data_raw$base_data_dates <- unique(private_raw_base$submission_date)
+    log$data_raw$base_data_dates <- unique(private_raw_base$note_identification2.date_today)
     rm(private_raw_base)
   }
 } else {log$data_raw$base_data$raw_timestamp <- "Raw baseline csv not found"}
@@ -42,7 +42,7 @@ if (file.exists(private_raw_fup)) {
   private_raw_fup <- try(read.csv(private_raw_fup))
   if (!"error" %in% class(private_raw_fup)) {
     log$data_raw$fup_data_raw_names <- names(private_raw_fup)
-    log$data_raw$fup_data_dates <- unique(private_raw_fup$submission_date)
+    log$data_raw$fup_data_dates <- unique(private_raw_fup$note_identification2.date_collected)
     rm(private_raw_fup)
   }
 } else {log$data_raw$fup_data$raw_timestamp <- "fup baseline csv not found"}

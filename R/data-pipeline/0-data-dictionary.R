@@ -17,7 +17,7 @@ set_data_dictionary <- function() {
                     "sex", "age", "children_feeding", "role", "governorate",
                     "bmi_category_daily", "bmi_category_prewar",
                     "strata", "stratum", "variable_name", "anomaly"),
-    data_levels = c(
+    data_levels = as_factor(c(
   # Categories within data -------------------------
     # sex
     "Male" = "male",
@@ -107,40 +107,7 @@ set_data_dictionary <- function() {
     "Current BMI" = "bmi_category_daily",
     "Pre-war BMI" = "bmi_category_prewar"
     )
+    )
   )
     return(dictionary)
   }
-
-
-# Helpers -----------------------------------------------------------------
-
-# count factor levels
-count_factors <- function(df){
-  count <- df |>
-    dplyr::select(where(is.factor)) |>
-    map_dfr(~ fct_count(.x, prop = TRUE) |>
-              add_row(f = "Missing", n = sum(is.na(.x))),
-            .id = "variable")
-  return(count)
-}
-
-# rename using data dictionary
-rename_with_dictionary <- function(df, data_dictionary,
-                                   long = FALSE) {
-  # rename records in a "variable" column
-  if (long) {
-    suppressWarnings(
-      df <- df |>
-        mutate(variable_name = fct_recode(variable,
-                                          !!!data_dictionary$data_levels))
-    )
-  } else {
-    # rename column names
-    suppressWarnings(
-      df <- df |>
-        rename(any_of(data_dictionary$data_levels))
-    )
-  }
-
-  return(df)
-}

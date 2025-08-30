@@ -8,7 +8,7 @@ options(dplyr.summarise.inform = FALSE)
 
 # error logging
 log <- list(log_time = Sys.time())
-
+log$data_raw <- list()
 
 # Load data from local private repo ---------------------------------------
 # Get wd from passed argument if ran on server
@@ -18,38 +18,68 @@ public_repo <- sprintf("%s/", .args["wd"])
 # get filepath to local private data
 private_repo <- gsub("gaza-response", "wt_monitoring_gaza", public_repo)
 
-if (file.exists(paste0(private_repo, "data/processed/df_base.RDS"))) {
-  base_data_path <- paste0(private_repo, "data/processed/df_base.RDS")
+private_raw <- paste0(private_repo, "data/raw/")
+private_raw_base <- paste0(private_raw, "gaza_adult_weight_form1.csv")
+private_raw_fup <- paste0(private_raw, "gaza_adult_weight_form2.csv")
+
+private_processed <- paste0(private_repo, "data/processed/")
+private_processed_base <- paste0(private_processed, "df_base.RDS")
+private_processed_fup <- paste0(private_processed, "df_fup.RDS")
+
+# debugging log - raw data
+if (file.exists(private_raw_base)) {
+  log$data_raw$base_data_raw_timestamp <- file.info(private_raw_base)$mtime
+  private_raw_base <- try(read.csv(private_raw_base))
+  if (!"error" %in% class(private_raw_base)) {
+    log$data_raw$base_data_raw_names <- names(private_raw_base)
+    log$data_raw$base_data_dates <- unique(private_raw_base$submission_date)
+    rm(private_raw_base)
+  }
+} else {log$data_raw$base_data$raw_timestamp <- "Raw baseline csv not found"}
+
+if (file.exists(private_raw_fup)) {
+  log$data_raw$base_data_raw_timestamp <- file.info(private_raw_fup)$mtime
+  private_raw_fup <- try(read.csv(private_raw_fup))
+  if (!"error" %in% class(private_raw_fup)) {
+    log$data_raw$fup_data_raw_names <- names(private_raw_fup)
+    log$data_raw$fup_data_dates <- unique(private_raw_fup$submission_date)
+    rm(private_raw_fup)
+  }
+} else {log$data_raw$fup_data$raw_timestamp <- "fup baseline csv not found"}
+
+  # set path to initially processed data
+if (file.exists(private_processed_base)) {
+  base_data_path <- private_processed_base
 } else {base_data_path <- paste0(public_repo, "data/processed/df_base.RDS")}
 
-if (file.exists(paste0(private_repo, "data/processed/df_fup.RDS"))) {
-  fup_data_path <- paste0(private_repo, "data/processed/df_fup.RDS")
+if (file.exists(private_processed_fup)) {
+  fup_data_path <- private_processed_fup
 } else {fup_data_path <- paste0(public_repo, "data/processed/df_fup.RDS")}
 
+# read in data
 base_data <- readRDS(base_data_path)
 fup_data <- readRDS(fup_data_path)
 
-# log raw data
-log$data_raw <- list()
-log$data_raw$base_data_source <- base_data_path
-log$data_raw$fup_data_source <- fup_data_path
+# log
+log$data_raw$base_data_processed_source <- base_data_path
+log$data_raw$fup_data_processed_source <- fup_data_path
 if (file.exists(base_data_path)) {
-  log$debug$base_file_timestamp <- file.info(base_data_path)$mtime
-  log$debug$base_file_size <- file.info(base_data_path)$size
+  log$data_raw$base_data$processed_timestamp <- file.info(base_data_path)$mtime
+  log$data_raw$base_data$processed_size <- file.info(base_data_path)$size
 }
 if (file.exists(fup_data_path)) {
-  log$debug$fup_file_timestamp <- file.info(fup_data_path)$mtime
-  log$debug$fup_file_size <- file.info(fup_data_path)$size
+  log$data_raw$fup_data$processed_timestamp <- file.info(fup_data_path)$mtime
+  log$data_raw$fup_data$processed_size <- file.info(fup_data_path)$size
 }
 
 expected_base <- c("id", "date", "organisation", "age", "sex", "governorate",
               "role", "height", "weight_prewar", "weight", "children_feeding")
-log$data_raw$base_cols_missing <- setdiff(expected_base, colnames(base_data))
+log$data_raw$basedata$cols_missing <- setdiff(expected_base, colnames(base_data))
 expected_fup <- c("id", "date", "weight")
-log$data_raw$fup_cols_missing <- setdiff(expected_fup, colnames(fup_data))
-log$data_raw$n_participants_baseline <- length(unique(base_data$id))
-log$data_raw$max_date <- max(fup_data$date)
-log$data_raw$orgs <- unique(base_data$organisation)
+log$data_raw$fup_data$cols_missing <- setdiff(expected_fup, colnames(fup_data))
+log$data_raw$base_data$n_participants_baseline <- length(unique(base_data$id))
+log$data_raw$fup_data$max_date <- max(fup_data$date)
+log$data_raw$base_data$orgs <- unique(base_data$organisation)
 
 
 # Data processing -----------------------------------------------------------

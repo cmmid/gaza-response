@@ -1,27 +1,42 @@
+::: {.panel-accordion}
+### Current BMI compared to pre-war
 
 ```{r}
-#| out-width: "100%"
-#| collapse: true
-
-# #| layout-nrow: 2
-# Filter all data to relevant demographic strata
-plot_data_timeseries <- org_summary$data$timeseries |> 
-  filter(strata == meta_params$strata)
+#| fig-subcap: "<details><summary>About the data</summary>The percentage of participants by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Showing all participants' pre-war BMI^[Calculated from estimated weight in October 2023, self-reported at study enrollment], and the most recent ('current') measurement from each participant since the study began in July 2025. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>"
+#| fill: false
 plot_data_latest <- org_summary$data$latest |> 
-  filter(strata == meta_params$strata)
+  filter(strata == tolower(meta_params$strata)) |> 
+  filter(!grepl("(o|O)ther", Stratum)) |> 
+  mutate(Stratum = fct_drop(Stratum))
 
-# plot_current_summary_stats(plot_data_latest) |> 
-#   ggplotly()
-# # About the data
-# markdown("<details><summary>About the data</summary>Median and 25-75% range of participant weight in kilograms (kg) and [Body Mass Index](https://www.cdc.gov/bmi/about/index.html), with % change from pre-October 2023. Negative % indicates weight loss.</details")
+plot_bmi_categories(plot_data = plot_data_latest) |> 
+  ggplotly(tooltip = c("fill", "y", "x")) |> 
+  layout(legend = list(orientation = "h"))
+```
+
+### Weekly change in BMI
+
+```{r}
+#| fig-subcap: "<details><summary>About the data</summary>The percentage of participants each week by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Colour intensity shows number of participants measured each week. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>"
+#| fill: false
+plot_data_timeseries <- org_summary$data$timeseries |> 
+  filter(strata == tolower(meta_params$strata)) |> 
+  mutate(across(contains("stratum"), ~ fct_recode(., NULL = "Other")))
+
+plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |> 
+  ggplotly(tooltip = c("fill", "y", "alpha")) |> 
+  layout(legend = list(orientation = "h"))
+```
+
+### Weekly change compared to pre-war {.open}
+
+```{r}
+#| fig-subcap: "<details><summary>About the data</summary>The difference between participants' weekly weight^[The latest measurement within the week for each participant], compared to their pre-war weight^[Estimated weight in October 2023, self-reported at study enrollment]. Showing the typical range among participants each week: the median (point) and 25-75% range (IQR; linebar). Colour intensity shows number of participants measured each week.</details>"
+#| fill: false
 
 plot_time_series_statistics(plot_data = plot_data_timeseries) |> 
   ggplotly() |> 
   layout(legend = list(orientation = 'h'))
-
-plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |> 
-  ggplotly(tooltip = c("y", "fill")) |> 
-  layout(legend = list(orientation = 'h'))
-
 ```
 
+:::

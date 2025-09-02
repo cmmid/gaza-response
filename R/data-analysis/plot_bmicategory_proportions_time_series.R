@@ -33,39 +33,31 @@ plot_bmicategory_proportions_time_series <- function(plot_data){
 
   # get % BMI category per week
   plot_data_bmi <- plot_data |>
-    # daily data (ie drop prewar)
     filter(grepl("bmi_category_daily", variable)) |>
-    mutate(bmi_category = factor(bmi_category,
-                                 levels = c("Underweight", "Normal", "Overweight", "Obese"),
+    mutate(`BMI category` = factor(bmi_category,
+                  levels = c("Underweight", "Normal", "Overweight", "Obese"),
                                  ordered = TRUE)) |>
-    mutate(week = lubridate::floor_date(date, "week")) |>
-    # only keep counts
     filter(stat == "count") |>
-    group_by(organisation, week, Strata, Stratum, bmi_category) |>
-    summarise(
-      category_count = sum(value, na.rm = TRUE),
-      .groups = "drop") |>
-    group_by(organisation, week, Strata, Stratum) |>
-    mutate(category_total = sum(category_count),
-           category_proportion = category_count / category_total) |>
+    mutate(`BMI %` = round(value / cohort_id_recorded * 100),
+           `Total weekly participants` = cut(cohort_id_recorded, c(0,10,30,50,Inf),
+                              labels = c("<10", "10-20", "20-50", ">50"),
+                              ordered_result = TRUE)) |>
     ungroup()
 
-  # ggplot - stacked bar % by week
+  # ggplot - stacked bar % by date
   plot <- ggplot(plot_data_bmi,
-                 aes(x = as.Date(week),
-                     fill = bmi_category, col = bmi_category)) +
-    geom_col(aes(y = category_proportion),
-             position = "stack") +
-    geom_text(aes(y = 1, label = paste0("N=",category_total)),
-                  colour = "black", vjust = -0.5, show.legend = FALSE) +
-    scale_y_continuous(limits = c(NA, 1.05), breaks = c(0,0.25,0.5,0.75,1),
-                       labels = scales::label_percent(accuracy = 1)) +
+                 aes(x = as.Date(date), y = `BMI %`,
+                     fill = `BMI category`,
+                     alpha = `Total weekly participants`)) +
+    geom_col(position = "stack") +
+    scale_y_continuous(labels = scales::label_percent(scale = 1), n.breaks = 3) +
     scale_fill_manual(name = "BMI category",
                       values = lshtm_palette$bmi_categories) +
-    scale_colour_manual(name = "BMI category",
-                      values = lshtm_palette$bmi_categories) +
-    labs(x = NULL, y = "Weekly participant measurements") +
-    facet_wrap(~ Stratum, scales = "free_y", ncol=1) +
+    scale_alpha_discrete(range = c(0.1,0.7)) +
+    labs(x = NULL, y = "% weekly measurements",
+         alpha = NULL) +
+    guides(alpha = "none") +
+    facet_wrap(~ Stratum, scales = "free_y") +
     theme(lshtm_theme())
 
   return(plot)

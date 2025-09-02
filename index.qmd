@@ -6,6 +6,8 @@ format:
     scrolling: true
     css: "styles.css"
     fig-format: svg
+filters:
+  - panel-accordion
 execute: 
   echo: false
   freeze: false
@@ -17,11 +19,12 @@ execute:
 pacman::p_load(here, 
                purrr, readr, dplyr, forcats, stringr,
                bslib, bsicons, 
-               ggplot2, plotly, shiny, patchwork)
+               ggplot2, scales, plotly, shiny, patchwork)
 # Source plotting scripts
 source(here("R", "data-pipeline", "0-data-dictionary.R"))
 source(here("R", "data-analysis/generate_key_insights.R"))
 source(here("R", "data-analysis/plot_participants_over_time.R"))
+source(here("R", "data-analysis/plot_bmi_categories.R"))
 source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
@@ -42,15 +45,12 @@ summary$data$timeseries <- readRDS(here("data", "public", "summary-timeseries.RD
 suppressWarnings(
   summary$data <- map(summary$data, 
                  ~ .x |> 
-                   mutate(Strata = as_factor(strata),
-                               Strata = fct_recode(Strata,
-                                                   !!!data_dictionary$data_levels),
-                               Stratum = as_factor(stratum),
-                               Stratum = fct_recode(Stratum,
-                                                    !!!data_dictionary$data_levels),
-                               Variable = as_factor(variable),
-                               Variable = fct_recode(Variable,
-                                                    !!!data_dictionary$data_levels))
+                   mutate(Strata = fct_recode(strata,
+                                               !!!data_dictionary$data_levels),
+                          Stratum = fct_recode(stratum,
+                                               !!!data_dictionary$data_levels),
+                          Variable = fct_recode(variable,
+                                                !!!data_dictionary$data_levels))
   )
 )
 
@@ -92,18 +92,16 @@ Last updated:
 
 We publish aggregated summary statistics as publicly available data.
 
-- Find the [latest public data](https://github.com/cmmid/gaza-response/tree/main/data/public)
-- Read more [about data collection](./about)
-
-All code is public and open source under an MIT license. 
-
+- Find the [public data](https://github.com/cmmid/gaza-response/tree/main/data/public)
+- Read about [data collection](./about)
 - Explore the [code](https://github.com/cmmid/gaza-response/)
 
 This project is built and maintained collectively and for free by volunteers. 
 We develop in the open, using R, Quarto, and Github.
-**We welcome and encourage contributors!** 
+All code is public and open source under an MIT license. 
+**We welcome and encourage contributors.** 
 
-- [Contribute](https://github.com/cmmid/gaza-response/discussions)
+- [Contribute](https://github.com/cmmid/gaza-response/discussions){.btn .btn-info .btn role="button"}
 
 :::
 

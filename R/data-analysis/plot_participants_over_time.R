@@ -49,7 +49,7 @@ plot_participants_over_time <- function(plot_data){
                                    "New joiner" = "#709b28",
                                    "Returning" = "#01454f")) +
       labs(x = NULL, y = "Participant measurements") +
-      facet_wrap(~Stratum, scales="free_y", ncol=1) +
+      facet_wrap(~Stratum, scales="free_y") +
       #gghighlight() +
       lshtm_theme()
 

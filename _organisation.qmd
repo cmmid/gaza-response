@@ -15,82 +15,67 @@ key_text <- generate_key_insights(key_insights_data$latest)
 meta_params$strata <- "sex"
 ```
 
-## row 1 {height="15%"}
+::: {.panel-tabset}
+
+### Overall change
+
+::: {.panel layout-ncol=3 height="15%"}
 
 ```{r}
 value_box(
   title = "Participants",
   value = key_text$n_id,
-  p(key_text$n_followup, "participants continuing to report after baseline"),
-  showcase = bs_icon("clipboard"),
-  theme = "teal"
+  p(key_text$n_followup, "providing ongoing updates"),
+  theme = "success"
 )
 ```
 
 ```{r}
 value_box(
-  title = "Typical loss of bodyweight from pre-war",
+  title = "Bodyweight loss since 2023",
   value = key_text[["weight_change_percent_prewar"]],
-  p("Median and interquartile range (25%-75% of participants), from pre-war to latest measurement"),
-  showcase = bs_icon("activity"),
-  theme = "teal"
+  p("Median (25%-75%)"),
+  theme = "info"
 )
 ```
 
 ```{r}
 value_box(
-  title = "% clinically underweight",
+  title = "Clinically underweight",
   value = key_text[["bmi_category_daily_Underweight"]],
-  p("WHO"),
-  showcase = bs_icon("activity"),
-  theme = "teal"
+  p("BMI < 18.5"),
+  theme = "warning"
 )
-```
-
-## row 2 {height="40%"}
-
-::: {.panel-tabset title="Participation"}
-
-### Participants
-```{r}
-#| fill: false
-#| out-width: "100%"
-#| fig-align: center
-plot_participants_over_time(key_insights_data$timeseries) |> 
-  ggplotly()|> 
-  layout(legend = list(orientation = 'h'))
-markdown("<details> <summary> About the data </summary> 
-         Daily participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line). </details>")
-```
-
-### Demographics
-```{r}
-#| fill: false
-org_summary$tables$demographic_strata
-```
-
-### Data
-```{r}
-#| fill: false
-org_summary$tables$data_quality
 ```
 
 :::
 
+::: {.panel layout-nrow=2 height="85%"}
+
 ```{r}
-#| title: "Change in BMI classification"
+#| title: "Change in BMI, pre-war to now"
+#| layout-ncol: 2
+#| fill: false
+
+plot_data_latest <- org_summary$data$latest |> 
+  filter(strata == "overall") |> 
+  mutate(Stratum = fct_drop(Stratum))
+plot_bmi_categories(plot_data = plot_data_latest) |> 
+  ggplotly(tooltip = c("fill", "y", "x")) |> 
+  layout(legend = list(orientation = "h"))
+
 org_summary$tables$bmi_crosstab
-markdown("<details> <summary> About the data </summary> 
-Prevalence of body mass index (BMI) classifications among participants, calculated from self-reported weight before October 2023 (pre-war), and latest measurement during study period (from July 2025). Adult BMI classifications are underweight (under 18.5 kg/m2), normal weight (18.5 to 24.9), overweight (25 to 29.9), and obese (30 or more). </details>")
 ```
 
-## row 3 {height="45%}
+<details><summary>About the data</summary>The percentage of participants by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Showing all participants' pre-war BMI^[Calculated from estimated weight in October 2023, self-reported at study enrollment], and the most recent ('current') measurement from each participant since the study began in July 2025. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>
 
-## ...still row 3
+:::
+
+### Trends by demographic
 
 ::: {.panel-tabset}
 
-### Trends 
+#### Overall 
 
 ```{r}
 meta_params$strata <- "overall"
@@ -98,18 +83,69 @@ meta_params$strata <- "overall"
 
 {{< include _tab-strata.qmd >}}
 
-### Sex
+#### Sex
 ```{r}
 meta_params$strata <- "sex"
 ```
 
 {{< include _tab-strata.qmd >}}
 
-### Age
+#### Age
 ```{r}
 meta_params$strata <- "age"
 ```
 
 {{< include _tab-strata.qmd >}}
+
+#### Dependents
+```{r}
+meta_params$strata <- "children_feeding"
+```
+
+{{< include _tab-strata.qmd >}}
+
+#### Staff role
+```{r}
+meta_params$strata <- "role"
+```
+
+{{< include _tab-strata.qmd >}}
+
+#### Location
+```{r}
+meta_params$strata <- "governorate"
+```
+
+{{< include _tab-strata.qmd >}}
+
+:::
+
+### Participation
+
+::: {.panel-accordion}
+
+#### Participants
+```{r}
+#| fill: false
+#| fig-align: center
+#| fig-subcap: "<details><summary>About the data</summary>Participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line).</details>"
+plot_participants_over_time(key_insights_data$timeseries) |> 
+  ggplotly() |> 
+  layout(legend = list(orientation = 'h'))
+```
+
+#### Demographics
+```{r}
+#| fill: false
+org_summary$tables$demographic_strata
+```
+
+#### Data
+```{r}
+#| fill: false
+org_summary$tables$data_quality
+```
+
+:::
 
 :::

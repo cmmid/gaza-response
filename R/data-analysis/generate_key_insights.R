@@ -18,7 +18,8 @@ generate_key_insights <- function(key_insights_data) {
 
   bmi_category <- key_insights_data |>
     filter(!is.na(bmi_category)) |>
-    expand(bmi_period, bmi_category, organisation, strata, cohort_id_recorded) |>
+    expand(bmi_period, bmi_category,
+           organisation, strata, cohort_id_recorded) |>
     mutate(stat = "count",
            value = 0,
            variable = paste0(bmi_period, "_", bmi_category)) |>
@@ -27,7 +28,7 @@ generate_key_insights <- function(key_insights_data) {
   summary_text_tab <- key_insights_data |>
     bind_rows(bmi_category) |>
     mutate(value = if_else(grepl("bmi_category_", variable),
-                           round(value / cohort_id_recorded * 100, 0),
+                           round(value / cohort_id_recorded * 100),
                            value),
            stat = if_else(grepl("bmi_category_", variable), "percent", stat),
            unit = case_when(
@@ -38,15 +39,14 @@ generate_key_insights <- function(key_insights_data) {
              grepl("bmi_category_", variable) ~ "%",
            )) |>
     pivot_wider(names_from = stat, values_from = value) |>
-    mutate(across(c(median, q1, q3, percent), ~ round(., 1))) |>
+    mutate(across(c(median, q1, q3, percent), ~ round(.))) |>
     mutate(value_text = case_when(
-      !is.na(median) ~ paste0(median, unit, " (", q1, unit, " - ", q3, unit, ")"),
+      !is.na(median) ~ paste0(median, unit, " (", q1, unit, " to ", q3, unit, ")"),
       !is.na(percent) ~ paste0(percent, unit)))
 
-  summary_text <- summary_text_tab |> dplyr::select(variable, value_text) |> deframe()
-
-  summary_text |>  getElement("bmi_category_daily_Underweight")
-
+  summary_text <- summary_text_tab |>
+    dplyr::select(variable, value_text) |>
+    deframe()
 
   key_text <- list(
     # Number of ppts

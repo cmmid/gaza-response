@@ -1,23 +1,15 @@
-```{r include=FALSE}
-key_insights_data <- map(org_summary$data,
-                        ~ .x |> filter(strata == "overall"))
-key_text <- generate_key_insights(key_insights_data$latest)
-para <- markdown('- **`r key_text[["weight_change_percent_prewar"]]` loss of bodyweight**^[Median and interquartile range (25%-75% of participants)] from pre-war to latest measurement, equivalent to 
-  - A median weight loss of `r key_text[["weight_change_unit_prewar"]]`
-  - A drop in BMI by `r key_text[["bmi_change_unit_prewar"]]`
-  
-- **`r key_text[["bmi_category_daily_Underweight"]]` participants clinically underweight**^[WHO classification: underweight body mass index of < 18.5], compared to `r key_text[["bmi_category_prewar_Underweight"]]` pre-war
-:::')
-```
+####
 
-::: {.panel layout-nrow=3 width="15%"}
+#####
+
+::: {.panel layout-nrow=3 width="20%"}
 
 ```{r}
 value_box(
-  title = "Participants",
-  value = key_text$n_id,
-  p(key_text$n_followup, "providing ongoing updates"),
-  theme = "success"
+  title = "Clinically underweight",
+  value = key_text[["bmi_category_daily_Underweight"]],
+  p("BMI < 18.5"),
+  theme = "warning"
 )
 ```
 
@@ -32,16 +24,16 @@ value_box(
 
 ```{r}
 value_box(
-  title = "Clinically underweight",
-  value = key_text[["bmi_category_daily_Underweight"]],
-  p("BMI < 18.5"),
-  theme = "warning"
+  title = "Participants",
+  value = key_text$n_id,
+  p(key_text$n_followup, "providing ongoing updates"),
+  theme = "success"
 )
 ```
 
 :::
 
-::: {.panel layout-nrow=2 width="85%"}
+::: {.panel layout-nrow=2 width="80%"}
 
 ```{r}
 #| title: "Change in BMI, pre-war to now"

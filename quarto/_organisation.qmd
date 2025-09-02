@@ -5,6 +5,16 @@ org_summary <- list()
 org_summary$data <- map(summary$data,
                    ~ .x |> filter(organisation == meta_params$organisation))
 org_summary$tables <- summary$tables[[meta_params$organisation]]
+# key insights
+key_insights_data <- map(org_summary$data,
+                        ~ .x |> filter(strata == "overall"))
+key_text <- generate_key_insights(key_insights_data$latest)
+para <- markdown('- **`r key_text[["weight_change_percent_prewar"]]` loss of bodyweight**^[Median and interquartile range (25%-75% of participants)] from pre-war to latest measurement, equivalent to 
+  - A median weight loss of `r key_text[["weight_change_unit_prewar"]]`
+  - A drop in BMI by `r key_text[["bmi_change_unit_prewar"]]`
+  
+- **`r key_text[["bmi_category_daily_Underweight"]]` participants clinically underweight**^[WHO classification: underweight body mass index of < 18.5], compared to `r key_text[["bmi_category_prewar_Underweight"]]` pre-war
+:::')
 ```
 
 ::: {.panel-tabset} 

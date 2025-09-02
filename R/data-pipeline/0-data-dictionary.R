@@ -17,7 +17,7 @@ set_data_dictionary <- function() {
                     "sex", "age", "children_feeding", "role", "governorate",
                     "bmi_category_daily", "bmi_category_prewar",
                     "strata", "stratum", "variable_name", "anomaly"),
-    data_levels = as_factor(c(
+    data_levels = c(
   # Categories within data -------------------------
     # sex
     "Male" = "male",
@@ -29,10 +29,10 @@ set_data_dictionary <- function() {
     "Age over 45" = "Age over 45",
     "Missing" = "anomaly",
     # dependants
-    "0" = "0",
-    "1" = "1",
-    "2" = "2",
-    "3+" = "3+",
+    "0 children" = "0",
+    "1 child" = "1",
+    "2 children" = "2",
+    "3+ children" = "3+",
     "Missing" = "NA",
     # role
     "Staff expatriate" = "expatriate",
@@ -104,10 +104,10 @@ set_data_dictionary <- function() {
       "BMI change since start of war (%)" = "bmi_change_percent_prewar",
       "BMI change since enrollment (%)" = "bmi_change_percent_entry",
       "BMI daily rate of change since study entry (%/day)" = "bmi_change_percent_daily_rate_entry",
-    "Current BMI" = "bmi_category_daily",
-    "Pre-war BMI" = "bmi_category_prewar"
+    "Pre-war BMI" = "bmi_category_prewar",
+  "Current BMI" = "bmi_category_daily"
     )
     )
-  )
+
     return(dictionary)
   }

@@ -204,7 +204,8 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
                            NA, .x)))
 
  # Handle factors ----------------------------------------------------------
- observed_data <- observed_data |>
+ clean_data <- observed_data
+ clean_data <- clean_data |>
    mutate(age = case_when(
      age < 16 ~ NA,
      age < 30 ~ "Age under 30",
@@ -214,7 +215,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
      .default = NA
    ))
 
- observed_data <- observed_data |>
+ clean_data <- clean_data |>
    mutate(children_feeding = case_when(
        children_feeding < 0 ~ NA,
        children_feeding == 0 ~ "0",
@@ -225,7 +226,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
        .default = NA
      ))
 
- observed_data <- observed_data |>
+ clean_data <- clean_data |>
    mutate(bmi_category_daily = bmi_daily,
           bmi_category_prewar = bmi_prewar) |>
    mutate(across(starts_with("bmi_category"),
@@ -242,11 +243,11 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
 
  # Convert to factor
  suppressWarnings(
-   clean_data <- observed_data |>
+   clean_data <- clean_data |>
      mutate(across(any_of(data_dictionary$factor_cols),
-                   ~ as_factor(.))) |> # preserves unexpected values
+                   ~ as_factor(.))) |>
      mutate(across(any_of(data_dictionary$factor_cols),
-                   ~ fct_recode(., !!!data_dictionary$data_levels)))
+                   ~ fct_relevel(., data_dictionary$data_levels)))
  )
 
  # neaten the df

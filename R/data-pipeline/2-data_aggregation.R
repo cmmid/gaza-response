@@ -50,7 +50,7 @@ tabulate_study <- function(data, strata, data_dictionary) {
                    filter(Organisation == .x) |>
                    tbl_summary(by = "Participant timepoint",
                                percent = "column",
-                               include = -c("Organisation"),
+                               include = -c("Organisation", "overall"),
                                missing = "ifany",
                                missing_text = "Missing") |>
                    add_overall() |>

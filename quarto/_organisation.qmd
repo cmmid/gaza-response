@@ -1,75 +1,21 @@
 ```{r, include=FALSE}
-# Set up template page per organisation
+# Set up template per organisation
 org_summary <- list()
-#  --- Filter data to organisation
+# --- Filter data to organisation
 org_summary$data <- map(summary$data,
                    ~ .x |> filter(organisation == meta_params$organisation))
-# --- print-ready tables
 org_summary$tables <- summary$tables[[meta_params$organisation]]
-# overall data
-key_insights_data <- map(org_summary$data,
-                        ~ .x |> filter(strata == "overall"))
-
-# Create key insights text
-key_text <- generate_key_insights(key_insights_data$latest)
-meta_params$strata <- "sex"
 ```
 
-::: {.panel-tabset}
+::: {.panel-tabset} 
 
-### Overall change
+<!-- tab 1. key insights -->
 
-::: {.panel layout-ncol=3 height="15%"}
+### Key insights
 
-```{r}
-value_box(
-  title = "Participants",
-  value = key_text$n_id,
-  p(key_text$n_followup, "providing ongoing updates"),
-  theme = "success"
-)
-```
+{{< include quarto/_key-insights.qmd >}}
 
-```{r}
-value_box(
-  title = "Bodyweight loss since 2023",
-  value = key_text[["weight_change_percent_prewar"]],
-  p("Median (25%-75%)"),
-  theme = "info"
-)
-```
-
-```{r}
-value_box(
-  title = "Clinically underweight",
-  value = key_text[["bmi_category_daily_Underweight"]],
-  p("BMI < 18.5"),
-  theme = "warning"
-)
-```
-
-:::
-
-::: {.panel layout-nrow=2 height="85%"}
-
-```{r}
-#| title: "Change in BMI, pre-war to now"
-#| layout-ncol: 2
-#| fill: false
-
-plot_data_latest <- org_summary$data$latest |> 
-  filter(strata == "overall") |> 
-  mutate(Stratum = fct_drop(Stratum))
-plot_bmi_categories(plot_data = plot_data_latest) |> 
-  ggplotly(tooltip = c("fill", "y", "x")) |> 
-  layout(legend = list(orientation = "h"))
-
-org_summary$tables$bmi_crosstab
-```
-
-<details><summary>About the data</summary>The percentage of participants by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Showing all participants' pre-war BMI^[Calculated from estimated weight in October 2023, self-reported at study enrollment], and the most recent ('current') measurement from each participant since the study began in July 2025. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>
-
-:::
+<!-- tab 2. demographic strata -->
 
 ### Trends by demographic
 
@@ -120,32 +66,10 @@ meta_params$strata <- "governorate"
 
 :::
 
+<!--- tab 3. participants + data quality -->
+
 ### Participation
 
-::: {.panel-accordion}
-
-#### Participants
-```{r}
-#| fill: false
-#| fig-align: center
-#| fig-subcap: "<details><summary>About the data</summary>Participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line).</details>"
-plot_participants_over_time(key_insights_data$timeseries) |> 
-  ggplotly() |> 
-  layout(legend = list(orientation = 'h'))
-```
-
-#### Demographics
-```{r}
-#| fill: false
-org_summary$tables$demographic_strata
-```
-
-#### Data
-```{r}
-#| fill: false
-org_summary$tables$data_quality
-```
-
-:::
+{{< include quarto/_participation.qmd >}}
 
 :::

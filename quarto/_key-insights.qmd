@@ -1,0 +1,63 @@
+```{r include=FALSE}
+key_insights_data <- map(org_summary$data,
+                        ~ .x |> filter(strata == "overall"))
+key_text <- generate_key_insights(key_insights_data$latest)
+para <- markdown('- **`r key_text[["weight_change_percent_prewar"]]` loss of bodyweight**^[Median and interquartile range (25%-75% of participants)] from pre-war to latest measurement, equivalent to 
+  - A median weight loss of `r key_text[["weight_change_unit_prewar"]]`
+  - A drop in BMI by `r key_text[["bmi_change_unit_prewar"]]`
+  
+- **`r key_text[["bmi_category_daily_Underweight"]]` participants clinically underweight**^[WHO classification: underweight body mass index of < 18.5], compared to `r key_text[["bmi_category_prewar_Underweight"]]` pre-war
+:::')
+```
+
+::: {.panel layout-nrow=3 width="15%"}
+
+```{r}
+value_box(
+  title = "Participants",
+  value = key_text$n_id,
+  p(key_text$n_followup, "providing ongoing updates"),
+  theme = "success"
+)
+```
+
+```{r}
+value_box(
+  title = "Bodyweight loss since 2023",
+  value = key_text[["weight_change_percent_prewar"]],
+  p("Median (25%-75%)"),
+  theme = "info"
+)
+```
+
+```{r}
+value_box(
+  title = "Clinically underweight",
+  value = key_text[["bmi_category_daily_Underweight"]],
+  p("BMI < 18.5"),
+  theme = "warning"
+)
+```
+
+:::
+
+::: {.panel layout-nrow=2 width="85%"}
+
+```{r}
+#| title: "Change in BMI, pre-war to now"
+#| layout-ncol: 2
+#| fill: false
+
+plot_data_latest <- org_summary$data$latest |> 
+  filter(strata == "overall") |> 
+  mutate(Stratum = fct_drop(Stratum))
+plot_bmi_categories(plot_data = plot_data_latest) |> 
+  ggplotly(tooltip = c("fill", "y", "x")) |> 
+  layout(legend = list(orientation = "h"))
+
+org_summary$tables$bmi_crosstab
+```
+
+<details><summary>About the data</summary>The percentage of participants by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Showing all participants' pre-war BMI^[Calculated from estimated weight in October 2023, self-reported at study enrollment], and the most recent ('current') measurement from each participant since the study began in July 2025. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>
+
+:::

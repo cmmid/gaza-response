@@ -10,7 +10,6 @@ filters:
   - panel-accordion
 execute: 
   echo: false
-  freeze: false
   cache: false
 ---
 

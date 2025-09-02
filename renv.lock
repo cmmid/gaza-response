@@ -5058,7 +5058,7 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "1.1.5",
+      "Version": "1.1.5.9000",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Project Environments",
@@ -5100,15 +5100,19 @@
       ],
       "Encoding": "UTF-8",
       "RoxygenNote": "7.3.2",
+      "Roxygen": "list(markdown = TRUE)",
       "VignetteBuilder": "knitr",
       "Config/Needs/website": "tidyverse/tidytemplate",
       "Config/testthat/edition": "3",
       "Config/testthat/parallel": "true",
       "Config/testthat/start-first": "bioconductor,python,install,restore,snapshot,retrieve,remotes",
+      "Repository": "https://rstudio.r-universe.dev",
+      "RemoteUrl": "https://github.com/rstudio/renv",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "d0eb86349d35679eb6920ca59072bd7369fe620f",
       "NeedsCompilation": "no",
       "Author": "Kevin Ushey [aut, cre] (ORCID: <https://orcid.org/0000-0003-2880-7407>), Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Posit Software, PBC [cph, fnd]",
-      "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
-      "Repository": "CRAN"
+      "Maintainer": "Kevin Ushey <kevin@rstudio.com>"
     },
     "reprex": {
       "Package": "reprex",

@@ -1,8 +1,6 @@
-####
 
-#####
 
-::: {.panel layout-nrow=3 width="20%"}
+::: {.panel layout-ncol=3 height="20%"}
 
 ```{r}
 value_box(
@@ -33,7 +31,7 @@ value_box(
 
 :::
 
-::: {.panel layout-nrow=2 width="80%"}
+::: {.panel layout-nrow=2 height="80%"}
 
 ```{r}
 #| title: "Change in BMI, pre-war to now"

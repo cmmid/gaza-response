@@ -99,7 +99,7 @@ We develop in the open, using R, Quarto, and Github.
 All code is public and open source under an MIT license. 
 **We welcome and encourage contributors.** 
 
-- [Contribute](https://github.com/cmmid/gaza-response/discussions){.btn .btn-info .btn role="button"}
+[Contribute](https://github.com/cmmid/gaza-response/discussions){.btn .btn-info .btn role="button"}
 
 :::
 

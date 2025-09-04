@@ -24,7 +24,6 @@ source(here("R", "data-pipeline", "0-data-dictionary.R"))
 source(here("R", "data-analysis/generate_key_insights.R"))
 source(here("R", "data-analysis/plot_participants_over_time.R"))
 source(here("R", "data-analysis/plot_bmi_categories.R"))
-source(here("R", "data-analysis/plot_current_summary_stats.R"))
 source(here("R", "data-analysis/plot_time_series_statistics.R"))
 source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
@@ -32,8 +31,6 @@ source(here("R", "data-analysis/ggplot_theme.R"))
 # Load metadata
 ## Data dictionary
 data_dictionary <- set_data_dictionary()
-## Pipeline log
-log <- readRDS(here("data/public/log.RDS"))
  
 # Load data
 summary <- list()
@@ -86,8 +83,10 @@ _Results are preliminary: please interpret with caution._
 
 Last updated:
 
-- Data: `r log$data_raw$max_date`
+- Data: `r max(summary[["data"]][["latest"]]$date)`
 - Website: `r Sys.Date()`
+
+---
 
 We publish aggregated summary statistics as publicly available data.
 

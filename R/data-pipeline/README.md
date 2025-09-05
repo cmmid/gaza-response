@@ -1,5 +1,7 @@
 ## Production of public data
 
+### Public pipeline
+
 This pipeline reads individual-level data from a local source, cleans, and produces aggregated output saved in `data/public`. 
 
 The public data files include:
@@ -11,6 +13,30 @@ The public data files include:
 - `summary-tables.RDS`
   - tables per organisation for: cross-tabulated BMI, participant demographics, and data quality
   
+---------
+  
+<details>
+
+<summary> Full pipeline description </summary>
+
+The full pipeline runs on a local VM with the following steps:
+
+- Clones private repo: `wt_monitoring_gaza` on branch `automation`
+  - Pulls 2 datasets from ODK
+    - Saves to `wt_monitoring_gaza/data/raw`
+  - Initial cleaning
+  - Saves output to `wt_monitoring_gaza/data/processed`
+- Clones public repo: `gaza-response`
+   - Runs public pipeline code
+      - `gaza-response/R/data-pipeline/run-public-pipeline.R`
+        - Reads local files from `wt_monitoring_gaza/data/processed`
+        - Cleans
+        - Aggregates
+        - Saves output to `gaza-response/data/public`
+   - Pushes to `gaza-response`
+   
+</details>
+
 --------
 
 <details>

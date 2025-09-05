@@ -1,69 +1,42 @@
-#...............................................................................
-### ++ MONITORING THE NUTRITIONAL STATUS OF HUMANITARIAN WORKERS IN GAZA +++ ###
-#...............................................................................
+# Plot number and type of participants by date
 
-#...............................................................................
-## ------ R SCRIPT TO GENERATE PLOTS OF PARTICIPANTS OVER TIME ----- ##
-#...............................................................................
+# R packages
+pacman::p_load(ggplot2, dplyr, forcats, scales)
+source(here("R", "data-analysis/ggplot_theme.R"))
 
-#...............................................................................
-### Preparatory steps
-#...............................................................................
+# Plot ----------------
+plot_participants_over_time <- function(plot_data){
 
-#...................................
-## Install or load required R packages
-pacman::p_load(
-  ggplot2,       # Visualise data
-  tidyverse)     # Tidyverse suite of packages
+  # reshape data
+  plot_data <- plot_data |>
+    filter(!is.na(date)) |>
+    filter(variable == "weight_daily" & stat == "median") |>
+    dplyr::select(-value) |>
+    group_by(organisation, strata, stratum) |>
+    mutate(cohort_participant_cumsum = cumsum(cohort_id_recorded),
+           cohort_record_cumsum = cumsum(cohort_obs_recorded)) |>
+    group_by(date, organisation, strata, stratum) |>
+    pivot_longer(cols = c("cohort_id_new",
+                          "cohort_id_followup_record")) |>
+    mutate(Participant = fct_rev(fct_recode(name,
+                                            "New joiner"="cohort_id_new",
+                                            "Returning"="cohort_id_followup_record"))) |>
+    ungroup()
 
-#...............................................................................
-### Read in current summary statistics data
-#...............................................................................
+  # plot
+    plot <- plot_data |>
+      ggplot(aes(x = date)) +
+      geom_col(aes(y = value,
+                   fill = Participant)) +
+      geom_area(aes(y = cohort_record_cumsum), alpha = 0.1) +
+      geom_line(aes(y = cohort_participant_cumsum), alpha = 0.1) +
+      scale_fill_manual(values = c("Missing" = "grey50",
+                                   "New joiner" = "#709b28",
+                                   "Returning" = "#01454f")) +
+      labs(x = NULL, y = "Participant measurements") +
+      facet_wrap(~Stratum, scales="free_y") +
+      #gghighlight() +
+      lshtm_theme()
 
-
-#...............................................................................
-### Plot
-#...............................................................................
-
-plot_participants_over_time <- function(data, strata = "Overall"){
-
-  # Filter data for the selected option
-  data_filter <- data[[tolower(strata)]] |>
-    pivot_wider(names_from = stat, values_from = value) %>%
-    dplyr::filter(!is.na(mean)) |>
-    filter(variable == "weight") |>
-    full_join(expand.grid(list(date = as.Date(min(data[[tolower(strata)]]$date) - 1),
-                               cohort_n = 0,
-                               label = unique(data[[tolower(strata)]]$label))))
-
-  if (strata == "Overall") {
-    # Generate plot
-    fig <- data_filter %>%
-      ggplot() +
-      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
-                position = "stack", alpha = 0.8, show.legend = F) +
-      labs(x = "Date",
-           y = "Participants",
-           fill = "Demographics") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank())
-  }
-
-  else {
-    fig <- data_filter %>%
-      ggplot() +
-      geom_area(aes(x = date, y = cohort_id_enrolled, fill = label, group = label),
-                position = "stack", alpha = 0.8) +
-      labs(x = "Date",
-           y = "Participants",
-           fill = "Demographics") +
-      #theme_bw() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-            strip.text.y = element_blank())
-  }
-
-
-  return(fig)
-
+  return(plot)
 }

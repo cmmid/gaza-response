@@ -1,0 +1,26 @@
+::: {.panel-accordion}
+
+#### Participants
+```{r}
+#| fill: false
+#| fig-align: center
+#| fig-subcap: "<details><summary>About the data</summary>Participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line).</details>"
+plot_participants_over_time(key_insights_data$timeseries) |> 
+  ggplotly() |> 
+  layout(legend = list(orientation = 'h'))
+```
+
+#### Demographics
+```{r}
+#| fill: false
+org_summary$tables$demographic_strata
+```
+
+#### Data
+```{r}
+#| fill: false
+org_summary$tables$data_quality
+```
+
+:::
+

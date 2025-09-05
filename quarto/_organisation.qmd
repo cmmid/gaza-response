@@ -1,0 +1,85 @@
+```{r, include=FALSE}
+# Set up template per organisation
+org_summary <- list()
+# --- Filter data to organisation
+org_summary$data <- map(summary$data,
+                   ~ .x |> filter(organisation == meta_params$organisation))
+org_summary$tables <- summary$tables[[meta_params$organisation]]
+# key insights
+key_insights_data <- map(org_summary$data,
+                        ~ .x |> filter(strata == "overall"))
+key_text <- generate_key_insights(key_insights_data$latest)
+para <- markdown('- **`r key_text[["weight_change_percent_prewar"]]` loss of bodyweight**^[Median and interquartile range (25%-75% of participants)] from pre-war to latest measurement, equivalent to 
+  - A median weight loss of `r key_text[["weight_change_unit_prewar"]]`
+  - A drop in BMI by `r key_text[["bmi_change_unit_prewar"]]`
+  
+- **`r key_text[["bmi_category_daily_Underweight"]]` participants clinically underweight**^[WHO classification: underweight body mass index of < 18.5], compared to `r key_text[["bmi_category_prewar_Underweight"]]` pre-war
+:::')
+```
+
+::: {.panel-tabset} 
+
+<!-- tab 1. key insights -->
+
+### Key insights
+
+{{< include quarto/_key-insights.qmd >}}
+
+<!-- tab 2. demographic strata -->
+
+### Trends by demographic
+
+::: {.panel-tabset}
+
+#### Overall 
+
+```{r}
+meta_params$strata <- "overall"
+```
+
+{{< include quarto/_tab-strata.qmd >}}
+
+#### Sex
+```{r}
+meta_params$strata <- "sex"
+```
+
+{{< include quarto/_tab-strata.qmd >}}
+
+#### Age
+```{r}
+meta_params$strata <- "age"
+```
+
+{{< include quarto/_tab-strata.qmd >}}
+
+#### Dependents
+```{r}
+meta_params$strata <- "children_feeding"
+```
+
+{{< include quarto/_tab-strata.qmd >}}
+
+#### Staff role
+```{r}
+meta_params$strata <- "role"
+```
+
+{{< include quarto/_tab-strata.qmd >}}
+
+#### Location
+```{r}
+meta_params$strata <- "governorate"
+```
+
+{{< include quarto/_tab-strata.qmd >}}
+
+:::
+
+<!--- tab 3. participants + data quality -->
+
+### Participation
+
+{{< include quarto/_participation.qmd >}}
+
+:::

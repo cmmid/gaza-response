@@ -48,15 +48,15 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-/.quarto/
-
 # Website files
 _site
+/.quarto/
+_freeze/*
 
 # Other
 *.DS_Store
 .DS_Store
-
+README_files/*
 index_files
 index_files/*
 site_libs
@@ -64,3 +64,6 @@ site_libs/*
 /data/processed
 data/processed
 renv/library/*
+README.html
+/R/data-pipeline/README_files
+/quarto/README_files

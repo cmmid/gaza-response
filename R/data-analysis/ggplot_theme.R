@@ -42,5 +42,6 @@ lshtm_palette <- list(
     "Obese" = "#01454f",
     "Overweight" = "#007457",
     "Normal" = "#709b28",
-    "Underweight" = "#ffa600")
+    "Underweight" = "#ffa600"),
+  lshtm_generic = "#01454f"
 )

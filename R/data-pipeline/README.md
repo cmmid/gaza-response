@@ -13,11 +13,33 @@ The public data files include:
 - `summary-tables.RDS`
   - tables per organisation for: cross-tabulated BMI, participant demographics, and data quality
   
----------
+---
+
+<details>
+
+<summary> Data generation </summary>
+
+Data generation involves: 
+
+- a survey at enrollment for each participant, including: creating a unique participant ID; values for baseline characteristics at study entry (e.g. sex, age, organisation, pre-war weight); and that day's weight measurement. 
+- a daily survey, optional for each participant, including: the participant's unique ID; the date; the day's weight measurement.
+
+Data are collected using ODK: see study protocol. Data are held on a secure local server.
+
+This produces two datasets, each updating daily:
+
+- base_data : Participants are identified by a unique `id`. 
+   - A single row for each unique participant ID; no duplicated participant IDs; any date from the start of the study to present. 
+- fup_data : follow up data for subseqent weight measurements, for participants who opt in to this each day. In this dataframe, the first date for each participant is therefore the first observation after enrollment, i.e. the participant's second measurement. Participant ID is a primary key with base_data.
+   - One or more rows for each unique participant ID.
+   
+</details>
+  
+---
   
 <details>
 
-<summary> Full pipeline description </summary>
+<summary> Data processing pipeline </summary>
 
 The full pipeline runs on a local VM with the following steps:
 

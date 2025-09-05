@@ -66,3 +66,4 @@ data/processed
 renv/library/*
 README.html
 /R/data-pipeline/README_files
+/quarto/README_files

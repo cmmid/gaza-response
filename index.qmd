@@ -15,7 +15,7 @@ execute:
 
 ```{r setup, include=FALSE}
 ## Packages
-pacman::p_load(here, 
+pacman::p_load(here, quarto,
                purrr, readr, dplyr, tibble, forcats, stringr,
                bslib, bsicons, 
                ggplot2, scales, plotly, shiny)

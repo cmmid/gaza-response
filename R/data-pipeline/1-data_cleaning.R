@@ -11,17 +11,7 @@
 #...............................................................................
 
 # Install or load packages from CRAN
-pacman::p_load(
-  dplyr,
-  lubridate,
-  ggplot2,       # Visualise data
-  ggpubr,        # Arrange multiple plots into a single plot
-  ggrepel,       # Improve labelling of plots
-  MASS,          # Implement various statistical methods
-  mgcv,          # Fit generalised additive models
-  scales,        # Scale and format data for visualisation
-  tidyverse,     # Tidyverse suite of packages
-  viridis)       # Colour-blind palette
+pacman::p_load(dplyr, tidyr, purrr, lubridate, forcats)
 
 # example
 # source(here("R/data-pipeline/0-data-dictionary.R")) # get helper fn for factors

@@ -1,7 +1,7 @@
 # Run the full data processing pipeline on a local server hosting raw data, ready to be pushed to public Github
 
 # ------------------ Set up ------------------------------------
-pacman::p_load(here, purrr, dplyr, gtsummary)
+pacman::p_load(here, purrr, dplyr, gtsummary, forcats, tidyr)
 set.seed(123)
 #do not show summarise message
 options(dplyr.summarise.inform = FALSE)

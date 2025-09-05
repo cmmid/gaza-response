@@ -23,10 +23,13 @@ Append the new item as a named character to the [`dictionary` list object](./R/d
 To load clean individual level data, using RDS files stored in the `data/processed` directory, use:
 
 ``` r
+# get functions
 source(here::here("R/data-pipeline/0-data-dictionary.R"))
 source(here::here("R/data-pipeline/1-data_cleaning.R"))
+# load data
 baseline_data <- readRDS(here::here("data/processed/df_base.RDS"))
 followup_data <- readRDS(here::here("data/processed/df_fup.RDS"))
+# clean data
 data_dictionary <- set_data_dictionary()
 data_id_daily <- clean_data(baseline_data, followup_data, data_dictionary)
 ```

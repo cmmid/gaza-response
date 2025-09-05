@@ -10,42 +10,7 @@
 
 #...............................................................................
 ### Preparatory steps
-#...............................................................................
-
-  #...................................
-  ## Install or load required R packages
-  if (!"pacman" %in% rownames(installed.packages())){install.packages("pacman")}
-
-    # Install or load packages from CRAN
-    pacman::p_load(
-      here,
-      ggplot2,       # Visualise data
-      ggpubr,        # Arrange multiple plots into a single plot
-      ggrepel,       # Improve labelling of plots
-      MASS,          # Implement various statistical methods
-      mgcv,          # Fit generalised additive models
-      scales,        # Scale and format data for visualisation
-      tidyverse,     # Tidyverse suite of packages
-      viridis)       # Colour-blind palette
-
-  #...................................
-  ## Starting setup
-
-    # Clean up from previous code / runs
-    rm(list=ls(all=TRUE) )
-
-    # Set font for Windows or Mac
-    # suppressWarnings(windowsFonts(Arial = windowsFont("Arial")))
-    # suppressWarnings(par(family = "Arial"))
-
-    # Initialise random numbers
-    set.seed(123)
-
-    # Colour-blind palette for graphing
-      # general palette
-      palette_gen <- viridis(16)
-      show_col(palette_gen)
-
+pacman::p_load(here)
 
 #...............................................................................
 ### Generating dummy dataset

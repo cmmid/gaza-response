@@ -1,25 +1,10 @@
-#...............................................................................
-### ++ MONITORING THE NUTRITIONAL STATUS OF HUMANITARIAN WORKERS IN GAZA +++ ###
-#...............................................................................
+# Plot number and type of participants by date
 
-#...............................................................................
-## ------ R SCRIPT TO GENERATE PLOTS OF PARTICIPANTS OVER TIME ----- ##
-#...............................................................................
-
-#...............................................................................
-### Preparatory steps
-#...............................................................................
-
-#...................................
-## Install or load required R packages
-pacman::p_load(
-  ggplot2,       # Visualise data
-  tidyverse)     # Tidyverse suite of packages
-
-#...............................................................................
-### Plot
-#...............................................................................
+# R packages
+pacman::p_load(ggplot2, dplyr, forcats, scales)
 source(here("R", "data-analysis/ggplot_theme.R"))
+
+# Plot ----------------
 plot_participants_over_time <- function(plot_data){
 
   # reshape data

@@ -1,3 +1,7 @@
+# Plot participants in stacked BMI categories, pre-war vs current
+pacman::p_load(dplyr, tidyr, ggplot, forcats, scales)
+
+# Plot
 plot_bmi_categories <- function(plot_data) {
 
   plot_data <- plot_data |>

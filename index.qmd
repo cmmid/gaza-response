@@ -16,23 +16,23 @@ execute:
 ```{r setup, include=FALSE}
 ## Packages
 pacman::p_load(here, 
-               purrr, readr, dplyr, forcats, stringr,
+               purrr, readr, dplyr, tibble, forcats, stringr,
                bslib, bsicons, 
                ggplot2, scales, plotly, shiny)
-# Source plotting scripts
+# Source summary and plotting functions
 source(here("R", "data-pipeline", "0-data-dictionary.R"))
 source(here("R", "data-analysis/generate_key_insights.R"))
-source(here("R", "data-analysis/plot_participants_over_time.R"))
-source(here("R", "data-analysis/plot_bmi_categories.R"))
-source(here("R", "data-analysis/plot_time_series_statistics.R"))
-source(here("R", "data-analysis/plot_bmicategory_proportions_time_series.R"))
 source(here("R", "data-analysis/ggplot_theme.R"))
+source(here("R", "data-analysis/plot_bmi_categories.R"))
+source(here("R", "data-analysis/plot_weekly_bmi_categories.R"))
+source(here("R", "data-analysis/plot_weekly_percentage_change.R"))
+source(here("R", "data-analysis/plot_participants_over_time.R"))
 
-# Load metadata
+# Load data
 ## Data dictionary
 data_dictionary <- set_data_dictionary()
  
-# Load data
+## Aggregated data
 summary <- list()
 summary$tables <- readRDS(here("data", "public", "summary-tables.RDS"))
 summary$data$latest <- readRDS(here("data", "public", "summary-latest.RDS")) 

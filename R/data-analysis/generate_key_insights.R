@@ -1,18 +1,7 @@
 #...............................................................................
-### ++ MONITORING THE NUTRITIONAL STATUS OF HUMANITARIAN WORKERS IN GAZA +++ ###
-#...............................................................................
-
-#...............................................................................
-## ------------- R SCRIPT TO GENERATE KEY INSIGHTS FROM DATA ---------------- ##
-#...............................................................................
-
-#...............................................................................
-### Preparatory steps
-#...............................................................................
-
-#...............................................................................
 ### Generate list of key insights
 #...............................................................................
+pacman::p_load(dplyr, tidyr, tibble, purrr, forcats)
 
 generate_key_insights <- function(key_insights_data) {
 
@@ -60,11 +49,6 @@ generate_key_insights <- function(key_insights_data) {
     bmi_category_daily_Underweight = summary_text |>  getElement("bmi_category_daily_Underweight"),
     bmi_category_prewar_Underweight = summary_text |>  getElement("bmi_category_prewar_Underweight")
   )
-
-  # average length of time in study
-  # = cohort_persondays / cohort_obs_recorded
-
-  # Daily rate of weight loss since study entry
 
   return(key_text)
 }

@@ -23,7 +23,7 @@ plot_data_timeseries <- org_summary$data$timeseries |>
   filter(strata == tolower(meta_params$strata)) |> 
   mutate(across(contains("stratum"), ~ fct_recode(., NULL = "Other")))
 
-plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |> 
+plot_weekly_bmi_categories(plot_data = plot_data_timeseries) |> 
   ggplotly(tooltip = c("fill", "y", "alpha")) |> 
   layout(legend = list(orientation = "h"))
 ```
@@ -34,7 +34,7 @@ plot_bmicategory_proportions_time_series(plot_data = plot_data_timeseries) |>
 #| fig-subcap: "<details><summary>About the data</summary>The difference between participants' weekly weight^[The latest measurement within the week for each participant], compared to their pre-war weight^[Estimated weight in October 2023, self-reported at study enrollment]. Showing the typical range among participants each week: the median (point) and 25-75% range (IQR; linebar). Colour intensity shows number of participants measured each week.</details>"
 #| fill: false
 
-plot_time_series_statistics(plot_data = plot_data_timeseries) |> 
+plot_weekly_percentage_change(plot_data = plot_data_timeseries) |> 
   ggplotly() |> 
   layout(legend = list(orientation = 'h'))
 ```

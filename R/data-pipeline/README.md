@@ -1,4 +1,17 @@
-## Data processing
+## Production of public data
+
+This pipeline reads individual-level data from a local source, cleans, and produces aggregated output saved in `data/public`. 
+
+The public data files include:
+
+- `summary-latest.RDS`
+  - a single dataframe for aggregated summary stats across all participants' most recent data
+- `summary-timeseries.RDS`
+  - a single dataframe for week-by-week aggregations, among any participants presenting each week
+- `summary-tables.RDS`
+  - tables per organisation for: cross-tabulated BMI, participant demographics, and data quality
+  
+--------
 
 <details>
 
@@ -15,10 +28,11 @@ Append the new item as a named character to the [`dictionary` list object](./R/d
 
 </details>
 
+--------
 
 <details>
 
-<summary>Working with individual data</summary>
+<summary>Working with individual daily data</summary>
 
 To load clean individual level data, using RDS files stored in the `data/processed` directory, use:
 
@@ -49,6 +63,8 @@ data_id_latest <- data_id_daily |>
 ```
 
 </details>
+
+-----------
 
 <details>
 

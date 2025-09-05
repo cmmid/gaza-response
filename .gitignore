@@ -65,3 +65,4 @@ site_libs/*
 data/processed
 renv/library/*
 README.html
+/R/data-pipeline/README_files

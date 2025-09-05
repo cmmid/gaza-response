@@ -6,7 +6,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'data/public/'
+      - 'data/public/**'
 
 jobs:
   build-deploy:

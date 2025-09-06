@@ -237,7 +237,7 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
      mutate(across(any_of(data_dictionary$factor_cols),
                    ~ as_factor(.))) |>
      mutate(across(any_of(data_dictionary$factor_cols),
-                   ~ fct_relevel(., data_dictionary$data_levels)))
+                   ~ fct_recode(., !!!data_dictionary$data_levels)))
  )
 
  # neaten the df

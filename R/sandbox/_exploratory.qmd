@@ -1,0 +1,85 @@
+---
+title: "Exploring the data"
+format: 
+  html:
+    code-fold: true
+---
+```{r}
+# Set up
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+pacman::p_load(here, dplyr, tidyr, purrr, forcats,
+               ggplot2, scales, 
+               ggridges, patchwork) # note: not declared in renv
+source(here("R", "data-pipeline", "0-data-dictionary.R"))
+source(here("R", "data-pipeline", "1-data_cleaning.R"))
+theme_set(theme_light())
+theme_update(legend.position = "bottom")
+
+# Load and clean individual-level data
+data_dictionary <- set_data_dictionary()
+data <- map(list.files(here("data", "processed"), 
+                       full.names = TRUE), 
+            ~ readRDS(.x))
+data <- clean_data(base_data = data[[1]], 
+                   fup_data = data[[2]],
+                   data_dictionary = data_dictionary)
+
+   clean_data <- data |>
+     mutate(across(any_of(data_dictionary$factor_cols),
+                   ~ as_factor(.))) |>
+     mutate(across(any_of(data_dictionary$factor_cols),
+                   ~ fct_recode(., !!!data_dictionary$data_levels)))
+ 
+strata <- c("organisation", "sex", "age", "children_feeding",
+            "role", "governorate")
+```
+
+## Change from pre-war to study entry
+
+```{r}
+# Use only measurement at baseline
+data_baseline <- filter(data, participant_timepoint == "Study entry")
+```
+
+Looking at BMI change
+
+```{r, warning=FALSE, message=FALSE, fig.width=8}
+plot_density <- function(data, .strata) {
+  data |> 
+    ggplot(aes(x = bmi_change_percent_prewar,
+               y = !!sym(.strata), 
+               fill = !!sym(.strata), col = !!sym(.strata))) +
+    geom_density_ridges(alpha = 0.2) +
+    geom_point(alpha = 0.5, size = 0.5) +
+    labs(x = "% change in BMI, pre-war to study entry") +
+    scale_x_continuous(labels = scales::label_percent(scale = 1)) +
+    geom_vline(xintercept = 0, lty = 2) +
+    theme(legend.position = "none")
+}
+density_plots <- map(strata, ~ plot_density(data_baseline, .x))
+patchwork::wrap_plots(density_plots, ncol = 2, axes = "collect")
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```

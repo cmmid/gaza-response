@@ -67,3 +67,5 @@ renv/library/*
 README.html
 /R/data-pipeline/README_files
 /quarto/README_files
+/R/sandbox/_exploratory_files
+R/sandbox/_exploratory.html

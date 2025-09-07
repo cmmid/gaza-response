@@ -235,12 +235,14 @@ clean_data <- function(base_data, fup_data, data_dictionary) {
  suppressWarnings(
    clean_data <- clean_data |>
      mutate(across(any_of(data_dictionary$factor_cols),
-                   ~ as_factor(.))) |>
+                   ~ factor(x = .,
+                            levels = data_dictionary$data_levels,
+                            labels = names(data_dictionary$data_levels)))) |>
      mutate(across(any_of(data_dictionary$factor_cols),
-                   ~ fct_recode(., !!!data_dictionary$data_levels)))
+                   ~ droplevels(.)))
  )
 
- # neaten the df
+# neaten the df
  clean_data <- clean_data |>
    dplyr::select(date, id, date_entry, date_last,
           anomaly, last_measurement,

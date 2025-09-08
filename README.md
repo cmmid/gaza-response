@@ -12,8 +12,7 @@ This repository contains Quarto documents to analyse aggregated data, and create
 ## Overview
 
 <!-- draw.io diagram -->
-<div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;dark-mode&quot;:&quot;light&quot;,&quot;toolbar&quot;:&quot;zoom lightbox&quot;,&quot;edit&quot;:&quot;https://app.diagrams.net/#G1snCTpMD9-Zb3m23dCBqMmGUp-dfgFssn#%7B%22pageId%22%3A%22voqQkcouitH0LyEqQwV9%22%7D&quot;,&quot;url&quot;:&quot;https://drive.google.com/uc?id=1snCTpMD9-Zb3m23dCBqMmGUp-dfgFssn&amp;export=download&quot;}"></div>
-<script type="text/javascript" src="https://viewer.diagrams.net/embed2.js?&fetch=https%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1snCTpMD9-Zb3m23dCBqMmGUp-dfgFssn%26export%3Ddownload"></script>
+<iframe frameborder="0" style="width:100%;height:335px;" src="https://viewer.diagrams.net/?lightbox=1&highlight=0000ff&edit=https%3A%2F%2Fapp.diagrams.net%2F%23G1snCTpMD9-Zb3m23dCBqMmGUp-dfgFssn%23%257B%2522pageId%2522%253A%2522voqQkcouitH0LyEqQwV9%2522%257D&nav=1&title=gaza-response.drawio.svg&transparent=1&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1snCTpMD9-Zb3m23dCBqMmGUp-dfgFssn%26export%3Ddownload" allowtransparency="true"></iframe>
 
 
 

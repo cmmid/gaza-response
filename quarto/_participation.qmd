@@ -1,6 +1,10 @@
-::: {.panel-accordion}
 
-#### Participants
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Participants
+</h2>
+
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
 ```{r}
 #| fill: false
 #| fig-align: center
@@ -10,17 +14,27 @@ plot_participants_over_time(key_insights_data$timeseries) |>
   layout(legend = list(orientation = 'h'))
 ```
 
-#### Demographics
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Demographics
+</h2>
+
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
 ```{r}
 #| fill: false
 org_summary$tables$demographic_strata
 ```
 
-#### Data
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Data
+</h2>
+
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
 ```{r}
 #| fill: false
 org_summary$tables$data_quality
 ```
 
-:::
+
 

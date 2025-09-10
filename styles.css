@@ -88,27 +88,30 @@ ul.dropdown-menu li a:hover {
   }
 }
 
-/*
-#current_summary {
-  min-height: 200px;
-  max-height: 300px;
-}
-.lshtm_widget_content[id^="current_summary_"] {
-  min-height: 200px;
-  max-height: 300px;
-}
-
-
-.card.current_summary_card {
-  min-height: 300px;
-  max-height: 400px;
+.no-box {
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: grid !important;
+  gap: 1rem !important;
 }
 
-#trend_over_time {
-  min-height: 600px;
-}
-#trends_bmi {
-  min-height: 400px;
-}
-*/
 
+
+.no-box .card {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Target the actual layout container */
+.quarto-layout-panel[data-layout-ncol="3"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: 1rem !important;
+}
+
+.quarto-layout-panel[data-layout-ncol="3"] > div {
+  width: 100% !important;
+  max-width: none !important;
+}

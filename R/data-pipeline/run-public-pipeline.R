@@ -25,6 +25,8 @@ pipeline_functions <- paste0(base,
 walk(pipeline_functions, source)
 
 # Load data stored locally -----
+log$data_raw <- list()
+
 # load using a switch between public & private repos to get latest data
 # Baseline data
 public_repo_df_base <- paste0(base, "data/processed/df_base.RDS")
@@ -35,6 +37,10 @@ if (file.exists(private_repo_df_base)) {
 } else {df_base_path <- public_repo_df_base}
 base_data <- readRDS(df_base_path)
 
+log$data_raw$base_data_source <- df_base_path
+log$data_raw$base_file_timestamp <- file.info(df_base_path)$mtime
+log$data_raw$base_file_size <- file.info(df_base_path)$size
+
 # Follow up data
 public_repo_df_fup <- paste0(base, "data/processed/df_fup.RDS")
 private_repo_df_fup <- gsub("gaza-response", "wt_monitoring_gaza",
@@ -44,14 +50,11 @@ if (file.exists(private_repo_df_fup)) {
 } else {df_fup_path <- public_repo_df_fup}
 fup_data <- readRDS(df_fup_path)
 
+log$data_raw$fup_data_source <- df_fup_path
+log$data_raw$fup_file_timestamp <- file.info(df_fup_path)$mtime
+log$data_raw$fup_file_size <- file.info(df_fup_path)$size
+
 # log raw data validation
-log$data_raw <- list()
-log$data_raw$base_data_source <- base_data_path
-log$data_raw$fup_data_source <- fup_data_path
-log$data_raw$base_file_timestamp <- file.info(base_data_path)$mtime
-log$data_raw$base_file_size <- file.info(base_data_path)$size
-log$data_raw$fup_file_timestamp <- file.info(fup_data_path)$mtime
-log$data_raw$fup_file_size <- file.info(fup_data_path)$size
 expected_base <- c("id", "date", "organisation",
                    "age", "sex", "governorate", "role", "children_feeding",
                    "height", "weight_prewar", "weight")

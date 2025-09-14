@@ -25,12 +25,29 @@ pipeline_functions <- paste0(base,
 walk(pipeline_functions, source)
 
 # Load data stored locally -----
-base_data <- readRDS(paste0(base, "data/processed/df_base.RDS"))
-fup_data <- readRDS(paste0(base, "data/processed/df_fup.RDS"))
-data_dictionary <- set_data_dictionary()
+public_repo <- sprintf("%s/", .args["wd"])
+private_repo <- gsub("gaza-response", "wt_monitoring_gaza", public_repo)
+
+if (file.exists(paste0(private_repo, "data/processed/df_base.RDS"))) {
+  base_data_path <- paste0(private_repo, "data/processed/df_base.RDS")
+} else {base_data_path <- paste0(public_repo, "data/processed/df_base.RDS")}
+
+if (file.exists(paste0(private_repo, "data/processed/df_fup.RDS"))) {
+  fup_data_path <- paste0(private_repo, "data/processed/df_fup.RDS")
+} else {fup_data_path <- paste0(public_repo, "data/processed/df_fup.RDS")}
+
+
+base_data <- readRDS(base_data_path)
+fup_data <- readRDS(fup_data_path)
 
 # log raw data validation
 log$data_raw <- list()
+log$data_raw$base_data_source <- base_data_path
+log$data_raw$fup_data_source <- fup_data_path
+log$data_raw$base_file_timestamp <- file.info(base_data_path)$mtime
+log$data_raw$base_file_size <- file.info(base_data_path)$size
+log$data_raw$fup_file_timestamp <- file.info(fup_data_path)$mtime
+log$data_raw$fup_file_size <- file.info(fup_data_path)$size
 expected_base <- c("id", "date", "organisation",
                    "age", "sex", "governorate", "role", "children_feeding",
                    "height", "weight_prewar", "weight")
@@ -42,6 +59,8 @@ log$data_raw$max_date <- max(fup_data$date)
 log$data_raw$orgs <- unique(base_data$organisation)
 
 # ------------------ Linelist data cleaning ---------------------------------
+data_dictionary <- set_data_dictionary()
+
 # Combine baseline and follow up data; calculate BMI and change; set factors
 suppressWarnings(
   data_id_daily <- clean_data(base_data, fup_data, data_dictionary)

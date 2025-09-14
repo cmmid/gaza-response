@@ -25,20 +25,24 @@ pipeline_functions <- paste0(base,
 walk(pipeline_functions, source)
 
 # Load data stored locally -----
-public_repo <- sprintf("%s/", .args["wd"])
-private_repo <- gsub("gaza-response", "wt_monitoring_gaza", public_repo)
+# load using a switch between public & private repos to get latest data
+# Baseline data
+public_repo_df_base <- paste0(base, "data/processed/df_base.RDS")
+private_repo_df_base <- gsub("gaza-response", "wt_monitoring_gaza",
+                            public_repo_df_base)
+if (file.exists(private_repo_df_base)) {
+  df_base_path <- private_repo_df_base
+} else {df_base_path <- public_repo_df_base}
+base_data <- readRDS(df_base_path)
 
-if (file.exists(paste0(private_repo, "data/processed/df_base.RDS"))) {
-  base_data_path <- paste0(private_repo, "data/processed/df_base.RDS")
-} else {base_data_path <- paste0(public_repo, "data/processed/df_base.RDS")}
-
-if (file.exists(paste0(private_repo, "data/processed/df_fup.RDS"))) {
-  fup_data_path <- paste0(private_repo, "data/processed/df_fup.RDS")
-} else {fup_data_path <- paste0(public_repo, "data/processed/df_fup.RDS")}
-
-
-base_data <- readRDS(base_data_path)
-fup_data <- readRDS(fup_data_path)
+# Follow up data
+public_repo_df_fup <- paste0(base, "data/processed/df_fup.RDS")
+private_repo_df_fup <- gsub("gaza-response", "wt_monitoring_gaza",
+                            public_repo_df_fup)
+if (file.exists(private_repo_df_fup)) {
+  df_fup_path <- private_repo_df_fup
+} else {df_fup_path <- public_repo_df_fup}
+fup_data <- readRDS(df_fup_path)
 
 # log raw data validation
 log$data_raw <- list()

@@ -4,7 +4,7 @@
   Current BMI compared to pre-war
 </h2>
 
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+The below chart shows the distribution of BMI categories before the war and currently. Each bar represents the proportion of people in the underweight, normal, overweight, and obese categories.
 
 ```{r}
 #| fig-subcap: "<details><summary>About the data</summary>The percentage of participants by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Showing all participants' pre-war BMI^[Calculated from estimated weight in October 2023, self-reported at study enrollment], and the most recent ('current') measurement from each participant since the study began in July 2025. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>"
@@ -25,7 +25,7 @@ plot_bmi_categories(plot_data = plot_data_latest) |>
   Weekly trends in BMI
 </h2>
 
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+The below chart shows the weekly distribution of BMI categories (underweight, normal, overweight, and obese) across different dates. Each bar represents the proportion of participants measured in that week, with stronger colours indicating weeks where more data was collected (i.e., more study participants logged updated weight measurements).
 
 
 ```{r}
@@ -44,7 +44,7 @@ plot_weekly_bmi_categories(plot_data = plot_data_timeseries) |>
   Weekly change compared to pre-war
 </h2>
 
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+The below chart shows weekly percentage weight changes (averaged for population or by demographic group). Each circular point represents the median value, with vertical lines showing the range between the first and third quartiles. The strength of the colour indicates the volume of data collected: lighter for fewer participants and darker for more participants.
 
 ```{r}
 #| fig-subcap: "<details><summary>About the data</summary>The difference between participants' weekly weight^[The latest measurement within the week for each participant], compared to their pre-war weight^[Estimated weight in October 2023, self-reported at study enrollment]. Showing the typical range among participants each week: the median (point) and 25-75% range (IQR; linebar). Colour intensity shows number of participants measured each week.</details>"

@@ -36,7 +36,7 @@ This project provides real-time information on the nutritional status of humanit
   Change in Body Mass Index (BMI) from pre-war
 </h2>
 
-The below plot compares the proportion of the surveyed population that falls into each WHO BMI category (underweight, normal, overweight, obese) from pre-war (2023) to currently.
+The below plot compares the percentage of the surveyed population that falls into each WHO BMI category (underweight, normal, overweight, obese) from pre-war (2023) to currently.
 
 ::: {.panel layout-nrow=2 height="80%" class = "no-box"}
 

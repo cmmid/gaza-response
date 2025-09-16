@@ -1,6 +1,6 @@
 
 
-::: {.panel layout-ncol=3 height="20%"}
+::: {layout="[[1,1,1], [1], [1]]" class = "no-box" data-panel-expand="false"}
 
 ```{r}
 value_box(
@@ -17,7 +17,7 @@ value_box(
   value = key_text[["weight_change_percent_prewar"]],
   p("Median (25%-75%)"),
   theme = "info"
-)
+) 
 ```
 
 ```{r}
@@ -26,15 +26,21 @@ value_box(
   value = key_text$n_id,
   p(key_text$n_followup, "providing ongoing updates"),
   theme = "success"
-)
+) 
 ```
-
 :::
 
-::: {.panel layout-nrow=2 height="80%"}
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza by tracking changes in weight and [Body Mass Index (BMI)](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index). Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. These key insights are calculated using data from all participants from a selected organisation (or overall, if the 'All Participants' tab is selected). For further information on data generation and quality please see the [Study Protocol](./protocol) and the Participation tab.
+
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Change in Body Mass Index (BMI) from pre-war
+</h2>
+
+The below plot compares the percentage of the surveyed population that falls into each WHO BMI category (underweight, normal, overweight, obese) from pre-war (2023) to currently.
+
+::: {.panel layout-nrow=2 height="80%" class = "no-box"}
 
 ```{r}
-#| title: "Change in BMI, pre-war to now"
 #| layout-ncol: 2
 #| fill: false
 

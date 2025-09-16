@@ -37,41 +37,57 @@ para <- markdown('- **`r key_text[["weight_change_percent_prewar"]]` loss of bod
 meta_params$strata <- "overall"
 ```
 
+This tab shows overall results for this organisation.
+
 {{< include quarto/_tab-strata.qmd >}}
 
 #### Sex
+
 ```{r}
 meta_params$strata <- "sex"
 ```
 
+This tab shows results stratified by biological sex as declared by participants (male/female/prefer not to answer).
+
 {{< include quarto/_tab-strata.qmd >}}
 
 #### Age
+
 ```{r}
 meta_params$strata <- "age"
 ```
 
+This tab shows results stratified by age (<30 years old, 30-45 years old, >45 years old).
+
 {{< include quarto/_tab-strata.qmd >}}
 
 #### Dependents
+
 ```{r}
 meta_params$strata <- "children_feeding"
 ```
 
+This tab shows results stratified by the number of child dependants under the care of the participant.
+
 {{< include quarto/_tab-strata.qmd >}}
 
 #### Staff role
+
 ```{r}
 meta_params$strata <- "role"
 ```
 
+This tab shows results stratified by humanitarian staff role.
+
 {{< include quarto/_tab-strata.qmd >}}
 
 #### Location
+
 ```{r}
 meta_params$strata <- "governorate"
 ```
 
+This tab shows results stratified by location, using Gaza governorates.
 {{< include quarto/_tab-strata.qmd >}}
 
 :::

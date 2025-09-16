@@ -1,6 +1,10 @@
-::: {.panel-accordion}
 
-#### Participants
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Participants
+</h2>
+
+The below chart shows data collected from participants over time, separated into new joiners and returning participants. The stacked bars indicate the weekly totals by participant type, and the grey line shows the cumulative number of participants over time.
+
 ```{r}
 #| fill: false
 #| fig-align: center
@@ -10,17 +14,25 @@ plot_participants_over_time(key_insights_data$timeseries) |>
   layout(legend = list(orientation = 'h'))
 ```
 
-#### Demographics
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Demographics
+</h2>
+
+
 ```{r}
 #| fill: false
 org_summary$tables$demographic_strata
 ```
 
-#### Data
+<h2 style="color: #2c3e50; margin-bottom: 1rem;">
+  Data
+</h2>
+
+
 ```{r}
 #| fill: false
 org_summary$tables$data_quality
 ```
 
-:::
+
 

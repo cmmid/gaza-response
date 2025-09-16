@@ -25,7 +25,7 @@ plot_bmi_categories(plot_data = plot_data_latest) |>
   Weekly trends in BMI
 </h2>
 
-The below chart shows the weekly distribution of BMI categories (underweight, normal, overweight, and obese) across different dates. Each bar represents the proportion of participants measured in that week, with stronger colours indicating weeks where more data was collected (i.e., more study participants logged updated weight measurements).
+The below chart shows the weekly distribution of BMI categories (underweight, normal, overweight, and obese) across different dates. Each bar represents the proportion of participants measured in that week. The strength of the colour indicates the volume of data collected: lighter for fewer participants and darker for more participants.
 
 
 ```{r}

@@ -67,7 +67,7 @@ This tab shows results stratified by age (<30 years old, 30-45 years old, >45 ye
 meta_params$strata <- "children_feeding"
 ```
 
-This tab shows results stratified by the number of minor dependents under the care of the participant.
+This tab shows results stratified by the number of child dependants under the care of the participant.
 
 {{< include quarto/_tab-strata.qmd >}}
 

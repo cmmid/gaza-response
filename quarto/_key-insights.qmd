@@ -30,7 +30,7 @@ value_box(
 ```
 :::
 
-This project provides real-time information on the nutritional status of humanitarian staff in Gaza by tracking changes in weight and [Body Mass Index (BMI)](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index). Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population.These key insights are calculated using data from all participants from a selected organisation (or overall, if the 'All Participants' tab is selected). For further information on data generation and quality please see the [Study Protocol](./protocol) and the Participation tab.
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza by tracking changes in weight and [Body Mass Index (BMI)](https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index). Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. These key insights are calculated using data from all participants from a selected organisation (or overall, if the 'All Participants' tab is selected). For further information on data generation and quality please see the [Study Protocol](./protocol) and the Participation tab.
 
 <h2 style="color: #2c3e50; margin-bottom: 1rem;">
   Change in Body Mass Index (BMI) from pre-war

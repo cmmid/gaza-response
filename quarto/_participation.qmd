@@ -3,7 +3,7 @@
   Participants
 </h2>
 
-The below chart shows data colelcted from participants over time, separated into new joiners and returning participants. The stacked bars indicate the weekly totals by participant type, and the grey line shows the cumulative number of participants over time.
+The below chart shows data collected from participants over time, separated into new joiners and returning participants. The stacked bars indicate the weekly totals by participant type, and the grey line shows the cumulative number of participants over time.
 
 ```{r}
 #| fill: false

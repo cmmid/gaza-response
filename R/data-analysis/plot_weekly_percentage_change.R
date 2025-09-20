@@ -10,28 +10,26 @@ plot_weekly_percentage_change <- function(plot_data) {
   plot_data <- plot_data |>
     filter(variable == "bmi_change_percent_prewar") |>
     pivot_wider(names_from = stat, values_from = value) %>%
-    filter(!is.na(median)) |>
-    mutate(Participants = cut(cohort_id_recorded, c(0,10,30,50,Inf),
-                   labels = c("<10", "10-20", "20-50", ">50"),
-                   ordered_result = TRUE))
+    filter(!is.na(median))
 
   # plot
     plot <- plot_data |>
       ggplot(aes(x = date)) +
-      geom_linerange(aes(ymin = q1, ymax = q3,
-                     alpha = Participants),
+      geom_linerange(aes(ymin = q1, ymax = q3),
                      col = lshtm_palette$lshtm_generic,
                      linewidth = 2) +
-      geom_point(aes(y = median,
-                     alpha = Participants),
+      geom_point(aes(y = median),
                  col = lshtm_palette$lshtm_generic,
                  size = 2.5) +
+      geom_text(aes(y = 2.5, label = cohort_id_recorded),
+                vjust = 0.5, alpha = 0.5, size = 3) +
       geom_hline(aes(yintercept = 0), lty = 2, alpha = 0.1) +
-      labs(x = NULL, y = NULL,
-           caption = "<details><summary>About the data</summary>This graph shows the difference between participants' recent weight (the latest measurement within the week for each participant), compared to their pre-war weight (self-reported estimate given at study enrollment). Showing the typical range among participants each week: the median (point) and 25-75% range (linebar).</details>") +
-      scale_alpha_discrete(range = c(0.1,0.7)) +
+      labs(x = NULL, y = NULL) +
       scale_y_continuous(labels = scales::label_percent(scale = 1),
+                         limits = c(NA, 5),
                          minor_breaks = c(NA, 0, NA)) +
+      scale_x_date(date_breaks = "2 week", date_minor_breaks = "1 week",
+                   date_labels = "%d %b")
       facet_wrap(~Stratum,
                  scales = "fixed") +
       theme(lshtm_theme())

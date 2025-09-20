@@ -10,7 +10,6 @@ The below chart shows the distribution of BMI categories before the war and curr
 #| fig-subcap: "<details><summary>About the data</summary>The percentage of participants by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Showing all participants' pre-war BMI^[Calculated from estimated weight in October 2023, self-reported at study enrollment], and the most recent ('current') measurement from each participant since the study began in July 2025. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>"
 #| fill: false
 
-
 plot_data_latest <- org_summary$data$latest |> 
   filter(strata == tolower(meta_params$strata)) |> 
   filter(!grepl("(o|O)ther", Stratum)) |> 
@@ -25,11 +24,11 @@ plot_bmi_categories(plot_data = plot_data_latest) |>
   Weekly trends in BMI
 </h2>
 
-The below chart shows the weekly distribution of BMI categories (underweight, normal, overweight, and obese) across different dates. Each bar represents the proportion of participants measured in that week. The strength of the colour indicates the volume of data collected: lighter for fewer participants and darker for more participants.
+The below chart shows the weekly distribution of BMI categories (underweight, normal, overweight, and obese) across different dates. Each bar represents the proportion of participants measured in that week. N indicates the number of participants each week.
 
 
 ```{r}
-#| fig-subcap: "<details><summary>About the data</summary>The percentage of participants each week by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. Colour intensity shows number of participants measured each week. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>"
+#| fig-subcap: "<details><summary>About the data</summary>The percentage of participants each week by BMI classification^[Body Mass Index: a standardised measure of weight-for-height, in kilograms per metre squared]. N indicates the number of participants each week. Underweight BMI classification (<18.5kg/m2) shown in yellow; with light to dark green, showing normal weight range (18.5-24.9kg/m2), overweight (25 to 29.9kg/m2), and obese (over 30kg/m2) classifications.</details>"
 #| fill: false
 plot_data_timeseries <- org_summary$data$timeseries |> 
   filter(strata == tolower(meta_params$strata)) |> 
@@ -44,10 +43,10 @@ plot_weekly_bmi_categories(plot_data = plot_data_timeseries) |>
   Weekly change compared to pre-war
 </h2>
 
-The below chart shows weekly percentage weight changes (averaged for population or by demographic group). Each circular point represents the median value, with vertical lines showing the range between the first and third quartiles. The strength of the colour indicates the volume of data collected: lighter for fewer participants and darker for more participants.
+The below chart shows weekly percentage weight changes (averaged for population or by demographic group). Each circular point represents the median value, with vertical lines showing the range between the first and third quartiles. N indicates the number of participants each week.
 
 ```{r}
-#| fig-subcap: "<details><summary>About the data</summary>The difference between participants' weekly weight^[The latest measurement within the week for each participant], compared to their pre-war weight^[Estimated weight in October 2023, self-reported at study enrollment]. Showing the typical range among participants each week: the median (point) and 25-75% range (IQR; linebar). Colour intensity shows number of participants measured each week.</details>"
+#| fig-subcap: "<details><summary>About the data</summary>The difference between participants' weekly weight^[The latest measurement within the week for each participant], compared to their pre-war weight^[Estimated weight in October 2023, self-reported at study enrollment]. Showing the typical range among participants each week: the median (point) and 25-75% range (IQR; linebar). N indicates the number of participants each week.</details>"
 #| fill: false
 
 plot_weekly_percentage_change(plot_data = plot_data_timeseries) |> 

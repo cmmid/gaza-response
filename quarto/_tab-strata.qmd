@@ -35,7 +35,7 @@ plot_data_timeseries <- org_summary$data$timeseries |>
   mutate(across(contains("stratum"), ~ fct_recode(., NULL = "Other")))
 
 plot_weekly_bmi_categories(plot_data = plot_data_timeseries) |> 
-  ggplotly(tooltip = c("fill", "y", "alpha")) |> 
+  ggplotly(tooltip = c("fill", "y")) |> 
   layout(legend = list(orientation = "h"))
 ```
 

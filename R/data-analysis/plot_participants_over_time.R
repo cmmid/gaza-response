@@ -19,8 +19,8 @@ plot_participants_over_time <- function(plot_data){
     pivot_longer(cols = c("cohort_id_new",
                           "cohort_id_followup_record")) |>
     mutate(Participant = fct_rev(fct_recode(name,
-                                            "New joiner"="cohort_id_new",
-                                            "Returning"="cohort_id_followup_record"))) |>
+                                            "New joiner" = "cohort_id_new",
+                                            "Returning" = "cohort_id_followup_record"))) |>
     ungroup()
 
   # plot

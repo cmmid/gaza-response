@@ -29,7 +29,7 @@ _Assistant Professor_
 
 :::
 
-With support from the Centre for Mathematical Modelling of Infectious Diseases (alphabetical):
+With support from the [Centre for Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) (alphabetical):
 
 ::: {.grid .team-grid}
 

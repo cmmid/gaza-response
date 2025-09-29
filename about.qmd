@@ -70,14 +70,16 @@ LSHTM project team led by:
 ::: {.team-card}
 ![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/2275.jpg?itok=YuuBTS5L){.img-fluid .team-photo}
 **Francesco Checchi**  
-_Professor of Epidemiology & International Health_
+_Professor of Epidemiology & International Health_<br>
+LSHTM
 :::
 :::
 
 ::: {.g-col-4}
 ::: {.team-card}
 **Zeina Jamaluddine**  
-_Assistant Professor_
+_Assistant Professor_<br>
+LSHTM
 :::
 :::
 
@@ -91,7 +93,8 @@ With support from the [Centre for Mathematical Modelling of Infectious Diseases]
 ::: {.team-card}
 ![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/5953.jpg?itok=lHm-pUor){.img-fluid .team-photo}
 **Clara Brigitta**  
-_Research Student_
+_Research Student_<br>
+LSHTM
 :::
 :::
 
@@ -99,14 +102,16 @@ _Research Student_
 ::: {.team-card}
 ![](images/ciara-judge-headshot.jpeg){.img-fluid .team-photo}
 **Ciara Judge**  
-_Research Fellow_
+_Research Fellow_<br>
+University of Oxford
 :::
 :::
 
 ::: {.g-col-4}
 ::: {.team-card}
 **Katharine Sherratt**  
-_Research Fellow_
+_Research Fellow_<br>
+LSHTM
 :::
 :::
 
@@ -114,7 +119,8 @@ _Research Fellow_
 ::: {.team-card}
 ![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/3165.jpg?itok=Rz8nkwbC){.img-fluid .team-photo}
 **Kevin van Zandvoot**  
-_Assistant Professor_
+_Assistant Professor_<br>
+LSHTM
 :::
 :::
 
@@ -128,7 +134,8 @@ Additional contributions from:
 ::: {.team-card}
 ![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/4339.jpg?itok=mVvYPsN9){.img-fluid .team-photo}
 **Mervat Alhaffar**  
-_Research Fellow_
+_Research Fellow_<br>
+LSHTM
 :::
 :::
 
@@ -136,7 +143,8 @@ _Research Fellow_
 ::: {.team-card}
 ![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/5241.jpg?itok=GdN1wQL6){.img-fluid .team-photo}
 **Catharina Van Der Boor**  
-_Assistant Professor_
+_Assistant Professor_<br>
+LSHTM
 :::
 :::
 

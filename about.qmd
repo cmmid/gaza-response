@@ -109,6 +109,7 @@ University of Oxford
 
 ::: {.g-col-4}
 ::: {.team-card}
+![](images/kath-profile-photo.jpeg){.img-fluid .team-photo}
 **Katharine Sherratt**  
 _Research Fellow_<br>
 LSHTM

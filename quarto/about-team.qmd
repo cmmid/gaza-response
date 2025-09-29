@@ -6,8 +6,6 @@ page-layout: full
 
 The project is implemented by humanitarian organisations providing services in Gaza, with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. There is no specific funding source for this study.
 
-The project is implemented by humanitarian organisations providing services in Gaza, with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. There is no specific funding source for this study.
-
 ## Project team
 
 ::: {.grid .team-grid}

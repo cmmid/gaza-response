@@ -5,10 +5,10 @@ toc: true
 ---
 
 ::: {.callout-note appearance="simple"}
-This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about)
+This project provides real-time information on the nutritional status of humanitarian staff in Gaza. Our aim is to inform humanitarian decision-making, advocacy, and diplomatic action to improve the lives of the affected population. We are developing this project during a rapidly changing situation: please interpret results with caution. [Find out more](./about.qmd)
 :::
 ::: {.callout-caution title="Join us"}
-We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact)
+We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. [**Get involved**](./contact.qmd)
 :::
 
 ::: {.panel-tabset}
@@ -60,25 +60,94 @@ Participants may be experiencing other changes in nutrition, such as the availab
 
 ### Project team
 
-The project is implemented by humanitarian organisations providing services in Gaza, with the support of the London School of Hygiene and Tropical Medicine (LSHTM), a university in the United Kingdom. 
-There is no specific funding source for this study. 
+Project team led by:
 
-LSHTM project team led by: 
+::: {.grid .team-grid}
 
-- Francesco Checchi 
-- Zeina Jamaluddine
+::: {.g-col-4}
+::: {.team-card}
+![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/2275.jpg?itok=YuuBTS5L){.img-fluid .team-photo}
+**Francesco Checchi**  
+_Professor of Epidemiology & International Health_<br>
+LSHTM
+:::
+:::
 
-With support from the [Centre for Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) (alphabetical):
+::: {.g-col-4}
+::: {.team-card}
+**Zeina Jamaluddine**  
+_Assistant Professor_<br>
+LSHTM
+:::
+:::
 
-- Clara Brigitta
-- Ciara Judge
-- Kath Sherratt
-- Kevin van Zandvoort
+:::
+
+With support from (alphabetical):
+
+::: {.grid .team-grid}
+
+::: {.g-col-4}
+::: {.team-card}
+![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/5953.jpg?itok=lHm-pUor){.img-fluid .team-photo}
+**Clara Brigitta**  
+_Research Student_<br>
+LSHTM
+:::
+:::
+
+::: {.g-col-4}
+::: {.team-card}
+![](images/ciara-judge-headshot.jpeg){.img-fluid .team-photo}
+**Ciara Judge**  
+_Research Fellow_<br>
+University of Oxford
+:::
+:::
+
+::: {.g-col-4}
+::: {.team-card}
+![](images/kath-profile-photo.jpeg){.img-fluid .team-photo}
+**Katharine Sherratt**  
+_Research Fellow_<br>
+LSHTM
+:::
+:::
+
+::: {.g-col-4}
+::: {.team-card}
+![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/3165.jpg?itok=Rz8nkwbC){.img-fluid .team-photo}
+**Kevin van Zandvoot**  
+_Assistant Professor_<br>
+LSHTM
+:::
+:::
+
+:::
 
 Additional contributions from:
 
-- Mervat Alhaffar
-- Catharina Van Der Boor
+::: {.grid .team-grid}
+
+::: {.g-col-4}
+::: {.team-card}
+![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/4339.jpg?itok=mVvYPsN9){.img-fluid .team-photo}
+**Mervat Alhaffar**  
+_Research Fellow_<br>
+LSHTM
+:::
+:::
+
+::: {.g-col-4}
+::: {.team-card}
+![](https://www.lshtm.ac.uk/sites/default/files/styles/profile_full_image_elements/public/profile_image/5241.jpg?itok=GdN1wQL6){.img-fluid .team-photo}
+**Catharina Van Der Boor**  
+_Assistant Professor_<br>
+LSHTM
+:::
+:::
+
+:::
 
 ### Reuse
 

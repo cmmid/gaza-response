@@ -66,7 +66,7 @@ Our aim is to inform humanitarian decision-making, advocacy, and diplomatic acti
 We are actively seeking participants to support the project, and welcome new collaborations with humanitarian organisations. 
 We invite all humanitarian staff to participate.
 
-[**Get involved**](./contact){.btn .btn-info .btn role="button"}
+[**Get involved**](./contact.qmd){.btn .btn-info .btn role="button"}
 :::
 
 ::: {.callout-note collapse="true" title="About the project"}
@@ -75,7 +75,7 @@ This information system is set up by organisations providing humanitarian servic
 
 _Results are preliminary: please interpret with caution._
 
-[**Read more**](./about){.btn .btn-info .btn role="button"}
+[**Read more**](./about.qmd){.btn .btn-info .btn role="button"}
 
 :::
 
@@ -91,7 +91,7 @@ Last updated:
 We publish aggregated summary statistics as publicly available data.
 
 - Find the [public data](https://github.com/cmmid/gaza-response/tree/main/data/public)
-- Read about [data collection](./about)
+- Read about [data collection](./about.qmd)
 - Explore the [code](https://github.com/cmmid/gaza-response/)
 
 This project is built and maintained collectively and for free by volunteers. 

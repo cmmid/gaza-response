@@ -1,0 +1,109 @@
+---
+title: "Report"
+---
+
+## Methods
+
+**Study design**
+
+[ _copy from protocol_ ]
+
+**Real-time analysis**
+
+Data were collected and aggregated in real-time throughout the study period. Summary statistics were generated hourly. We summarised data for weight, BMI, and participation and stratified by organisation, professional role, sex, age, and number of dependent children. We created interactive visualisations and presented these in an interactive dashboard, with hourly automated updates published to a website. We used R for all data processing and analysis and quarto with Github Pages for reporting and website hosting. All code is publicly available under an open-source license.
+
+**Retrospective analysis**
+
+We retrospectively assessed the study period from the start of data collection up to the ceasefire of 10 October 2025. We restricted analysis to UNRWA participants. We calculated summary statistics including the mean and standard deviation of weight in kilograms and the BMI at each time point, among the entire cohort and by demographic stratification. We used a paired t-test of means to assess the overall difference between recent and pre-war weight. We used logistic regression to model the difference in weight change by demographic strata.
+For analysis of repeated measures over the study period, we used weekly time windows taking the most recent record for each participant within each week.
+
+## Results
+
+```{r setup, include=FALSE}
+## Packages
+pacman::p_load(here, quarto,
+               purrr, readr, dplyr, tibble, forcats, stringr,
+               bslib, bsicons, 
+               ggplot2, scales, plotly, shiny)
+# Source summary and plotting functions
+source(here("R", "data-pipeline", "0-data-dictionary.R"))
+source(here("R", "data-analysis/generate_key_insights.R"))
+source(here("R", "data-analysis/ggplot_theme.R"))
+source(here("R", "data-analysis/plot_bmi_categories.R"))
+source(here("R", "data-analysis/plot_weekly_bmi_categories.R"))
+source(here("R", "data-analysis/plot_weekly_percentage_change.R"))
+source(here("R", "data-analysis/plot_participants_over_time.R"))
+
+# Load data
+## Data dictionary
+data_dictionary <- set_data_dictionary()
+ 
+## Aggregated data
+summary <- list()
+summary$tables <- readRDS(here("data", "public", "summary-tables.RDS"))
+summary$data$latest <- readRDS(here("data", "public", "summary-latest.RDS")) 
+summary$data$timeseries <- readRDS(here("data", "public", "summary-timeseries.RDS"))
+# recode labelling (convention: Upper-case variable name = pretty label name)
+suppressWarnings(
+  summary$data <- map(summary$data, 
+                 ~ .x |> 
+                   mutate(Strata = fct_recode(strata,
+                                               !!!data_dictionary$data_levels),
+                          Stratum = fct_recode(stratum,
+                                               !!!data_dictionary$data_levels),
+                          Variable = fct_recode(variable,
+                                                !!!data_dictionary$data_levels))
+  )
+)
+
+meta_params <- list(organisation = NA, strata = NA)
+# --- Filter data to organisation
+meta_params$organisation <- "UNRWA"
+org_summary <- list()
+org_summary$data <- map(summary$data,
+                   ~ .x |> filter(organisation == meta_params$organisation))
+org_summary$tables <- summary$tables[[meta_params$organisation]]
+# --- Generate summary insights
+key_insights_data <- map(org_summary$data,
+                        ~ .x |> filter(strata == "overall"))
+key_text <- generate_key_insights(key_insights_data$latest)
+```
+
+### Participation
+
+```{r participation-table1}
+#| fill: false
+#| fig-align: center
+#| fig-subcap: "Participation from newly recruited participants (light green), or repeat measurements from returning participants (dark blue); with cumulative number of unique participants over time (shaded grey area) and their unique measurements (grey line)."
+plot_participants_over_time(key_insights_data$timeseries) |> 
+  ggplotly() |> 
+  layout(legend = list(orientation = 'h'))
+```
+
+```{r}
+org_summary$tables$demographic_strata
+```
+
+```{r}
+org_summary$tables$data_quality
+```
+
+### Change from pre-war
+
+We observed an overall `r key_text[["weight_change_percent_prewar"]]` (median, IQR) loss of bodyweight from pre-war to latest measurement. This was equivalent to a median weight loss of `r key_text[["weight_change_unit_prewar"]]`kg, and a corresponding `r key_text[["bmi_change_percent_prewar"]]` kg/m² decrease in BMI.
+  
+Among our sample, `r key_text[["bmi_category_daily_Underweight"]]` participants were clinically underweight (BMI < 18.5km/m2) at latest measurement, compared to `r key_text[["bmi_category_prewar_Underweight"]]` pre-war.
+
+```{r}
+#| layout-ncol: 2
+#| fill: false
+org_summary$tables$bmi_crosstab
+```
+
+```{r}
+plot_data_latest <- org_summary$data$latest |> 
+  filter(strata == "overall") |> 
+  mutate(Stratum = fct_drop(Stratum))
+```
+
+

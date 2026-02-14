@@ -173,6 +173,10 @@ saveRDS(summary_timeseries, output_timeseries)
 
 output_log = sprintf("%s/data/public/log.RDS", .args["wd"])
 saveRDS(log, output_log)
+
+# simulate linelist data
+source("R/sandbox/simulate_clean_data.R")
+
 # RDS data pushed to Github public repo
 
 

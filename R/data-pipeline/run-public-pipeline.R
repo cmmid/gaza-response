@@ -176,7 +176,8 @@ saveRDS(log, output_log)
 
 # simulate linelist data
 source("R/sandbox/simulate_clean_data.R")
-
-# RDS data pushed to Github public repo
+# Save simulated data
+output_simulated = sprintf("%s/data/public/simulated.RDS", .args["wd"])
+saveRDS(sim_data, output_simulated))
 
 

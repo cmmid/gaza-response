@@ -341,6 +341,3 @@ sim_data <- simulate_clean_data(
   factor_params = factor_params,
   cohort_params = cohort_params
 )
-
-# Save simulated data
-saveRDS(sim_data, here::here("data/public/simulated_clean_data.RDS"))

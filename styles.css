@@ -1,0 +1,117 @@
+/* css styles */
+div#quarto-content {
+  height: auto !important;*/
+  /*min-height: 100vh;*/
+}
+/* Remove vertical margin/padding between rows */
+
+.lshtm_widget_content {
+  display: none;
+}
+.lshtm_widget_content.visible {
+  display: block !important;
+}
+.lshtm_widget_filter p {
+  font-size: 1.1em;
+  margin-bottom: 2px;
+}
+.lshtm_widget_filter legend {
+    font-size: 1em;
+    font-style: italic;
+    margin-bottom: 2px;
+}
+.lshtm_widget_filter label {
+    margin-left: 10px;
+}
+header nav.navbar {
+    background-color: #0D5257;
+}
+.quarto-dashboard #quarto-dashboard-header .navbar .navbar-nav .active {
+    background-color: #00BF6F;
+}
+header nav span {
+    color: #EEEEEE;
+}
+.quarto-dashboard #quarto-dashboard-header .navbar .navbar-nav .active > span {
+    color: #000000;
+}
+aside#bslib-sidebar-1 {
+    background-color: #EEEEEE;
+}
+.card-header {
+    background-color: #EEEEEE;
+}
+.callout-title-container.flex-fill {
+    font-size: 1.1em;
+    color: #000000;
+}
+.card-body {
+    font-size: 0.9em;
+    padding: 0.5em;
+}
+.card-body ul {
+    margin-bottom: 0;
+}
+ul.dropdown-menu li a span {
+    color: #000000 !important;
+}
+ul.dropdown-menu li a:hover {
+    background-color: #EEEEEE;
+}
+
+.card-body.html-fill-item.html-fill-container {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+.bslib-tooltip:empty {
+  display: none !important;
+}
+
+
+.quarto-figure > svg,
+.quarto-figure > img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.quarto-figure {
+  width: 100% !important;
+}
+
+@media (max-width: 600px) {
+  .navbar-title {
+    font-size: 1rem; /* smaller title */
+    white-space: normal; /* allow wrapping */
+  }
+}
+
+.no-box {
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: grid !important;
+  gap: 1rem !important;
+}
+
+
+
+.no-box .card {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Target the actual layout container */
+.quarto-layout-panel[data-layout-ncol="3"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: 1rem !important;
+}
+
+.quarto-layout-panel[data-layout-ncol="3"] > div {
+  width: 100% !important;
+  max-width: none !important;
+}

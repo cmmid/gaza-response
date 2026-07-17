@@ -1,5 +1,7 @@
 # Monitoring the nutritional status of humanitarian workers in Gaza
 
+[![DOI](https://zenodo.org/badge/1028923506.svg)](https://doi.org/10.5281/zenodo.21406637)
+
 This project provides real-time information on the nutritional status of humanitarian staff in Gaza. We are collecting a set of baseline information from each participant, and a daily optional weight measurement. 
 
 We aim to produce a dashboard with aggregated results, stratified by organisation, and by key characteristics (age group, sex, children dependents, staff role, governorate location). See [study protocol](/protocol/protocol.docx) for full analysis objectives. 
